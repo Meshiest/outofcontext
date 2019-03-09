@@ -117,7 +117,7 @@
 }
 
 .main-menu .title {
-  font-family: 'Lora', sans-serif;
+  font-family: 'Lora', serif;
   font-size: 30px;
   margin: 8px 0;
 }
@@ -139,7 +139,7 @@ export default {
     testLobby(event) {
       event.preventDefault();
       const form = event.target;
-      const code = form.lobbyCode.value;
+      const code = form.lobbyCode.value.replace(/\W/g, '');
 
       this.testingLobby = true;
 
