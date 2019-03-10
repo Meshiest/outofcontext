@@ -4,21 +4,32 @@
       title="Invalid Lobby"
       subtitle="This lobby does not exist">
       <div>
+        <sui-divider horizontal>
+          Lobby
+        </sui-divider>
+        <sui-button-group>
+          <sui-button
+            color="green"
+            :loading="creatingLobby"
+            @click="createLobby">
+            Create
+          </sui-button>
+          <sui-button-or/>
+          <sui-button
+            primary
+            :loading="showJoinLobby"
+            @click="showJoinLobby = true">
+            Join
+          </sui-button>
+        </sui-button-group>
+        <sui-divider horizontal>
+          Redirect
+        </sui-divider>
         <sui-button-group vertical basic>
           <router-link is="sui-button"
             to="/">
             Home
           </router-link>
-          <sui-button
-            :loading="creatingLobby"
-            @click="createLobby">
-            Create Lobby
-          </sui-button>
-          <sui-button
-            :loading="showJoinLobby"
-            @click="showJoinLobby = true">
-            Join Lobby
-          </sui-button>
           <a is="sui-button"
             href="https://github.com/meshiest/out-of-context/issues"
             target="_blank"
@@ -56,9 +67,17 @@
       </sui-form>
     </ooc-menu>
     <ooc-menu v-else-if="state === 'LOBBY_WAITING'"
-      :title="lobbyInfo.currGame || 'No Game Selected'"
-      subtitle="Waiting for a game to be selected">
+      :title="currGame ? currGame.title : 'No Game Selected'"
+      :subtitle="currGame ? currGame.subtitle : 'Waiting for a game to be selected'">
       <!-- <pre>{{JSON.stringify(lobbyInfo, 0, 2)}}</pre> -->
+      <sui-dropdown
+        placeholder="Select a Game"
+        :value="lobbyInfo.game"
+        :loading="changeGame"
+        @input="tryChangeGame"
+        :options="gameOptions"
+        selection>
+      </sui-dropdown>
       <sui-table basic="very" class="player-table">
         <thead>
           <tr>
@@ -104,7 +123,6 @@
             </td>
           </tr>
         </tbody>
-
       </sui-table>
     </ooc-menu>
     <sui-dimmer :active="loading">
@@ -138,8 +156,19 @@
 
 </style>
 
-
 <script>
+
+import gameInfo from '../gameInfo';
+import _ from 'lodash';
+
+const emptyInfo = () => ({
+  admin: '',
+  players: [],
+  members: [],
+  spectators: [],
+  game: '',
+  config: {},
+});
 
 export default {
   data() {
@@ -150,17 +179,23 @@ export default {
       validLobby: false,
       loadingName: false,
       validName: true,
-      lobbyInfo: {
-        admin: '',
-        players: [],
-        members: [],
-        spectators: [],
-        currGame: '',
-      },
+      changeGame: false,
+      lobbyInfo: emptyInfo(),
       state: 'LOADING',
+      gameInfo,
+      gameOptions: _.map(gameInfo, (v, k) => ({value: k, text: v.title})),
     };
   },
+  computed:  {
+    currGame() {
+      return gameInfo[this.lobbyInfo.game];
+    },
+  },
   methods: {
+    tryChangeGame(game) {
+      this.changeGame = true;
+      this.$socket.emit('lobby:game:set', game);
+    },
     enterName(event) {
       event.preventDefault();
       const name = event.target.playerName.value;
@@ -179,6 +214,7 @@ export default {
         .then(resp => {
           if(resp.status === 200) {
             this.state = 'JOIN_LOBBY';
+            this.validLobby = true;
             this.$socket.emit('lobby:join', lobbyCode);
           } else {
             this.state = 'NO_LOBBY';
@@ -208,13 +244,7 @@ export default {
       this.state = 'JOIN_LOBBY';
       this.validLobby = true;
       this.showJoinLobby = false;
-      this.lobbyInfo = {
-        admin: '',
-        players: [],
-        members: [],
-        spectators: [],
-        currGame: '',
-      };
+      this.lobbyInfo = emptyInfo();
       const lobbyCode = this.$route.params.code;
       if(lobbyCode !== code)
         this.$router.push(`/lobby/${code}`);
@@ -224,6 +254,7 @@ export default {
       this.state = 'NO_LOBBY';
     },
     'lobby:info': function(info) {
+      this.changeGame = false;
       this.lobbyInfo = info;
     },
     connect() {

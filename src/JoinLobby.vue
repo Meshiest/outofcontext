@@ -55,7 +55,6 @@ module.exports = {
   sockets: {
     'lobby:join': function(code) {
       this.$emit('close');
-      console.log('what');
       this.$router.push(`/lobby/${code}`);
     },
     disconnect: function() {

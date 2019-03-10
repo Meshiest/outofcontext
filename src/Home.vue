@@ -18,7 +18,7 @@
           <sui-button
             primary
             @click="showJoinLobby = true"
-            :loading="!connected">
+            :loading="!connected || showJoinLobby">
             Join
           </sui-button>
         </sui-button-group>

@@ -1,17 +1,31 @@
 const _ = require('lodash');
+const gameInfo = require('../gameInfo');
 
 class Lobby {
   constructor() {
     do {
-      this.code = _.sampleSize('abcdefghijklmnopqrstuvwxyz', 4).join('');
+      this.code = _.sampleSize('abcdefghijklmnopqrstuvwxyz0123456789', 4).join('');
     } while(Lobby.lobbies[this.code]);
     this.members = [];
     this.players = [];
     this.spectators = [];
     this.selectedGame = '';
+    this.gameConfig = {};
     this.maxPlayers = 0;
     this.admin = '';
     this.lobbyState = 'WAITING';
+  }
+
+  setGame(game) {
+    if(gameInfo.hasOwnProperty(game)) {
+      this.selectedGame = game;
+      this.gameConfig = _.mapValues(gameInfo[game], v => v.defaults);
+      this.sendLobbyInfo();
+    }
+  }
+
+  setConfig(config) {
+
   }
 
   addMember(member) {
@@ -101,7 +115,8 @@ class Lobby {
   sendLobbyInfo() {
     const isPlayer = this.players.reduce((obj, p) => ({...obj, [p.id]: true}), {});
     const info = {
-      currGame: this.selectedGame,
+      game: this.selectedGame,
+      config: this.gameConfig,
       admin: this.admin,
       members: this.members.map(m => ({
         id: m.id,

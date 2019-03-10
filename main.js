@@ -70,6 +70,18 @@ io.on('connection', socket => {
     }
   });
 
+  socket.on('lobby:game:set', game => {
+    if(player.isAdmin()) {
+      player.lobby.setGame(game);
+    }
+  });
+
+  socket.on('lobby:game:config', config => {
+    if(player.isAdmin()) {
+      player.lobby.setConfig(config);
+    }
+  });
+
   // Leave the lobby if a player is in one
   socket.on('lobby:leave', () => {
     player.name = '';

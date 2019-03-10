@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-class Player {
+class Member {
   constructor(socket) {
     this.socket = socket;
     this.id = _.uniqueId('player');
@@ -8,6 +8,10 @@ class Player {
     this.name = '';
     this.color = 0;
   }
+
+  isAdmin() {
+     return this.lobby && this.lobby.admin === this.id;
+  }
 }
 
-module.exports = Player;
+module.exports = Member;
