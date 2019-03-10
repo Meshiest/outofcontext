@@ -1,8 +1,7 @@
 <template>
   <div>
-    <portal-target name="semantic-ui-vue">
-    </portal-target>
-    <div class="main-menu">
+    <ooc-util></ooc-util>
+    <div class="menu">
       <header>
         <div class="title">
           Out of Context
@@ -16,7 +15,10 @@
           Lobby
         </sui-divider>
         <sui-button-group>
-          <sui-button color="green" :loading="!connected">
+          <sui-button
+            color="green"
+            :loading="!connected || creatingLobby"
+            @click="createLobby">
             Create
           </sui-button>
           <sui-button-or/>
@@ -32,7 +34,7 @@
         </sui-divider>
         <sui-button-group vertical basic>
           <sui-button disabled>
-            Games
+            Playable Games
           </sui-button>
           <sui-button disabled>
             Screenshots
@@ -41,7 +43,7 @@
             href="https://github.com/meshiest/out-of-context"
             target="_blank"
             rel="noopener noreferrer">
-            Source
+            Read the Code
           </a>
           <sui-button disabled>
             About
@@ -96,7 +98,7 @@
 
 <style>
 
-.main-menu {
+.menu {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -106,17 +108,17 @@
   text-align: center;
 }
 
-.main-menu header {
+.menu header {
   margin: 32px 16px 16px 16px;
 }
 
-.main-menu .subtitle {
+.menu .subtitle {
   color: #666;
   font-family: Lato, sans-serif;
   font-style: italic;
 }
 
-.main-menu .title {
+.menu .title {
   font-family: 'Lora', serif;
   font-size: 30px;
   margin: 8px 0;
@@ -134,8 +136,16 @@ export default {
     disconnect() {
       this.connected = false;
     },
+    'lobby:join': function(code) {
+      this.creatingLobby = false;
+      this.$router.push(`/lobby/${code}`);
+    },
   },
   methods: {
+    createLobby() {
+      this.creatingLobby = true;
+      this.$socket.emit('lobby:create');
+    },
     testLobby(event) {
       event.preventDefault();
       const form = event.target;
@@ -143,6 +153,7 @@ export default {
 
       this.testingLobby = true;
 
+      // Determine if the lobby exists
       fetch(`/api/v1/lobby/${code}`)
         .then(resp => {
           if(resp.status === 200) {
@@ -158,9 +169,13 @@ export default {
         });
     }
   },
+  created() {
+    this.$socket.emit('lobby:leave');
+  },
   data() {
     return {
       connected: this.$root.connected,
+      creatingLobby: false,
       testingLobby: false,
       showJoinLobby: false,
       lobbyError: false,

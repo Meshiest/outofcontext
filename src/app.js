@@ -25,6 +25,9 @@ const router = new VueRouter({
 import Home from './Home.vue';
 import Lobby from './Lobby.vue';
 import NotFound from './NotFound.vue';
+import Util from './Util.vue';
+
+Vue.component('ooc-util', Util);
 
 new Vue({
   router,
@@ -32,16 +35,19 @@ new Vue({
   data() {
     return {
       connected: false,
+      disconnected: false,
     }
   },
   sockets: {
     connect() {
       console.log('Connected');
       this.connected = true;
+      this.disconnected = false;
     },
     disconnect() {
       console.log('Disconnected');
       this.connected = false;
+      this.disconnected = true;
     },
   },
   render(h) {
