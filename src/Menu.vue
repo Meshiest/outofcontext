@@ -6,12 +6,13 @@
   flex-direction: column;
   margin: 0 auto;
   padding: 4px;
-  width: 300px;
+  max-width: 300px;
+  width: 100%;
   text-align: center;
 }
 
 .menu header {
-  margin: 32px 16px 16px 16px;
+  padding: 32px 16px 16px 16px;
 }
 
 .menu .subtitle {
@@ -39,7 +40,7 @@
           {{subtitle}}
         </div>
       </header>
-      <div>
+      <div :style="{textAlign: left ? 'left' : 'inherit'}">
         <slot></slot>
       </div>
     </div>
@@ -48,6 +49,6 @@
 
 <script>
 export default {
-  props: ['title', 'subtitle']
+  props: ['title', 'subtitle', 'left'],
 };
 </script>

@@ -16,7 +16,7 @@ const router = new VueRouter({
   mode: 'history',
   base: '/',
   routes: [
-    { name: 'lobby', path: '/lobby/:id?' },
+    { name: 'lobby', path: '/lobby/:code?' },
     { name: 'games', path: '/games' },
     { name: 'home', path: '/' },
   ]
@@ -27,9 +27,13 @@ import Lobby from './Lobby.vue';
 import NotFound from './NotFound.vue';
 import Util from './Util.vue';
 import Menu from './Menu.vue';
+import JoinLobby from './JoinLobby.vue';
+import Page from './Page.vue';
 
 Vue.component('ooc-util', Util);
 Vue.component('ooc-menu', Menu);
+Vue.component('ooc-join-lobby', JoinLobby);
+Vue.component('ooc-page', Page);
 
 new Vue({
   router,
@@ -38,7 +42,8 @@ new Vue({
     return {
       connected: false,
       disconnected: false,
-    }
+      playerId: undefined,
+    };
   },
   sockets: {
     connect() {
@@ -51,6 +56,9 @@ new Vue({
       this.connected = false;
       this.disconnected = true;
     },
+    'member:id': function(id) {
+      this.playerId = id;
+    }
   },
   render(h) {
     return h({

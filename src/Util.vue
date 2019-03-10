@@ -2,10 +2,28 @@
   <div>
     <portal-target name="semantic-ui-vue">
     </portal-target>
-    <sui-dimmer :active="$root.disconnected">
+    <sui-dimmer :active="disconnected">
       <sui-loader>
         Lost Connection to Server
       </sui-loader>
     </sui-dimmer>
-  <div>
+  </div>
 </template>
+
+<script>
+module.exports = {
+  data() {
+    return {
+      disconnected: false,
+    };
+  },
+  sockets: {
+    connect() {
+      this.disconnected = false;
+    },
+    disconnect() {
+      this.disconnected = true;
+    }
+  },
+};
+</script>

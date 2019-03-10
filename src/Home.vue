@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <ooc-util></ooc-util>
+  <ooc-page>
     <ooc-menu
       title="Out of Context"
       subtitle="Party games fueled by your insanity!">
@@ -45,49 +44,10 @@
         </sui-button-group>
       </div>
     </ooc-menu>
-    <sui-dimmer :active="showJoinLobby">
-      <sui-form
-        @submit="testLobby"
-        :error="lobbyError"
-        :loading="testingLobby">
-        <sui-card>
-          <sui-card-content>
-            <sui-card-header>
-              Join a Lobby
-            </sui-card-header>
-            <sui-card-meta>
-              Enter the code for an existing lobby
-            </sui-card-meta>
-          </sui-card-content>
-          <sui-card-content>
-              <sui-form-field
-                :error="lobbyError">
-                <label>Lobby Code</label>
-                <input name="lobbyCode"
-                  required
-                  @input="lobbyError = false"
-                  autocomplete="off" 
-                  placeholder="c0d3">
-              </sui-form-field>
-              <sui-button
-                primary
-                type="submit">
-                Join
-              </sui-button>
-              <sui-button
-                type="button"
-                @click="showJoinLobby = false">
-                Cancel
-              </sui-button>
-          </sui-card-content>
-        </sui-card>
-        <sui-message
-          error
-          header="Invalid Lobby Code"
-          content="This lobby does not exist"/>
-      </sui-form>
-    </sui-dimmer>
-  </div>
+    <ooc-join-lobby :active="showJoinLobby" @close="showJoinLobby = false">
+    </ooc-join-lobby>
+    <ooc-util></ooc-util>
+  </ooc-page>
 </template>
 
 <style>
@@ -104,38 +64,12 @@ export default {
     disconnect() {
       this.connected = false;
     },
-    'lobby:join': function(code) {
-      this.creatingLobby = false;
-      this.$router.push(`/lobby/${code}`);
-    },
   },
   methods: {
     createLobby() {
       this.creatingLobby = true;
       this.$socket.emit('lobby:create');
     },
-    testLobby(event) {
-      event.preventDefault();
-      const form = event.target;
-      const code = form.lobbyCode.value.replace(/\W/g, '');
-
-      this.testingLobby = true;
-
-      // Determine if the lobby exists
-      fetch(`/api/v1/lobby/${code}`)
-        .then(resp => {
-          if(resp.status === 200) {
-            this.$router.push(`/lobby/${code}`);
-          } else {
-            this.testingLobby = false;
-            this.lobbyError = true;  
-          }
-        })
-        .catch(() => {
-          this.testingLobby = false;
-          this.lobbyError = true;
-        });
-    }
   },
   created() {
     this.$socket.emit('lobby:leave');
@@ -144,9 +78,7 @@ export default {
     return {
       connected: this.$root.connected,
       creatingLobby: false,
-      testingLobby: false,
       showJoinLobby: false,
-      lobbyError: false,
     };
   },
 };

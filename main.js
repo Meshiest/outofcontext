@@ -14,8 +14,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const Member = require('./core/Member');
 const Lobby = require('./core/Lobby');
 
-const lobbies = {};
-
 /**
  * Removes player from his/her lobby
  * @param  {Member} player Player potentially in a lobby
@@ -28,41 +26,59 @@ function removePlayerFromLobby(player) {
 
   lobby.removeMember(player);
   player.lobby = undefined;
-
   if(lobby.empty()) {
-    lobbies[lobby.code] = false;
+    Lobby.lobbies[lobby.code] = false;
   }
 }
 
 io.on('connection', socket => {
   const player = new Member(socket);
+  socket.emit('member:id', player.id);
+
+  socket.on('member:name', name => {
+    if(name.length > 0 && name.length < 16) {
+      player.name = name;
+      socket.emit('member:nameOk', true);
+      if(player.lobby) {
+        player.lobby.updateMembers();
+        player.lobby.sendLobbyInfo();
+      }
+    } else {
+      socket.emit('member:nameOk', false);
+    }
+  });
 
   // Create a lobby if the player is not in one
   socket.on('lobby:create', () => {
     if(!player.lobby) {
       const lobby = new Lobby();
+      const code = lobby.code;
       player.lobby = lobby;
-      lobbies[lobby.code] = lobby;
-      socket.emit('lobby:join', lobby.code);
+      Lobby.lobbies[code] = lobby;
+      socket.emit('lobby:join', code);
+      Lobby.lobbies[code].addMember(player);
     }
   });
 
   // Let a player join a lobby with a code
   socket.on('lobby:join', code => {
     code = code.toLowerCase();
-    if(!player.lobby && lobbies.hasOwnProperty(code)) {
-      lobbies[code].addMember(player);
+    if(!player.lobby && Lobby.lobbyExists(code)) {
+      player.lobby = Lobby.lobbies[code];
       socket.emit('lobby:join', code);
+      Lobby.lobbies[code].addMember(player);
     }
   });
 
   // Leave the lobby if a player is in one
   socket.on('lobby:leave', () => {
+    player.name = '';
     removePlayerFromLobby(player);
   });
 
   // Remove the player from a lobby on disconnection
   socket.on('disconnect', data => {
+
     removePlayerFromLobby(player);
   });
 });
@@ -70,7 +86,7 @@ io.on('connection', socket => {
 // Determine if a lobby exists
 app.get('/api/v1/lobby/:code', (req, res) => {
   const code = req.params.code.toLowerCase();
-  if(lobbies.hasOwnProperty(code)) {
+  if(Lobby.lobbyExists(code)) {
     res.status(200).json({
       message: 'Lobby Exists',
     });
