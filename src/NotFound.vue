@@ -3,15 +3,9 @@
 
 <template>
   <div>
-    <div class="menu">
-      <header>
-        <div class="title">
-          Page Not Found
-        </div>
-        <div class="subtitle">
-          It appears this page does not exist!
-        </div>
-      </header>
+    <ooc-menu
+      title="Page Not Found"
+      subtitle="It appears this page does not exist!">
       <div>
         <sui-button-group vertical basic>
           <router-link is="sui-button"
@@ -26,7 +20,7 @@
           </a>
         </sui-button-group>
       </div>
-    </div>
+    </ooc-menu>
   </div>
 </template>
 

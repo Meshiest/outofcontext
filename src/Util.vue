@@ -7,6 +7,5 @@
         Lost Connection to Server
       </sui-loader>
     </sui-dimmer>
-  </div>
+  <div>
 </template>
-

@@ -4,15 +4,9 @@
 <template>
   <div>
     <ooc-util></ooc-util>
-    <div v-if="state === 'DEAD_LOBBY'" class="menu">
-      <header>
-        <div class="title">
-          Invalid Lobby
-        </div>
-        <div class="subtitle">
-          This lobby does not exist
-        </div>
-      </header>
+    <ooc-menu v-if="state === 'NO_LOBBY'"
+      title="Invalid Lobby"
+      subtitle="This lobby does not exist">
       <div>
         <sui-button-group vertical basic>
           <router-link is="sui-button"
@@ -33,7 +27,7 @@
           </a>
         </sui-button-group>
       </div>
-    </div>
+    </ooc-menu>
     <div v-else-if="state === 'JOIN_LOBBY'">
       create name
     </div>
@@ -66,12 +60,12 @@ export default {
           if(resp.status === 200) {
             this.state = 'JOIN_LOBBY';
           } else {
-            this.state = 'DEAD_LOBBY';
+            this.state = 'NO_LOBBY';
           }
           this.loading = false;
         })
         .catch(() => {
-          this.state = 'DEAD_LOBBY';
+          this.state = 'NO_LOBBY';
           this.loading = false;
         });
     },
@@ -83,7 +77,7 @@ export default {
       this.$router.push(`/lobby/${code}`);
     },
     'lobby:leave': function(code) {
-      this.state = 'DEAD_LOBBY';
+      this.state = 'NO_LOBBY';
     },
     connect() {
       this.testLobby();
@@ -93,7 +87,7 @@ export default {
     const lobbyId = this.$route.params.id;
     if(!lobbyId || lobbyId.length !== 4) {
       this.loading = false;
-      this.state = 'DEAD_LOBBY';
+      this.state = 'NO_LOBBY';
     } else {
       this.testLobby();
     }

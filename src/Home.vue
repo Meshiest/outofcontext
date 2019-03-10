@@ -1,15 +1,9 @@
 <template>
   <div>
     <ooc-util></ooc-util>
-    <div class="menu">
-      <header>
-        <div class="title">
-          Out of Context
-        </div>
-        <div class="subtitle">
-          Party games fueled by your insanity!
-        </div>
-      </header>
+    <ooc-menu
+      title="Out of Context"
+      subtitle="Party games fueled by your insanity!">
       <div>
         <sui-divider horizontal>
           Lobby
@@ -50,7 +44,7 @@
           </sui-button>
         </sui-button-group>
       </div>
-    </div>
+    </ooc-menu>
     <sui-dimmer :active="showJoinLobby">
       <sui-form
         @submit="testLobby"
@@ -97,32 +91,6 @@
 </template>
 
 <style>
-
-.menu {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  padding: 4px;
-  width: 300px;
-  text-align: center;
-}
-
-.menu header {
-  margin: 32px 16px 16px 16px;
-}
-
-.menu .subtitle {
-  color: #666;
-  font-family: Lato, sans-serif;
-  font-style: italic;
-}
-
-.menu .title {
-  font-family: 'Lora', serif;
-  font-size: 30px;
-  margin: 8px 0;
-}
 
 </style>
 

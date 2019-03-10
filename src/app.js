@@ -26,8 +26,10 @@ import Home from './Home.vue';
 import Lobby from './Lobby.vue';
 import NotFound from './NotFound.vue';
 import Util from './Util.vue';
+import Menu from './Menu.vue';
 
 Vue.component('ooc-util', Util);
+Vue.component('ooc-menu', Menu);
 
 new Vue({
   router,
