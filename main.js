@@ -36,6 +36,10 @@ io.on('connection', socket => {
   socket.emit('member:id', player.id);
 
   socket.on('member:name', name => {
+
+    // remove zero width no break spaces, trim spaces
+    name = name.replace(/[\u200B-\u200D\uFEFF]/g, '').trim()
+
     if(name.length > 0 && name.length < 16) {
       player.name = name;
       socket.emit('member:nameOk', true);
