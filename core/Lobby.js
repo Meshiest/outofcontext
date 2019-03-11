@@ -10,8 +10,7 @@ class Lobby {
     this.players = [];
     this.spectators = [];
     this.selectedGame = '';
-    this.gameConfig = {};
-    this.maxPlayers = 0;
+    this.gameConfig = {players: '#numPlayers'};
     this.admin = '';
     this.lobbyState = 'WAITING';
   }
@@ -19,13 +18,47 @@ class Lobby {
   setGame(game) {
     if(gameInfo.hasOwnProperty(game)) {
       this.selectedGame = game;
-      this.gameConfig = _.mapValues(gameInfo[game], v => v.defaults);
+      this.gameConfig = _.mapValues(gameInfo[game].config, v => v.defaults);
+      
+      this.updateMembers();
       this.sendLobbyInfo();
     }
   }
 
-  setConfig(config) {
+  setConfig(name, val) {
+    if(!this.selectedGame)
+      return;
 
+    if(!this.gameConfig.hasOwnProperty(name))
+      return;
+
+    const conf = gameInfo[this.selectedGame].config[name];
+
+    switch(conf.type) {
+    case 'int':
+      if(typeof val !== 'number') {
+        // value is not one of the calculated values
+        switch(val) {
+        case '#numPlayers':
+          if(this.players.length > gameInfo[this.selectedGame].config.players.max)
+            val = gameInfo[this.selectedGame].config.players.max;
+          break;
+
+        default:
+          return
+        }
+      } else {
+        // value is too small or too large
+        if(val < conf.min || val > conf.max && conf.max) {
+          return;
+        }
+      }
+
+      this.gameConfig[name] = val;
+    }
+
+    this.updateMembers();
+    this.sendLobbyInfo();
   }
 
   addMember(member) {
@@ -49,6 +82,11 @@ class Lobby {
       playerObj.connected = false;
       playerObj.member = null;
       playerObj.id = -1;
+    }
+
+    const isSpectator = this.spectators.find(p => p.id === player.id);
+    if(isSpectator) {
+      this.spectators.splice(this.spectators.indexOf(isSpectator), 1);
     }
 
     this.updateMembers();
@@ -84,6 +122,20 @@ class Lobby {
     }
   }
 
+  toggleSpectate(player) {
+    const isSpectator = this.spectators.find(p => p.id === player.id);
+
+    if(this.admin === player.id && !isSpectator)
+      this.admin = '';
+    if(isSpectator)
+      this.spectators.splice(this.spectators.indexOf(isSpectator), 1);
+    else
+      this.spectators.push({id: player.id, name: player.name});
+
+    this.updateMembers();
+    this.sendLobbyInfo();
+  }
+
   updateMembers() {
     switch(this.lobbyState) {
     case 'WAITING':
@@ -94,9 +146,19 @@ class Lobby {
         }
       }
 
-      if(!this.maxPlayers || this.players.length < this.maxPlayers) {
+      // Remove players who are over the max player cap
+      while(this.gameConfig.players > 0 && this.players.length > this.gameConfig.players) {
+        const [{id}] = this.players.splice(-1, 1);
+
+        // Remove the admin if one of the removed players is the admin
+        if(this.admin === id)
+          this.admin = '';
+      }
+
+      // Determine if more members should be added into the players list
+      if(!this.gameConfig.players || this.gameConfig.players === '#numPlayers' || this.players.length < this.gameConfig.players) {
         for(const m of this.members) {
-          if(m.name && !this.players.find(p => p.id === m.id))
+          if(m.name && !this.players.find(p => p.id === m.id) && !this.spectators.find(p => p.id === m.id))
             this.players.push({
               id: m.id,
               name: m.name,
@@ -106,6 +168,7 @@ class Lobby {
         }
       }
 
+      // Delegate a new admin
       if(!this.admin && this.players.length)
         this.admin = this.players[0].id;
       break;

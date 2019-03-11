@@ -76,9 +76,14 @@ io.on('connection', socket => {
     }
   });
 
-  socket.on('lobby:game:config', config => {
+  socket.on('lobby:game:spectate', () => {
+    if(player.lobby)
+      player.lobby.toggleSpectate(player);
+  });
+
+  socket.on('lobby:game:config', (name, val) => {
     if(player.isAdmin()) {
-      player.lobby.setConfig(config);
+      player.lobby.setConfig(name, val);
     }
   });
 

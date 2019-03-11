@@ -5,8 +5,9 @@
 </template>
 
 <style>
-.page {
+body {
   height: 100vh;
+  max-height: 100vh;
   position: relative;
   overflow-y: auto;
 }

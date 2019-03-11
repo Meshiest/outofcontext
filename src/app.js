@@ -4,8 +4,10 @@ import SemanticUI from 'semantic-ui-vue';
 import VueSocketIO from 'vue-socket.io'
 import PortalVue from 'portal-vue';
 import './style.css';
+import VueDefaultValue from 'vue-default-value';
 
 Vue.use(VueRouter);
+Vue.use(VueDefaultValue);
 Vue.use(PortalVue);
 Vue.use(SemanticUI);
 Vue.use(new VueSocketIO({

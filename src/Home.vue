@@ -27,7 +27,7 @@
         </sui-divider>
         <sui-button-group vertical basic>
           <sui-button disabled>
-            Playable Games
+            Game Selection
           </sui-button>
           <sui-button disabled>
             Screenshots
