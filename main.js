@@ -41,8 +41,13 @@ io.on('connection', socket => {
 
   socket.on('member:name', name => {
 
+    if(!player.lobby) {
+      socket.emit('lobby:leave');
+      return;
+    }
+
     // remove zero width no break spaces, trim spaces
-    name = name.replace(/[\u200B-\u200D\uFEFF]/g, '').trim()
+    name = name.replace(/[\u200B-\u200D\uFEFF\n\t]/g, '').trim()
 
     if(name.length > 0 && name.length < 16) {
       player.name = name;
@@ -68,6 +73,23 @@ io.on('connection', socket => {
     }
   });
 
+  // Allow players to request current lobby info
+  socket.on('lobby:info', () => {
+    if(player.lobby) {
+      player.socket.emit('lobby:info', player.lobby.getLobbyInfo());
+    }
+  });
+
+  // Allow players to request current lobby info
+  socket.on('game:info', () => {
+    const lobby = player.lobby;
+    if(lobby && lobby.game) {
+      const game = lobby.game;
+      player.socket.emit('game:info', game.getState());
+      lobby.getPlayerState(player.id);
+    }
+  });
+
   // Let a player join a lobby with a code
   socket.on('lobby:join', code => {
     code = code.toLowerCase();
@@ -78,23 +100,47 @@ io.on('connection', socket => {
     }
   });
 
+  socket.on('lobby:replace', pid => {
+    if(player.lobby) {
+      player.lobby.replacePlayer(player, pid);
+    } else {
+      socket.emit('lobby:leave');
+    }
+  });
+
+  // Allow an admin player to change what game is being played
   socket.on('lobby:game:set', game => {
     if(player.isAdmin()) {
       player.lobby.setGame(game);
     }
   });
 
-  socket.on('lobby:spectate', () => {
-    if(player.lobby) {
-      player.lobby.toggleSpectate(player);
+  // Allow an admin player to change what game is being played
+  socket.on('game:start', game => {
+    if(player.isAdmin()) {
+      player.lobby.startGame();
     }
   });
 
-  socket.on('lobby:game:msg', (type, data) => {
-    if(player.lobby)
-      player.lobby.gameMessage(type, data);
+  // Toggle whether this member is a spectator
+  socket.on('lobby:spectate', () => {
+    if(player.lobby) {
+      player.lobby.toggleSpectate(player);
+    } else {
+      socket.emit('lobby:leave');
+    }
   });
 
+  // Core gameplay messages
+  socket.on('lobby:game:msg', (type, data) => {
+    if(player.lobby) {
+      player.lobby.gameMessage(player.id, type, data);
+    } else {
+      socket.emit('lobby:leave');
+    }
+  });
+
+  // Change game config if the player is an admin
   socket.on('lobby:game:config', (name, val) => {
     if(player.isAdmin()) {
       player.lobby.setConfig(name, val);
@@ -109,7 +155,6 @@ io.on('connection', socket => {
 
   // Remove the player from a lobby on disconnection
   socket.on('disconnect', data => {
-
     removePlayerFromLobby(player);
   });
 });

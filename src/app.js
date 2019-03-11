@@ -30,12 +30,16 @@ import NotFound from './NotFound.vue';
 import Util from './Util.vue';
 import Menu from './Menu.vue';
 import JoinLobby from './JoinLobby.vue';
+import PlayerList from './PlayerList.vue';
 import Page from './Page.vue';
+import GameRenderer from './games/GameRenderer.vue';
 
 Vue.component('ooc-util', Util);
 Vue.component('ooc-menu', Menu);
 Vue.component('ooc-join-lobby', JoinLobby);
+Vue.component('ooc-player-list', PlayerList);
 Vue.component('ooc-page', Page);
+Vue.component('ooc-game', GameRenderer);
 
 new Vue({
   router,

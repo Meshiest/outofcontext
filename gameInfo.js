@@ -24,13 +24,19 @@ module.exports = {
         max: 256,
         defaults: '#numPlayers',
       },
-      numRounds: {
-        name: 'Round Count',
+      numLines: {
+        name: 'Line Count',
         type: 'int',
-        text: 'Rounds',
-        min: 1,
+        text: 'Lines',
+        min: 2,
         max: 256,
         defaults: '#numPlayers',
+      },
+      anonymous: {
+        name: 'Hide Authors',
+        type: 'bool',
+        text: 'Anonymous',
+        defaults: 'false',
       },
     },
   },

@@ -18,6 +18,7 @@ class Lobby {
     this.game = null;
   }
 
+  // Start the game
   startGame() {
     if(!this.selectedGame) return;
 
@@ -50,6 +51,7 @@ class Lobby {
     }
   }
 
+  // Change which game this lobby is playing
   setGame(game) {
     if(this.lobbyState !== 'WAITING') return;
 
@@ -62,11 +64,17 @@ class Lobby {
     }
   }
 
-  gameMessage(type, data) {
-    if(this.game)
-      this.game.handleMessage(type, data);
+  // Pass a message to the game controller
+  gameMessage(member, type, data) {
+    // find associated player
+    const player = this.players.find(p => p.id === member);
+
+    if(this.game && player) {
+      this.game.handleMessage(player.playerId, type, data);
+    }
   }
 
+  // Change a value in the game config
   setConfig(name, val) {
     if(this.lobbyState !== 'WAITING') return;
 
@@ -77,6 +85,7 @@ class Lobby {
     const conf = gameInfo[this.selectedGame].config[name];
     if(conf.hidden) return;
 
+    // Type validation
     switch(conf.type) {
     case 'int':
       if(typeof val !== 'number') {
@@ -100,9 +109,13 @@ class Lobby {
 
       this.gameConfig[name] = val;
       break;
+    case 'bool':
+      this.gameConfig[name] = val === 'true' ? 'true' : 'false';
+      break;
     case 'list':
       const entry = conf.options.find(n => n.name === val);
       this.gameConfig[name] = entry ? val : gameInfo[this.selectedGame].config[name].defaults;
+      break;
     }
 
     this.updateMembers();
@@ -197,7 +210,40 @@ class Lobby {
     }
   }
 
+  // Replace a player that has left the game
+  replacePlayer(member, pid) {
+    const id = member.id;
+    const isPlayer = this.players.find(p => p.id === id);
+    const isSpectator = this.spectators.find(p => p.id === id);
+    const targetPlayer = this.players.find(p => p.playerId === pid && p.id === -1 && !p.connected);
+
+    if((!isPlayer || isSpectator) && targetPlayer) {
+      targetPlayer.id = id;
+      targetPlayer.name = member.name;
+      targetPlayer.member = member;
+      targetPlayer.connected = true;
+
+      this.updateMembers();
+      this.sendLobbyInfo();
+    }
+  }
+
+  getPlayerState(id) {
+    if(!this.gameState === 'PLAYING')
+      return;
+
+    const player = this.players.find(p => p.id === id);
+    if(!player)
+      return;
+
+    player.member.socket.emit('game:player:info', this.game.getPlayerState(player.playerId));
+  }
+
+  // Swap a player into/out of spectators group
   toggleSpectate(player) {
+    if(!player.name)
+      return;
+
     const isSpectator = this.spectators.find(p => p.id === player.id);
 
     if(this.admin === player.id && !isSpectator) {
@@ -212,7 +258,7 @@ class Lobby {
       if(playerObj) {
         playerObj.name = player.name;
         playerObj.connected = false;
-        playerObj.player = null;
+        playerObj.member = undefined;
         playerObj.id = -1;
       }
 
@@ -270,7 +316,7 @@ class Lobby {
     case 'PLAYING':
 
       // Determine if the admin disconnected
-      const admin = this.players.find(p => p.id === admin);
+      const admin = this.players.find(p => p.id === this.admin);
       if(admin && !admin.connected)
         admin = '';
 
@@ -283,7 +329,7 @@ class Lobby {
     }
   }
 
-  sendLobbyInfo() {
+  genLobbyInfo() {
     const isPlayer = this.players.reduce((obj, p) => ({...obj, [p.id]: true}), {});
     const info = {
       game: this.selectedGame,
@@ -298,7 +344,7 @@ class Lobby {
       players: this.players.map(p => ({
         id: p.id,
         playerId: p.playerId,
-        connected: !!p.member,
+        connected: p.connected && !!p.member,
         name: p.member ? p.member.name : p.name,
       })),
       spectators: this.members.filter(m => !isPlayer[m.id]).map(m => ({
@@ -306,6 +352,12 @@ class Lobby {
         name: m.name,
       })),
     };
+
+    return info;
+  }
+
+  sendLobbyInfo() {
+    const info = this.genLobbyInfo();
 
     this.emitAll('lobby:info', info);
   }

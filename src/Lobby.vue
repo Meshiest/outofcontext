@@ -70,7 +70,6 @@
     <ooc-menu v-else-if="state === 'LOBBY_WAITING'"
       :title="currGame ? currGame.title : 'No Game Selected'"
       :subtitle="currGame ? currGame.subtitle : 'Waiting for a game to be selected'">
-      <!-- <pre>{{JSON.stringify(lobbyInfo, 0, 2)}}</pre> -->
       <div>
         <div v-if="currGame">
           <sui-divider horizontal>
@@ -111,7 +110,7 @@
               </sui-dropdown>
             </sui-form-field>
             <div v-if="currGame">
-              <sui-form-field v-for="(opt, name) in currGame.config" v-if="!opt.hidden">
+              <sui-form-field v-for="(opt, name) in currGame.config" v-if="!opt.hidden" :key="name">
                 <label>{{opt.name}}</label>
                 <div v-if="opt.type === 'int'" style="display: flex">
                   <sui-input
@@ -128,6 +127,12 @@
                     style="margin-left: 8px"
                     icon="users"/>
                 </div>
+                <sui-dropdown v-else-if="opt.type === 'bool'"
+                  :value="deriveConfigValue(name)"
+                  :options="[{text: 'Enabled', value: 'true'}, {text: 'Disabled', value: 'false'}]"
+                  @input="val => updateConfig(name, val)"
+                  selection>
+                </sui-dropdown>
                 <sui-dropdown v-else-if="opt.type === 'list'"
                   :value="deriveConfigValue(name)"
                   :options="opt.options.map(o => ({text: o.text, value: o.name}))"
@@ -139,8 +144,8 @@
                 <sui-button
                   type="button"
                   :disabled="lobbyInfo.players.length < currGame.config.players.min"
+                  @click="$socket.emit('game:start')"
                   primary>
-                  <!-- TODO: actually start the game -->
                   Start Game
                 </sui-button>
               </div>
@@ -155,6 +160,7 @@
             <div style="display: flex; flex-flow: row wrap; align-items: center; justify-content: center;">
               <div v-for="(opt, name) in currGame.config"
                 v-if="!opt.hidden"
+                :key="name"
                 style="margin: 8px;">
                 <sui-statistic>
                   <sui-statistic-value>
@@ -169,99 +175,26 @@
           </sui-card>
         </div>
       </div>
-      <div>
-        <sui-divider horizontal>
-          Lobby Members
-        </sui-divider>
-        <sui-table basic class="player-table">
-          <thead>
-            <tr>
-              <th>Players</th>
-            </tr>
-          </thead>
-          <tbody>
-            <sui-table-row v-for="p in lobbyInfo.players"
-              :negative="!p.connected"
-              :positive="$root.playerId === p.id">
-              <td>
-                {{p.name}}
-                <span class="user-icons">
-                  <sui-icon
-                    v-if="lobbyInfo.admin === p.id"
-                    color="grey"
-                    name="shield"/>
-                  <sui-icon
-                    v-if="$root.playerId === p.id"
-                    color="grey"
-                    name="user"/>
-                  <sui-icon
-                    v-if="!p.connected"
-                    color="grey"
-                    name="times"/>
-                </span>
-              </td>
-            </sui-table-row>
-            <tr v-if="!lobbyInfo.players.length">
-              <td>
-                <i>No Players</i>
-              </td>
-            </tr>
-          </tbody>
-        </sui-table>
-        <sui-table basic class="player-table">
-          <thead>
-            <tr>
-              <th>Spectators</th>
-            </tr>
-          </thead>
-          <tbody>
-            <sui-table-row v-for="p in lobbyInfo.spectators"
-              :positive="$root.playerId === p.id">
-              <td v-if="p.name">
-                {{p.name}}
-                <span class="user-icons">
-                  <sui-icon
-                    v-if="$root.playerId === p.id"
-                    color="grey"
-                    name="user"/>
-                </span>
-              </td>
-              <td v-else>
-                <i>Pending</i>
-              </td>
-            </sui-table-row>
-            <tr v-if="!lobbyInfo.spectators.length">
-              <td>
-                <i>No Spectators</i>
-              </td>
-            </tr>
-          </tbody>
-        </sui-table>
-        <div>
-          <sui-button v-if="lobbyInfo.players.find(p => p.id === $root.playerId)"
-            basic
-            @click="$socket.emit('lobby:spectate')">
-            Spectate
-          </sui-button>
-          <div v-else-if="(!lobbyInfo.config.players ||
-            lobbyInfo.players.length < lobbyInfo.config.players ||
-            !currGame) &&
-            lobbyInfo.spectators.find(p => p.id === $root.playerId) ||
-            lobbyInfo.players.length === 0 && lobbyInfo.spectators.length === 0" basic>
-            <sui-button
-              basic
-              @click="$socket.emit('lobby:spectate')">
-              Join Players
-            </sui-button>
-            <router-link
-              basic
-              is="sui-button"
-              to="/">
-              Leave
-            </router-link>
-          </div>
-        </div>
-      </div>
+      <ooc-player-list
+        :admin="lobbyInfo.admin"
+        :players="lobbyInfo.players"
+        :spectators="lobbyInfo.spectators"
+        :isSpectator="isSpectator"
+        :canJoinPlayers="canJoinPlayers">
+      </ooc-player-list>
+    </ooc-menu>
+    <ooc-menu v-else-if="state === 'PLAYING'"
+      :title="currGame.title"
+      :subtitle="currGame.subtitle">
+      <ooc-game :game="lobbyInfo.game">
+      </ooc-game>
+      <ooc-player-list
+        :admin="lobbyInfo.admin"
+        :players="lobbyInfo.players"
+        :spectators="lobbyInfo.spectators"
+        :isSpectator="isSpectator"
+        :canJoinPlayers="canJoinPlayers">
+      </ooc-player-list>
     </ooc-menu>
     <sui-dimmer :active="loading">
       <sui-loader />
@@ -306,10 +239,6 @@
   right: 0 !important;
 }
 
-.user-icons {
-  float: right;
-}
-
 </style>
 
 <script>
@@ -344,6 +273,29 @@ export default {
     };
   },
   computed:  {
+    isSpectator() {
+      return this.lobbyInfo.spectators.find(p => p.id === this.$root.playerId);
+    },
+    canJoinPlayers() {
+      const confPlayers = this.lobbyInfo.config.players;
+      const currGame = gameInfo[this.lobbyInfo.game];
+      const maxPlayers = Math.min(currGame ? currGame.config.players.max : 0, confPlayers);
+      const playerCount = this.lobbyInfo.players.length;
+      const isSpectator = this.lobbyInfo.spectators.find(p => p.id === this.$root.playerId);
+
+      // There is an available place for this player
+      const openSpot = (!maxPlayers || playerCount < maxPlayers);
+
+      const notMaxPlayers = (
+        // The amount of players is flexible
+        !confPlayers || confPlayers === '#numPlayers' ||
+
+        // There are no players
+        playerCount === 0
+      ) && openSpot;
+
+      return notMaxPlayers || !currGame;
+    },
     currGame() {
       return gameInfo[this.lobbyInfo.game];
     }
@@ -352,7 +304,7 @@ export default {
     configVal(name) {
       const confVal = this.lobbyInfo.config[name];
       const defVal = gameInfo[this.lobbyInfo.game].config[name].defaults;
-      return confVal || defVal;
+      return typeof confVal !== 'undefined' ? confVal : defVal;
     },
     deriveConfigText(name) {
       const val = this.configVal(name);
@@ -361,6 +313,8 @@ export default {
       switch(conf.type) {
       case 'int':      
         return this.deriveConfigValue(name);
+      case 'bool':
+        return val === 'true' ? 'Yes' : 'No';
       case 'list':
         const entry = conf.options.find(v => v.name === val);
         return entry ? entry.text : '???';
@@ -378,6 +332,8 @@ export default {
         default:
           return val;
         }
+      case 'bool':
+        return val;
       case 'list':
         return val
       }
@@ -409,9 +365,10 @@ export default {
       fetch(`/api/v1/lobby/${lobbyCode}`)
         .then(resp => {
           if(resp.status === 200) {
-            this.state = 'JOIN_LOBBY';
-            this.validLobby = true;
+            if(this.state === 'NO_LOBBY')
+              this.state = 'JOIN_LOBBY';
             this.$socket.emit('lobby:join', lobbyCode);
+            this.validLobby = true;
           } else {
             this.state = 'NO_LOBBY';
             this.validLobby = false;
@@ -432,7 +389,7 @@ export default {
         this.validName = false;
       } else {
         this.validLobby = true;
-        this.state = 'LOBBY_WAITING';
+        this.state = this.lobbyInfo && this.lobbyInfo.state === 'PLAYING' ? 'PLAYING' : 'LOBBY_WAITING';
       }
     },
     'lobby:join': function(code) {
@@ -451,6 +408,16 @@ export default {
     },
     'lobby:info': function(info) {
       this.changeGame = false;
+      // TODO - don't do this with spectators yet or implement spectators in game on server
+
+      // Start playing if the lobby is playing
+      if(info.state === 'PLAYING' && this.state === 'LOBBY_WAITING')
+        this.state = 'PLAYING';
+
+      // If the lobby says we're not playing, we're probably not playing
+      if(this.state === 'PLAYING' && info.state === 'WAITING')
+        this.state = 'LOBBY_WAITING';
+
       this.lobbyInfo = info;
     },
     disconnect(code) {

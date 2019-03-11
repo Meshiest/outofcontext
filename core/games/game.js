@@ -5,12 +5,27 @@ module.exports = class Game {
     this.players = players;
   }
 
-  handleMessage(type, data) {}
+  // Emit a message to a specific player
+  emitTo(pid, ...msg) {
+    this.lobby.emitPlayer(pid, ...msg);
+  }
+
+  // Message all players
+  emit(...msg) {
+    this.lobby.emitPlayers(...msg);
+  }
+
+  sendGameInfo() {
+    this.emit('game:info', this.getState());
+    for(const player of this.players) {
+      this.emitTo(player, 'game:player:info', this.getPlayerState(player));
+    }
+  }
+
+  handleMessage(pid, type, data) {}
   start() {}
   stop() {}
   cleanup() {}
-
-  getState() {
-    return {};
-  }
+  getPlayerState(pid) { return { state: '' }; }
+  getState() { return { icons: {} }; }
 };
