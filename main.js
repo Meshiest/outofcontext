@@ -27,6 +27,10 @@ function removePlayerFromLobby(player) {
   lobby.removeMember(player);
   player.lobby = undefined;
   if(lobby.empty()) {
+    if(lobby.game) {
+      lobby.game.stop();
+      lobby.game.cleanup();
+    }
     Lobby.lobbies[lobby.code] = false;
   }
 }
@@ -80,9 +84,15 @@ io.on('connection', socket => {
     }
   });
 
-  socket.on('lobby:game:spectate', () => {
-    if(player.lobby)
+  socket.on('lobby:spectate', () => {
+    if(player.lobby) {
       player.lobby.toggleSpectate(player);
+    }
+  });
+
+  socket.on('lobby:game:msg', (type, data) => {
+    if(player.lobby)
+      player.lobby.gameMessage(type, data);
   });
 
   socket.on('lobby:game:config', (name, val) => {

@@ -3,7 +3,7 @@ const _ = require('lodash');
 class Member {
   constructor(socket) {
     this.socket = socket;
-    this.id = _.uniqueId('player');
+    this.id = _.uniqueId('member');
     this.lobby = undefined;
     this.name = '';
     this.color = 0;

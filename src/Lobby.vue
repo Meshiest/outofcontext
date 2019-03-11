@@ -111,21 +111,16 @@
               </sui-dropdown>
             </sui-form-field>
             <div v-if="currGame">
-              <sui-form-field v-for="(opt, name) in currGame.config">
+              <sui-form-field v-for="(opt, name) in currGame.config" v-if="!opt.hidden">
                 <label>{{opt.name}}</label>
-                <div style="display: flex">
+                <div v-if="opt.type === 'int'" style="display: flex">
                   <sui-input
-                    v-if="opt.type === 'int'"
                     type="number"
-                    required
                     @input="val => updateConfig(name, val)"
                     :value="deriveConfigValue(name)"
                     :min="opt.min"
                     :max="opt.max || 256"
                     autocomplete="off"/>
-                  <pre v-else>
-                    {{name}}: {{JSON.stringify(opt, 0, 2)}}
-                  </pre>
                   <sui-button v-if="opt.defaults === '#numPlayers'"
                     type="button"
                     :primary="configVal(name) === '#numPlayers'"
@@ -133,6 +128,12 @@
                     style="margin-left: 8px"
                     icon="users"/>
                 </div>
+                <sui-dropdown v-else-if="opt.type === 'list'"
+                  :value="deriveConfigValue(name)"
+                  :options="opt.options.map(o => ({text: o.text, value: o.name}))"
+                  @input="val => updateConfig(name, val)"
+                  selection>
+                </sui-dropdown>
               </sui-form-field>
               <div style="margin: 1em 0; text-align: center">
                 <sui-button
@@ -152,10 +153,12 @@
           </sui-divider>
           <sui-card>
             <div style="display: flex; flex-flow: row wrap; align-items: center; justify-content: center;">
-              <div v-for="(opt, name) in currGame.config" style="margin: 8px;">
+              <div v-for="(opt, name) in currGame.config"
+                v-if="!opt.hidden"
+                style="margin: 8px;">
                 <sui-statistic>
                   <sui-statistic-value>
-                    {{deriveConfigValue(name)}}
+                    {{deriveConfigText(name)}}
                   </sui-statistic-value>
                   <sui-statistic-label>
                     {{opt.text}}
@@ -177,16 +180,27 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="p in lobbyInfo.players">
-              <td :negative="!p.connected">
+            <sui-table-row v-for="p in lobbyInfo.players"
+              :negative="!p.connected"
+              :positive="$root.playerId === p.id">
+              <td>
                 {{p.name}}
-                <sui-icon
-                  v-if="lobbyInfo.admin === p.id"
-                  color="grey"
-                  name="shield">
-                </sui-icon>
+                <span class="user-icons">
+                  <sui-icon
+                    v-if="lobbyInfo.admin === p.id"
+                    color="grey"
+                    name="shield"/>
+                  <sui-icon
+                    v-if="$root.playerId === p.id"
+                    color="grey"
+                    name="user"/>
+                  <sui-icon
+                    v-if="!p.connected"
+                    color="grey"
+                    name="times"/>
+                </span>
               </td>
-            </tr>
+            </sui-table-row>
             <tr v-if="!lobbyInfo.players.length">
               <td>
                 <i>No Players</i>
@@ -201,14 +215,21 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="p in lobbyInfo.spectators">
+            <sui-table-row v-for="p in lobbyInfo.spectators"
+              :positive="$root.playerId === p.id">
               <td v-if="p.name">
                 {{p.name}}
+                <span class="user-icons">
+                  <sui-icon
+                    v-if="$root.playerId === p.id"
+                    color="grey"
+                    name="user"/>
+                </span>
               </td>
               <td v-else>
                 <i>Pending</i>
               </td>
-            </tr>
+            </sui-table-row>
             <tr v-if="!lobbyInfo.spectators.length">
               <td>
                 <i>No Spectators</i>
@@ -216,6 +237,30 @@
             </tr>
           </tbody>
         </sui-table>
+        <div>
+          <sui-button v-if="lobbyInfo.players.find(p => p.id === $root.playerId)"
+            basic
+            @click="$socket.emit('lobby:spectate')">
+            Spectate
+          </sui-button>
+          <div v-else-if="(!lobbyInfo.config.players ||
+            lobbyInfo.players.length < lobbyInfo.config.players ||
+            !currGame) &&
+            lobbyInfo.spectators.find(p => p.id === $root.playerId) ||
+            lobbyInfo.players.length === 0 && lobbyInfo.spectators.length === 0" basic>
+            <sui-button
+              basic
+              @click="$socket.emit('lobby:spectate')">
+              Join Players
+            </sui-button>
+            <router-link
+              basic
+              is="sui-button"
+              to="/">
+              Leave
+            </router-link>
+          </div>
+        </div>
       </div>
     </ooc-menu>
     <sui-dimmer :active="loading">
@@ -259,6 +304,10 @@
 
 .lobby-code.right {
   right: 0 !important;
+}
+
+.user-icons {
+  float: right;
 }
 
 </style>
@@ -305,15 +354,32 @@ export default {
       const defVal = gameInfo[this.lobbyInfo.game].config[name].defaults;
       return confVal || defVal;
     },
+    deriveConfigText(name) {
+      const val = this.configVal(name);
+      const conf = gameInfo[this.lobbyInfo.game].config[name];
+
+      switch(conf.type) {
+      case 'int':      
+        return this.deriveConfigValue(name);
+      case 'list':
+        const entry = conf.options.find(v => v.name === val);
+        return entry ? entry.text : '???';
+      }
+    },
     deriveConfigValue(name) {
       const val = this.configVal(name);
       const conf = gameInfo[this.lobbyInfo.game].config[name];
 
-      switch(val) {
-      case '#numPlayers':
-        return Math.max(Math.min(this.lobbyInfo.players.length, conf.max), conf.min);
-      default:
-        return val;
+      switch(conf.type) {
+      case 'int':      
+        switch(val) {
+        case '#numPlayers':
+          return Math.max(Math.min(this.lobbyInfo.players.length, conf.max), conf.min);
+        default:
+          return val;
+        }
+      case 'list':
+        return val
       }
     },
     updateConfig(name, val) {

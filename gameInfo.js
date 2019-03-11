@@ -12,7 +12,7 @@ module.exports = {
         name: 'Max Players',
         text: 'Players',
         type: 'int',
-        min: 3,
+        min: 2,
         max: 256,
         defaults: '#numPlayers',
       },
@@ -71,27 +71,27 @@ module.exports = {
           value: 0,
         }, {
           name: 'sec5',
-          text: '5 seconds',
+          text: '5 sec',
           value: 5,
         }, {
           name: 'sec15',
-          text: '15 seconds',
+          text: '15 sec',
           value: 15,
         }, {
           name: 'sec30',
-          text: '30 seconds',
+          text: '30 sec',
           value: 30,
         }, {
           name: 'min1',
-          text: '1 minute',
+          text: '1 min',
           value: 60,
         }, {
           name: 'min2',
-          text: '2 minutes',
+          text: '2 min',
           value: 120,
         }, {
           name: 'min5',
-          text: '5 minutes',
+          text: '5 min',
           value: 300,
         }],
       },
@@ -143,11 +143,11 @@ module.exports = {
       },
       locationSet: {
         name: 'Location Set',
-        text: 'Location',
+        text: 'Locations',
         type: 'list',
         options: [{
           name: 'campus',
-          text: 'Campus Life',
+          text: 'Campus',
           value: [
             'Atrium',
             'Basketball Gym',
