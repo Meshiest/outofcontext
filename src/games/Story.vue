@@ -45,12 +45,15 @@
             <sui-comment-group>
               <sui-comment v-for="(entry, j) in story" :key="j">
                 <sui-comment-content>
-                  <sui-comment-author v-if="nameTable[entry.editor]">
-                    {{nameTable[entry.editor]}}
-                  </sui-comment-author>
                   <sui-comment-text>
-                    <p>{{entry.line}}</p>
+                    <p style="font-family: 'Lora', serif;">
+                      {{entry.line}}
+                    </p>
                   </sui-comment-text>
+                  <sui-comment-author v-if="nameTable[entry.editor]"
+                    style="text-align: right;">
+                    &mdash;{{nameTable[entry.editor]}}
+                  </sui-comment-author>
                 </sui-comment-content>
               </sui-comment>
             </sui-comment-group>
