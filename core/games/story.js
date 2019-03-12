@@ -89,7 +89,6 @@ module.exports = class Story extends Game {
 
   // Find stories for those who are not working on one
   redistribute() {
-    console.log('distributing');
     const hasStory = this.stories.filter(s => s.editor).reduce((obj, i) => ({...obj, [i.editor]: true}), {});
 
     // find players not editing stories
@@ -99,7 +98,6 @@ module.exports = class Story extends Game {
       const story = this.findStoryForPlayer(player);
       if(!story)
         break;
-      console.log(player, 'is editing a story');
       story.editor = player;
     }
 
@@ -126,7 +124,6 @@ module.exports = class Story extends Game {
 
       this.lastWrite[pid] = Date.now();
       story.addLine(pid, line);
-      console.log(pid, 'added a line');
 
       this.redistribute();
 
@@ -169,7 +166,14 @@ module.exports = class Story extends Game {
     const progress = this.getGameProgress();
     return {
       // players who are writing have pencil icons, players who are not have a clock icon
-      icons: this.players.reduce((obj, p) => ({...obj, [p]: hasStory[p] ? 'pencil' : 'clock'}), {}),
+      icons: this.players.reduce((obj, p) => ({
+        ...obj,
+        [p]: progress === 1 ?
+          'check' :
+          hasStory[p] ?
+            'pencil' :
+            'clock'
+      }), {}),
       progress,
       stories: progress === 1 ? this.compileStories() : [],
     };

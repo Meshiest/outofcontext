@@ -122,6 +122,12 @@ io.on('connection', socket => {
     }
   });
 
+  socket.on('game:end', game => {
+    if(player.isAdmin()) {
+      player.lobby.endGame();
+    }
+  });
+
   // Toggle whether this member is a spectator
   socket.on('lobby:spectate', () => {
     if(player.lobby) {

@@ -58,6 +58,20 @@ class Lobby {
     }
   }
 
+  endGame() {
+    if(!this.selectedGame) return;
+    if(this.lobbyState !== 'PLAYING') return;
+
+    this.game.stop();
+    this.game.cleanup();
+
+    this.game = undefined;
+    this.lobbyState = 'WAITING';
+
+    this.updateMembers();
+    this.sendLobbyInfo();
+  }
+
   // Change which game this lobby is playing
   setGame(game) {
     if(this.lobbyState !== 'WAITING') return;

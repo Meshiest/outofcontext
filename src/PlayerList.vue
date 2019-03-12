@@ -98,6 +98,12 @@
           Leave
         </router-link>
       </div>
+      <sui-button :basic="!confirmEndGame"
+        color="red"
+        @click="tryEndGame"
+        v-if="$root.playerId === admin && lobbyState === 'PLAYING'">
+        {{confirmEndGame ? 'Are You Sure?' : 'End Game'}}
+      </sui-button>
     </div>
   </div>
 </template>
@@ -129,6 +135,30 @@ td {
 
 <script>
 export default {
-  props: ['players', 'admin', 'spectators', 'isSpectator', 'canJoinPlayers', 'gameState'],
+  props: [
+    'players', 'admin', 'spectators',
+    'isSpectator', 'canJoinPlayers',
+    'lobbyState', 'gameState',
+  ],
+  methods: {
+    tryEndGame() {
+      clearTimeout(this.confirmTimeout);
+      if(this.confirmEndGame) {
+        this.confirmEndGame = false;
+        this.$socket.emit('game:end');
+      } else {
+        this.confirmEndGame = true;
+        this.confirmTimeout = setTimeout(() => this.confirmEndGame = false, 1000);
+      }
+    },
+  },
+  created() {
+  },
+  data() {
+    return {
+      confirmTimeout: undefined,
+      confirmEndGame: false,
+    };
+  },
 };
 </script>

@@ -181,6 +181,7 @@
         :spectators="lobbyInfo.spectators"
         :isSpectator="isSpectator"
         :gameState="gameState"
+        :lobbyState="state"
         :canJoinPlayers="canJoinPlayers">
       </ooc-player-list>
     </ooc-menu>
@@ -194,6 +195,7 @@
         :players="lobbyInfo.players"
         :spectators="lobbyInfo.spectators"
         :isSpectator="isSpectator"
+        :lobbyState="state"
         :gameState="gameState"
         :canJoinPlayers="canJoinPlayers">
       </ooc-player-list>

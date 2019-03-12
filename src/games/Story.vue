@@ -39,9 +39,24 @@
       <sui-divider horizontal>
         Stories
       </sui-divider>
-      <pre>
-        {{JSON.stringify(game.stories, 0, 2)}}
-      </pre>
+      <div style="text-align: left">
+        <sui-card v-for="story in game.stories">
+          <sui-card-content>
+            <sui-comment-group>
+              <sui-comment v-for="entry in story">
+                <sui-comment-content>
+                  <sui-comment-author v-if="nameTable[entry.editor]">
+                    {{nameTable[entry.editor]}}
+                  </sui-comment-author>
+                  <sui-comment-text>
+                    <p>{{entry.line}}</p>
+                  </sui-comment-text>
+                </sui-comment-content>
+              </sui-comment>
+            </sui-comment-group>
+          </sui-card-content>
+        </sui-card>
+      </div>
     </div>
     <div v-else style="margin: 16px">
       <sui-loader active centered inline size="huge">
@@ -53,7 +68,7 @@
       state="active"
       progress
       indicating
-      :percent="(game.progress || 0) * 100"/>
+      :percent="Math.round((game.progress || 0) * 100)"/>
   </div>
 </template>
 
@@ -63,6 +78,9 @@
 <script>
 export default {
   sockets: {
+    'lobby:info': function(info) {
+      this.lobby = info;
+    },
     'game:info': function(info) {
       this.game = info;
     },
@@ -75,6 +93,11 @@ export default {
   created() {
     this.$socket.emit('game:info');
     this.$socket.emit('lobby:info');
+  },
+  computed: {
+    nameTable() {
+      return this.lobby.players.reduce((obj, p) => ({...obj, [p.playerId]: p.name}), {});
+    }
   },
   methods: {
     writeLine(event) {
@@ -92,6 +115,14 @@ export default {
       line: '',
       player: { state: '' },
       game: { icons: {} },
+      lobby: ({
+        admin: '',
+        players: [],
+        members: [],
+        spectators: [],
+        game: '',
+        config: {},
+      }),
     };
   },
 };
