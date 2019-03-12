@@ -200,7 +200,7 @@
         :canJoinPlayers="canJoinPlayers">
       </ooc-player-list>
     </ooc-menu>
-    <sui-dimmer :active="loading">
+    <sui-dimmer :active="loading || state === 'LOADING'">
       <sui-loader />
     </sui-dimmer>
     <sui-label
@@ -370,7 +370,7 @@ export default {
       fetch(`/api/v1/lobby/${lobbyCode}`)
         .then(resp => {
           if(resp.status === 200) {
-            if(this.state === 'NO_LOBBY')
+            if(this.state === 'NO_LOBBY' || this.state === 'LOADING')
               this.state = 'JOIN_LOBBY';
             this.$socket.emit('lobby:join', lobbyCode);
             this.validLobby = true;
@@ -438,8 +438,9 @@ export default {
     },
     connect() {
       const lobbyCode = this.$route.params.code;
-      if(this.loading)
+      if(this.loading) {
         return;
+      }
       if(!lobbyCode || lobbyCode.length !== 4) {
         this.loading = false;
         this.state = 'NO_LOBBY';
