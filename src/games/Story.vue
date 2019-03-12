@@ -60,6 +60,13 @@
           </sui-card-content>
         </sui-card>
       </div>
+      <sui-button v-if="player.state === 'READING'"
+        style="margin-top: 16px"
+        @click="$socket.emit('game:message', 'story:done', game.icons[player.id] !== 'check')"
+        primary
+        :basic="game.icons[player.id] === 'check'" >
+        {{game.icons[player.id] === 'check' ? 'Still Reading' : 'Done Reading'}}
+      </sui-button>
     </div>
     <div v-else style="margin: 16px">
       <sui-loader active centered inline size="huge">
@@ -116,7 +123,7 @@ export default {
   data() {
     return {
       line: '',
-      player: { state: '' },
+      player: { state: '', id: '', },
       game: { icons: {} },
       lobby: ({
         admin: '',

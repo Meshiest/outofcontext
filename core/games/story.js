@@ -42,6 +42,8 @@ module.exports = class Story extends Game {
     this.lastWrite = {};
     for(const p of players)
       this.lastWrite[p] = 0;
+
+    this.finishedReading = {};
   }
 
 
@@ -128,6 +130,11 @@ module.exports = class Story extends Game {
       this.redistribute();
 
       break;
+
+    case 'story:done':
+      this.finishedReading[pid] = data === true;
+      this.sendGameInfo();
+      break;
     }
   }
 
@@ -143,10 +150,12 @@ module.exports = class Story extends Game {
     const done = this.getGameProgress() === 1;
 
     return story ? {
+      id: pid,
       state: 'EDITING',
       isLastLine: story.story.length === this.config.numLines - 1,
       line: story.story.slice(-1)[0],
     } : {
+      id: pid,
       state: done ? 'READING' : 'WAITING',
     };
   }
@@ -169,10 +178,12 @@ module.exports = class Story extends Game {
       icons: this.players.reduce((obj, p) => ({
         ...obj,
         [p]: progress === 1 ?
-          'check' :
-          hasStory[p] ?
+          (this.finishedReading[p] ?
+            'check' :
+            'clock') :
+          (hasStory[p] ?
             'pencil' :
-            'clock'
+            'clock')
       }), {}),
       progress,
       stories: progress === 1 ? this.compileStories() : [],

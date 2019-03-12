@@ -26,6 +26,6 @@ module.exports = class Game {
   start() {}
   stop() {}
   cleanup() {}
-  getPlayerState(pid) { return { state: '' }; }
+  getPlayerState(pid) { return { state: '', id: pid }; }
   getState() { return { icons: {} }; }
 };
