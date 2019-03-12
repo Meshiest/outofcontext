@@ -4,8 +4,7 @@ import Story from './Story.vue';
 export default {
   props: ['game'],
   render(h) {
-    console.log('starting render of', this.game);
-    h({
+    return h({
       'story': Story,
     }[this.game]);
   }

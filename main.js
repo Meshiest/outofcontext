@@ -76,7 +76,7 @@ io.on('connection', socket => {
   // Allow players to request current lobby info
   socket.on('lobby:info', () => {
     if(player.lobby) {
-      player.socket.emit('lobby:info', player.lobby.getLobbyInfo());
+      player.socket.emit('lobby:info', player.lobby.genLobbyInfo());
     }
   });
 
@@ -132,7 +132,7 @@ io.on('connection', socket => {
   });
 
   // Core gameplay messages
-  socket.on('lobby:game:msg', (type, data) => {
+  socket.on('game:message', (type, data) => {
     if(player.lobby) {
       player.lobby.gameMessage(player.id, type, data);
     } else {

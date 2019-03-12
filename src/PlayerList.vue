@@ -23,7 +23,7 @@
                 basic>
                 Join
               </sui-button>
-              <sui-icon
+               <sui-icon
                 v-if="admin === p.id"
                 color="grey"
                 name="shield"/>
@@ -31,6 +31,10 @@
                 v-if="$root.playerId === p.id"
                 color="grey"
                 name="user"/>
+              <sui-icon
+                v-if="gameState.icons[p.playerId]"
+                color="grey"
+                :name="gameState.icons[p.playerId]"/>
               <sui-icon
                 v-if="!p.connected"
                 color="grey"
@@ -125,6 +129,6 @@ td {
 
 <script>
 export default {
-  props: ['players', 'admin', 'spectators', 'isSpectator', 'canJoinPlayers'],
+  props: ['players', 'admin', 'spectators', 'isSpectator', 'canJoinPlayers', 'gameState'],
 };
 </script>

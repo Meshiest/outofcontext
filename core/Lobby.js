@@ -30,7 +30,15 @@ class Lobby {
     }
 
     let game;
-    const args = [this, this.gameConfig, this.players.map(p => p.playerId)];
+    const numPlayers = this.players.length;
+
+    // cap players
+    this.gameConfig.players = numPlayers;
+
+    // parse config values
+    const newConfig = this.configVals();
+
+    const args = [this, newConfig, this.players.map(p => p.playerId)];
 
     switch(this.selectedGame) {
       case 'story':
@@ -43,7 +51,6 @@ class Lobby {
 
     if(game) {
       this.game = game;
-      this.gameConfig.players = this.players.length;
       this.lobbyState = 'PLAYING';
       this.updateMembers();
       this.sendLobbyInfo();
@@ -120,6 +127,35 @@ class Lobby {
 
     this.updateMembers();
     this.sendLobbyInfo();
+  }
+
+  configVals() {
+    const conf = {};
+    const numPlayers = this.players.length;
+
+    for(const name in this.gameConfig) {
+      const info = gameInfo[this.selectedGame].config[name];
+      const rawVal = this.gameConfig[name];
+      let val;
+      switch(info.type) {
+      case 'int':
+        if(rawVal === '#numPlayers')
+          val = numPlayers;
+        else
+          val = rawVal;
+        break;
+      case 'bool':
+        val = rawVal === 'true';
+        break;
+      case 'list':
+        val = info.options.find(o => o.name === rawVal).value;
+        break;
+      }
+
+      conf[name] = val;
+    }
+
+    return conf;
   }
 
   addMember(member) {
@@ -223,14 +259,23 @@ class Lobby {
       targetPlayer.member = member;
       targetPlayer.connected = true;
 
+
       this.updateMembers();
       this.sendLobbyInfo();
+
+      if(this.game && this.lobbyState === 'PLAYING') {
+        member.socket.emit('game:info', this.game.getState());
+        this.getPlayerState(id);
+      }
+    } else {
+      member.socket.emit('game:player:info', { state: '' });
     }
   }
 
   getPlayerState(id) {
-    if(!this.gameState === 'PLAYING')
+    if(this.lobbyState !== 'PLAYING') {
       return;
+    }
 
     const player = this.players.find(p => p.id === id);
     if(!player)
@@ -263,6 +308,7 @@ class Lobby {
       }
 
       this.spectators.push({id: player.id, name: player.name});
+      player.socket.emit('game:player:info', { state: '' });
     }
 
     this.updateMembers();

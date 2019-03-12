@@ -180,6 +180,7 @@
         :players="lobbyInfo.players"
         :spectators="lobbyInfo.spectators"
         :isSpectator="isSpectator"
+        :gameState="gameState"
         :canJoinPlayers="canJoinPlayers">
       </ooc-player-list>
     </ooc-menu>
@@ -193,6 +194,7 @@
         :players="lobbyInfo.players"
         :spectators="lobbyInfo.spectators"
         :isSpectator="isSpectator"
+        :gameState="gameState"
         :canJoinPlayers="canJoinPlayers">
       </ooc-player-list>
     </ooc-menu>
@@ -263,6 +265,7 @@ export default {
       creatingLobby: false,
       showJoinLobby: false,
       validLobby: false,
+      gameState: { icons: {} },
       loadingName: false,
       validName: true,
       changeGame: false,
@@ -406,9 +409,16 @@ export default {
       this.validLobby = false;
       this.state = 'NO_LOBBY';
     },
+    'game:info': function(state) {
+      this.gameState = state;
+    },
     'lobby:info': function(info) {
       this.changeGame = false;
-      // TODO - don't do this with spectators yet or implement spectators in game on server
+      // TODO implement spectators on server
+
+      // Remove gameState if we are not playing
+      if(info.state !== 'PLAYING')
+        this.gameState = { icons: {} };
 
       // Start playing if the lobby is playing
       if(info.state === 'PLAYING' && this.state === 'LOBBY_WAITING')
