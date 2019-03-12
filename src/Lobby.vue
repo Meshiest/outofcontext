@@ -31,7 +31,7 @@
             Home
           </router-link>
           <a is="sui-button"
-            href="https://github.com/meshiest/out-of-context/issues"
+            href="https://github.com/meshiest/outofcontext/issues"
             target="_blank"
             rel="noopener noreferrer">
             Bug Report
