@@ -137,6 +137,15 @@ io.on('connection', socket => {
     }
   });
 
+  // Let admins make players spectators
+  socket.on('lobby:admin:toggle', targetId => {
+    if(player.isAdmin && targetId !== player.id) {
+      const targetPlayer = player.lobby.players.find(p => p.id === targetId);
+      if(targetPlayer && targetPlayer.member)
+        player.lobby.toggleSpectate(targetPlayer.member);
+    }
+  });
+
   // Core gameplay messages
   socket.on('game:message', (type, data) => {
     if(player.lobby) {

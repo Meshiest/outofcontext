@@ -23,6 +23,13 @@
                 basic>
                 Join
               </sui-button>
+              <sui-button v-if="isAdmin && removeMode && p.id !== $root.playerId && p.connected"
+                size="tiny"
+                color="red"
+                @click="$socket.emit('lobby:admin:toggle', p.id)"
+                basic>
+                Remove
+              </sui-button>
                <sui-icon
                 v-if="admin === p.id"
                 color="grey"
@@ -48,6 +55,26 @@
           </td>
         </sui-table-row>
       </sui-table-body>
+      <sui-table-footer full-width v-if="isAdmin">
+        <sui-table-row negative>
+          <sui-table-header-cell verticalAlign="middle"
+            style="position: relative"
+            negative>
+            <div>
+              <sui-icon name="shield"/>
+              Admin
+            </div>
+            <span class="user-icons">
+              <sui-button :basic="!removeMode"
+                @click="removeMode = !removeMode"
+                color="red"
+                size="tiny">
+                Remove
+              </sui-button>
+            </span>
+          </sui-table-header-cell>
+        </sui-table-row>
+      </sui-table-footer>
     </sui-table>
     <sui-table basic class="player-table">
       <sui-table-header>
@@ -123,7 +150,7 @@ td {
   display: flex;
 }
 
-.user-icons button {
+.user-icons button:not(:last-child) {
   margin-right: 8px !important;
 }
 
@@ -152,12 +179,18 @@ export default {
       }
     },
   },
+  computed: {
+    isAdmin() {
+      return this.$root.playerId === this.admin;
+    },
+  },
   created() {
   },
   data() {
     return {
       confirmTimeout: undefined,
       confirmEndGame: false,
+      removeMode: false,
     };
   },
 };
