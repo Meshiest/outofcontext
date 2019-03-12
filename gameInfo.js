@@ -30,7 +30,7 @@ module.exports = {
         text: 'Lines',
         min: 2,
         max: 256,
-        defaults: '#numPlayers',
+        defaults: 10,
       },
       anonymous: {
         name: 'Hide Authors',

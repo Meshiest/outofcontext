@@ -97,7 +97,7 @@ module.exports = class Story extends Game {
     for(const player of players) {
       const story = this.findStoryForPlayer(player);
       if(!story)
-        break;
+        continue;
       story.editor = player;
     }
 

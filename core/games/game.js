@@ -16,7 +16,7 @@ module.exports = class Game {
   }
 
   sendGameInfo() {
-    this.emit('game:info', this.getState());
+    this.lobby.emitAll('game:info', this.getState());
     for(const player of this.players) {
       this.emitTo(player, 'game:player:info', this.getPlayerState(player));
     }
