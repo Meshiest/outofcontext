@@ -40,10 +40,10 @@
         Stories
       </sui-divider>
       <div style="text-align: left">
-        <sui-card v-for="story in game.stories">
+        <sui-card v-for="(story, i) in game.stories" :key="i">
           <sui-card-content>
             <sui-comment-group>
-              <sui-comment v-for="entry in story">
+              <sui-comment v-for="(entry, j) in story" :key="j">
                 <sui-comment-content>
                   <sui-comment-author v-if="nameTable[entry.editor]">
                     {{nameTable[entry.editor]}}
