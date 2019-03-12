@@ -25,7 +25,7 @@ module.exports = {
         defaults: '#numPlayers',
       },
       numLines: {
-        name: 'Line Count',
+        name: 'Lines per Story',
         type: 'int',
         text: 'Lines',
         min: 2,
