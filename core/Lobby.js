@@ -3,6 +3,7 @@ const gameInfo = require('../gameInfo');
 
 const Story = require('./games/story');
 const Assassin = require('./games/assassin');
+const Locations = require('./games/locations');
 
 class Lobby {
   constructor() {
@@ -50,6 +51,8 @@ class Lobby {
         game = new Assassin(...args);
         break;
       case 'locations':
+        game = new Locations(...args);
+        break;
     }
 
     if(game) {

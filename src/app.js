@@ -33,8 +33,10 @@ import JoinLobby from './JoinLobby.vue';
 import PlayerList from './PlayerList.vue';
 import Page from './Page.vue';
 import GameRenderer from './games/GameRenderer.vue';
+import Timer from './Timer.vue';
 
 Vue.component('ooc-util', Util);
+Vue.component('ooc-timer', Timer);
 Vue.component('ooc-menu', Menu);
 Vue.component('ooc-join-lobby', JoinLobby);
 Vue.component('ooc-player-list', PlayerList);

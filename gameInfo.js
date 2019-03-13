@@ -147,6 +147,14 @@ module.exports = {
         max: 10,
         defaults: '#numPlayers',
       },
+      duration: {
+        name: 'Game Duration (Minutes)',
+        text: 'Minutes',
+        type: 'int',
+        min: 1,
+        max: 30,
+        defaults: 10,
+      },
       locationSet: {
         name: 'Location Set',
         text: 'Locations',

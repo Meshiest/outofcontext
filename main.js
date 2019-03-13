@@ -30,6 +30,7 @@ function removePlayerFromLobby(player) {
     if(lobby.game) {
       lobby.game.stop();
       lobby.game.cleanup();
+      lobby.game = undefined;
     }
     Lobby.lobbies[lobby.code] = false;
   }
