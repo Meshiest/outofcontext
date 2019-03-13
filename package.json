@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx webpack",
     "watch": "npx webpack --watch",
-    "server": "node main.js"
+    "start": "node main.js"
   },
   "author": "Isaac Hirschfeld",
   "license": "ISC",
