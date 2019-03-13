@@ -121,7 +121,7 @@ module.exports = {
         max: 256,
         defaults: '#numPlayers',
       },
-      numRounds: {
+      numWords: {
         name: 'Word Count',
         text: 'Words',
         type: 'int',

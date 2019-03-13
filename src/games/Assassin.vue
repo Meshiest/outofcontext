@@ -1,0 +1,101 @@
+<template>
+  <div>
+    <div v-if="player.state === 'READING'"
+      style="margin: 16px 0">
+      <h2 is="sui-header" icon="crosshairs">
+        Target Dossier
+        <sui-header-subheader>
+          Screenshot this just in case
+        </sui-header-subheader>
+      </h2>
+      <h2 is="sui-header" style="font-family: monospace; margin-top: 0;">
+        Operation<br/>{{player.title}}
+      </h2>
+      <sui-card>
+        <sui-card-content>
+          <sui-card-header>Target</sui-card-header>
+          <sui-card-meta style="margin-bottom: 8px">
+            You must <b>wurder</b> this player
+          </sui-card-meta>
+          <sui-label size="huge" color="red">
+            {{nameTable[player.target]}}
+          </sui-label>
+        </sui-card-content>
+        <sui-card-content>
+          <sui-card-header>Weapons</sui-card-header>
+          <sui-card-meta style="margin-bottom: 8px">
+            Trick your target into <b>saying</b> one of these
+          </sui-card-meta>
+          <sui-label v-for="word in player.words" :key="word">
+            {{word}}
+          </sui-label>
+        </sui-card-content>
+      </sui-card>
+      <sui-button
+        @click="$socket.emit('game:message', 'assassin:done', true)"
+        primary>
+        Done
+      </sui-button>
+    </div>
+    <div v-else-if="player.state === 'DONE'"
+      style="margin: 16px">
+      <h2 is="sui-header" style="font-family: monospace; font-weight: normal">
+        You are now free to <b style="color: #800">Wurder</b> to your heart's content
+      </h2>
+      <sui-button style="margin-top: 16px"
+        @click="$socket.emit('game:message', 'assassin:done', false)"
+        primary basic>
+        Show Dossier
+      </sui-button>
+    </div>
+    <div v-else style="margin: 16px">
+      <sui-loader active centered inline size="huge">
+        Wurderers Collecting Intel
+      </sui-loader>
+    </div>
+  </div>
+</template>
+
+<style>
+</style>
+
+<script>
+export default {
+  sockets: {
+    'lobby:info': function(info) {
+      this.lobby = info;
+    },
+    'game:info': function(info) {
+      this.game = info;
+    },
+    'game:player:info': function(info) {
+      this.player = info;
+      if(info.state === 'WAITING')
+        this.line = '';
+    }
+  },
+  created() {
+    this.$socket.emit('lobby:info');
+    this.$socket.emit('game:info');
+  },
+  computed: {
+    nameTable() {
+      return this.lobby.players.reduce((obj, p) => ({...obj, [p.playerId]: p.name}), {});
+    }
+  },
+  data() {
+    return {
+      player: { state: '', id: '', },
+      game: { icons: {} },
+      lobby: ({
+        admin: '',
+        players: [],
+        members: [],
+        spectators: [],
+        game: '',
+        config: {},
+      }),
+    };
+  },
+};
+</script>

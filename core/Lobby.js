@@ -2,6 +2,7 @@ const _ = require('lodash');
 const gameInfo = require('../gameInfo');
 
 const Story = require('./games/story');
+const Assassin = require('./games/assassin');
 
 class Lobby {
   constructor() {
@@ -46,6 +47,8 @@ class Lobby {
         break;
       case 'draw':
       case 'assassin':
+        game = new Assassin(...args);
+        break;
       case 'locations':
     }
 
