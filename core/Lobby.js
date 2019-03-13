@@ -338,8 +338,15 @@ class Lobby {
       // Cull disconnected players
       for(let i = 0; i < this.players.length; i++) {
         const p = this.players[i];
+
         if(!p.connected) {
           this.players.splice(i--, 1);
+          continue;
+        }
+
+        // Move the admin to the in case this player gets culled
+        if(p.id === this.admin) {
+          this.players.splice(0, 0, ...this.players.splice(i, 1));
         }
       }
 
@@ -347,7 +354,7 @@ class Lobby {
       while(this.gameConfig.players > 0 && this.players.length > this.gameConfig.players) {
         const [{id}] = this.players.splice(-1, 1);
 
-        // Remove the admin if one of the removed players is the admin
+        // Remove the admin if one of the removed players is the admin somehow
         if(this.admin === id) {
           this.admin = '';
         }

@@ -146,6 +146,17 @@ io.on('connection', socket => {
     }
   });
 
+  // Change the admin
+  socket.on('lobby:admin:grant', targetId => {
+    if(player.isAdmin && targetId !== player.id) {
+      const targetPlayer = player.lobby.players.find(p => p.id === targetId);
+      if(targetPlayer && targetPlayer.member) {
+        player.lobby.admin = targetPlayer.id;
+        player.lobby.sendLobbyInfo();
+      }
+    }
+  });
+
   // Core gameplay messages
   socket.on('game:message', (type, data) => {
     if(player.lobby) {

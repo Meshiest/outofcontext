@@ -6,7 +6,23 @@
     <sui-table basic class="player-table">
       <sui-table-header>
         <sui-table-row>
-          <th>Players</th>
+          <th style="position: relative;">
+            Players
+            <span class="user-icons" v-if="isAdmin">
+              <sui-button :basic="!changeMode"
+                @click="changeMode = !changeMode; removeMode = false"
+                color="blue"
+                icon="shield"
+                size="tiny">
+              </sui-button>
+              <sui-button :basic="!removeMode"
+                @click="removeMode = !removeMode; changeMode = false"
+                color="red"
+                icon="times"
+                size="tiny">
+              </sui-button>
+            </span>
+          </th>
         </sui-table-row>
       </sui-table-header>
       <sui-table-body>
@@ -26,9 +42,16 @@
               <sui-button v-if="isAdmin && removeMode && p.id !== $root.playerId && p.connected"
                 size="tiny"
                 color="red"
-                @click="$socket.emit('lobby:admin:toggle', p.id)"
+                @click="$socket.emit('lobby:admin:toggle', p.id); removeMode = false"
                 basic>
                 Remove
+              </sui-button>
+              <sui-button v-if="isAdmin && changeMode && p.id !== $root.playerId && p.connected"
+                size="tiny"
+                color="blue"
+                @click="$socket.emit('lobby:admin:grant', p.id); changeMode = false"
+                basic>
+                Change
               </sui-button>
                <sui-icon
                 v-if="admin === p.id"
@@ -55,26 +78,6 @@
           </td>
         </sui-table-row>
       </sui-table-body>
-      <sui-table-footer full-width v-if="isAdmin">
-        <sui-table-row negative>
-          <sui-table-header-cell verticalAlign="middle"
-            style="position: relative"
-            negative>
-            <div>
-              <sui-icon name="shield"/>
-              Admin
-            </div>
-            <span class="user-icons">
-              <sui-button :basic="!removeMode"
-                @click="removeMode = !removeMode"
-                color="red"
-                size="tiny">
-                Remove
-              </sui-button>
-            </span>
-          </sui-table-header-cell>
-        </sui-table-row>
-      </sui-table-footer>
     </sui-table>
     <sui-table basic class="player-table">
       <sui-table-header>
@@ -191,6 +194,7 @@ export default {
       confirmTimeout: undefined,
       confirmEndGame: false,
       removeMode: false,
+      changeMode: false,
     };
   },
 };
