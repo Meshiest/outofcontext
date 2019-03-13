@@ -29,6 +29,14 @@ module.exports = {
         ],
       },
       {
+        test: /favicon\.ico$/,
+        loader: 'file-loader',
+        query: {
+          limit: 1,
+          name: '[name].[ext]',
+        },
+      },
+      {
         test: /\.(png|woff|woff2|eot|ttf|svg)$/,
         loader: 'url-loader?limit=100000',
       },
