@@ -33,7 +33,7 @@
             Screenshots
           </sui-button>
           <a is="sui-button"
-            href="https://github.com/meshiest/out-of-context"
+            href="https://github.com/meshiest/outofcontext"
             target="_blank"
             rel="noopener noreferrer">
             Read the Code
