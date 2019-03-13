@@ -1,5 +1,5 @@
 game:
-  build: ./backend
+  build: .
   restart: always
   command: "npm start"
   volumes:
