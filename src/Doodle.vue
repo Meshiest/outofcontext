@@ -1,0 +1,156 @@
+<template>
+  <div class="ooc-doodle">
+    <sui-card>
+      <sui-card-content class="container">
+        <canvas ref="canvas"></canvas>
+      </sui-card-content>
+      <sui-card-content class="gadgets" v-if="!readOnly">
+        <sui-button-group>
+          <sui-button :disabled="!paths.length"
+            icon="undo"
+            @click="pressUndo"
+            size="tiny"
+            compact/>
+        </sui-button-group>
+        <span style="flex: 1"></span>
+        <sui-button-group v-if="colors">
+          <sui-button :icon="color == 1 ? 'circle' : ' '"
+            @click="color = 1"
+            size="tiny"
+            compact
+            color="red"/>
+          <sui-button :icon="color == 2 ? 'circle' : ' '"
+            @click="color = 2"
+            size="tiny"
+            compact
+            color="yellow"/>
+          <sui-button :icon="color == 3 ? 'circle' : ' '"
+            @click="color = 3"
+            size="tiny"
+            compact
+            color="green"/>
+          <sui-button :icon="color == 4 ? 'circle' : ' '"
+            @click="color = 4"
+            size="tiny"
+            compact
+            color="blue"/>
+          <sui-button :icon="color == 0 ? 'circle' : ' '"
+            @click="color = 0"
+            size="tiny"
+            compact
+            color="black"/>
+        </sui-button-group>
+        <span style="flex: 1"></span>
+        <sui-button-group>
+          <sui-button primary
+            :disabled="!paths.length"
+            @click="pressDone"
+            icon="check"
+            size="tiny"
+            compact/>
+        </sui-button-group>
+      </sui-card-content>
+    </sui-card>
+  </div>
+</template>
+
+<style>
+
+.ooc-doodle {
+  margin: 0;
+}
+
+.ooc-doodle .container {
+  padding-bottom: 100% !important;
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+
+.ooc-doodle .gadgets {
+  display: flex;
+  padding: 8px !important;
+}
+
+.ooc-doodle canvas {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+</style>
+
+<script>
+
+import paper, { Path, Tool, PaperScope } from 'paper';
+
+export default {
+  props: ['read-only', 'image', 'colors'],
+  colors: ['black', 'red', 'yellow', 'green', 'blue'],
+  data() {
+    return {
+      color: 0,
+      width: 0,
+      height: 0,
+      paths: [],
+      paper: new PaperScope(),
+      tool: new Tool(),
+    };
+  },
+  methods: {
+    pressUndo() {
+      const [path, ] = this.paths.splice(-1, 1);
+      if(path)
+        path.remove();
+    },
+    pressDone() {
+      this.$emit('save', this.paths.map(p => p.exportJSON({asString: false})));
+    }
+  },
+  watch: {
+    image(newImage) {
+      // Select this scope
+      this.paper.activate();
+      // Remove old paths
+      this.paths.forEach(p => p.remove());
+      // import new image
+      this.paths = newImage.map(p => new Path().importJSON(JSON.stringify(p)));
+    }
+  },
+  mounted() {
+    const canvas = this.$refs.canvas;
+    this.paper.setup(canvas);
+
+    if(this.image && this.image.length) {
+      this.paper.activate();
+      this.paths = this.image.map(p => new Path().importJSON(JSON.stringify(p)));
+    }
+
+    if(this.readOnly) {
+      return;
+    }
+
+    this.paper.tools.push(this.tool);
+    this.paper.tool = this.tool;
+    let path;
+
+    this.tool.onMouseDown = ({ point }) => {
+      path = new Path({
+        segments: [point],
+        strokeColor: this.$options.colors[this.color],
+      });
+    };
+    this.tool.onMouseDrag = ({ point }) => {
+      path.add(point);
+    };
+
+    this.tool.onMouseUp = () => {
+      path.simplify(10);
+      this.paths.push(path);
+    };
+
+    this.tool.activate();
+  },
+};
+</script>

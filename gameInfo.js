@@ -24,7 +24,7 @@ module.exports = {
         max: 256,
         defaults: '#numPlayers',
       },
-      numLines: {
+      numLinks: {
         name: 'Lines per Story',
         type: 'int',
         text: 'Lines',
@@ -58,13 +58,19 @@ module.exports = {
         max: 256,
         defaults: '#numPlayers',
       },
-      numRounds: {
+      numLinks: {
         name: 'Round Count',
         text: 'Rounds',
         type: 'int',
-        min: 1,
+        min: 2,
         max: 256,
         defaults: '#numPlayers',
+      },
+      colors: {
+        name: 'Allow Colors',
+        type: 'bool',
+        text: 'Colors',
+        defaults: 'false',
       },
       timeLimit: {
         name: 'Time Limit',

@@ -35,6 +35,7 @@ import PlayerList from './PlayerList.vue';
 import Page from './Page.vue';
 import GameRenderer from './games/GameRenderer.vue';
 import Timer from './Timer.vue';
+import Doodle from './Doodle.vue';
 
 Vue.component('ooc-util', Util);
 Vue.component('ooc-timer', Timer);
@@ -43,6 +44,7 @@ Vue.component('ooc-join-lobby', JoinLobby);
 Vue.component('ooc-player-list', PlayerList);
 Vue.component('ooc-page', Page);
 Vue.component('ooc-game', GameRenderer);
+Vue.component('ooc-doodle', Doodle);
 
 new Vue({
   router,
