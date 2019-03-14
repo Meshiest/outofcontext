@@ -106,14 +106,19 @@ export default {
     },
     pressDone() {
       this.$emit('save', this.paths.map(p => p.exportJSON({asString: false})));
-    }
+      this.clear();
+    },
+    clear() {
+      this.paths.forEach(p => p.remove());
+      this.paths = [];
+    },
   },
   watch: {
     image(newImage) {
       // Select this scope
       this.paper.activate();
       // Remove old paths
-      this.paths.forEach(p => p.remove());
+      this.clear();
       // import new image
       this.paths = newImage.map(p => new Path().importJSON(JSON.stringify(p)));
     }
