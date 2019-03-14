@@ -26,9 +26,11 @@
           Info
         </sui-divider>
         <sui-button-group vertical basic>
-          <sui-button disabled>
-            Game Selection
-          </sui-button>
+          <router-link
+            is="sui-button"
+            to="/games">
+            Game Info
+          </router-link>
           <sui-button disabled>
             Screenshots
           </sui-button>
@@ -38,9 +40,6 @@
             rel="noopener noreferrer">
             Read the Code
           </a>
-          <sui-button disabled>
-            About
-          </sui-button>
         </sui-button-group>
       </div>
     </ooc-menu>

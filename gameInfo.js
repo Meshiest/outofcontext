@@ -6,11 +6,17 @@ module.exports = {
     more: 'Raconteur is inspired by improv-type games where players contribute to a story one sentence or one word at a time. ' +
       'The idea is to create unique stories from a train of thought going who knows where. Continuity is held only ' +
       'by the last line in the story, so writing with ambiguity allows for more interesting stories.',
+    howTo: [
+      'Every player will be given a line in a story',
+      'Players will continue the story, one line at a time',
+      'At the end, players can enjoy the crazy stories they wrote',
+    ],
     playTime: '10-15m',
     config: {
       players: {
         name: 'Max Players',
         text: 'Players',
+        info: 'Maximum allowed players in the game',
         type: 'int',
         min: 2,
         max: 256,
@@ -18,24 +24,27 @@ module.exports = {
       },
       numStories: {
         name: 'Story Count',
-        type: 'int',
         text: 'Stories',
+        info: 'The number of stories being written',
+        type: 'int',
         min: 1,
         max: 256,
         defaults: '#numPlayers',
       },
       numLinks: {
         name: 'Lines per Story',
-        type: 'int',
         text: 'Lines',
+        info: 'How many lines are in a story',
+        type: 'int',
         min: 2,
         max: 256,
         defaults: 10,
       },
       anonymous: {
         name: 'Hide Authors',
-        type: 'bool',
         text: 'Anonymous',
+        info: 'Whether names are shown at the end',
+        type: 'bool',
         defaults: 'false',
       },
     },
@@ -48,11 +57,18 @@ module.exports = {
       'Players put their minds in maximum overdrive to decipher what on earth the other players are trying ' +
       'to convey with what little space they have. At the end of the game, the pictures and descriptions ' +
       'link together to visualize what on earth everyone is thinking.',
+    howTo: [
+      'The game is played by alternating between drawing pictures and describing pictures',
+      'When given a prompt, players draw it to the best of their abilities',
+      'When given an image, players describe it to the best of their abilities',
+      'At the end of the game, players can enjoy the chain of pictures and descriptions',
+    ],
     playTime: '10-15m',
     config: {
       players: {
         name: 'Max Players',
         text: 'Players',
+        info: 'Maximum allowed players in the game',
         type: 'int',
         min: 2,
         max: 256,
@@ -62,6 +78,7 @@ module.exports = {
         name: 'Round Count',
         text: 'Rounds',
         type: 'int',
+        info: 'Number of times a chain is added to',
         min: 2,
         max: 256,
         defaults: '#numPlayers',
@@ -70,12 +87,14 @@ module.exports = {
         name: 'Allow Colors',
         type: 'bool',
         text: 'Colors',
+        info: 'Enable drawing in red, green, blue, and yellow',
         defaults: 'false',
       },
       timeLimit: {
         name: 'Time Limit',
         text: 'Time Limit',
         type: 'list',
+        info: 'Amount of players have to draw',
         defaults: 'none',
         options: [{
           name: 'none',
@@ -117,11 +136,19 @@ module.exports = {
       'course of multiple days. This website only orchestrates setting up the game by giving players the ' +
       'words they need to get their target to say. Players will have to handle passing their words off ' +
       'to whoever killed them on their own.',
+    howTo: [
+      'This website does not aid in actually playing the game, only moderation',
+      'The game is played in person over conversations',
+      'Players are given words they try to get their targets to say',
+      'Once a player\'s target says one of those words, the player gets that player\'s target',
+      'The last player alive wins!',
+    ],
     playTime: '4+hr',
     config: {
       players: {
         name: 'Max Players',
         text: 'Players',
+        info: 'Maximum allowed players in the game',
         type: 'int',
         min: 2,
         max: 256,
@@ -130,6 +157,7 @@ module.exports = {
       numWords: {
         name: 'Word Count',
         text: 'Words',
+        info: 'Number of words players receive to kill with',
         type: 'int',
         min: 1,
         max: 5,
@@ -143,11 +171,21 @@ module.exports = {
     description: 'One hidden player is trying to figure out where everyone is while avoiding other players\' questioning.',
     more: 'Underground is inspired by hidden role games like Spyfall where everyone is looking for the one player that ' +
       'lying their way to victory.',
+    howTo: [
+      'Players take turns asking other players questions about the location',
+      'The underground player tries to figure out the location before time runs out',
+      'The other players try to determine who the underground player is',
+      'If the underground player is determined before the time is up, the other players win',
+      'If time runs out, the underground player has a minute to guess the location',
+      'The underground player can guess the location before time runs out',
+      'If that player guesses correctly, he or she wins! Otherwise, everyone else wins!',
+    ],
     playTime: '10m',
     config: {
       players: {
         name: 'Max Players',
         text: 'Players',
+        info: 'Maximum allowed players in the game',
         type: 'int',
         min: 3,
         max: 10,
@@ -156,6 +194,7 @@ module.exports = {
       duration: {
         name: 'Game Duration (Minutes)',
         text: 'Minutes',
+        info: 'How much time players have until the end phase',
         type: 'int',
         min: 1,
         max: 30,
@@ -164,6 +203,7 @@ module.exports = {
       locationSet: {
         name: 'Location Set',
         text: 'Locations',
+        info: 'The possible locations the game can take place',
         type: 'list',
         options: [{
           name: 'campus',

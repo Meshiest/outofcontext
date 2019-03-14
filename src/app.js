@@ -27,6 +27,7 @@ const router = new VueRouter({
 
 import Home from './Home.vue';
 import Lobby from './Lobby.vue';
+import GameList from './GameList.vue';
 import NotFound from './NotFound.vue';
 import Util from './Util.vue';
 import Menu from './Menu.vue';
@@ -75,6 +76,7 @@ new Vue({
     return h({
       home: Home,
       lobby: Lobby,
+      games: GameList,
     }[this.$route.name] || NotFound);
   }
 });
