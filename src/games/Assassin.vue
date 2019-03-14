@@ -3,7 +3,7 @@
     <div v-if="player.state === 'READING'"
       style="margin: 16px 0">
       <h2 is="sui-header" icon="crosshairs">
-        Target Dossier
+        Target Dossier{{game.battleRoyale ? 's' : ''}}
         <sui-header-subheader>
           Screenshot this just in case
         </sui-header-subheader>
@@ -11,7 +11,7 @@
       <h2 is="sui-header" style="font-family: monospace; margin-top: 0;">
         Operation<br/>{{player.title}}
       </h2>
-      <sui-card>
+      <sui-card v-if="!game.battleRoyale">
         <sui-card-content>
           <sui-card-header>Target</sui-card-header>
           <sui-card-meta style="margin-bottom: 8px">
@@ -31,6 +31,30 @@
           </sui-label>
         </sui-card-content>
       </sui-card>
+      <sui-table v-else basic>
+        <sui-table-header>
+          <sui-table-row>
+            <sui-table-header-cell>
+              Player
+            </sui-table-header-cell>
+            <sui-table-header-cell>
+              Kill Words
+            </sui-table-header-cell>
+          </sui-table-row>
+        </sui-table-header>
+        <sui-table-body>
+          <sui-table-row v-for="obj in player.targets" :key="obj.target">
+            <sui-table-cell>
+              {{nameTable[obj.target]}}
+            </sui-table-cell>
+            <sui-table-cell>
+              <sui-label v-for="word in obj.words" :key="word">
+                {{word}}
+              </sui-label>
+            </sui-table-cell>
+          </sui-table-row>
+        </sui-table-body>
+      </sui-table>
       <sui-button
         @click="$socket.emit('game:message', 'assassin:done', true)"
         primary>

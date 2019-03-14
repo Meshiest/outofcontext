@@ -163,6 +163,13 @@ module.exports = {
         max: 5,
         defaults: 2,
       },
+      battleRoyale: {
+        name: 'Battle Royale Mode',
+        text: 'Royale',
+        info: 'When enabled, players are given kill words for every player.',
+        type: 'bool',
+        defaults: 'false',
+      },
     },
   },
   locations: {

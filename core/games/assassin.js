@@ -64,17 +64,22 @@ module.exports = class Assassin extends Game {
   }
 
   getPlayerState(pid) {
+    const isBR = this.config.battleRoyale;
     return {
       id: pid,
       title: this.title,
       state: this.finishedLooking[pid] ? 'DONE' : 'READING',
-      target: this.targets[pid],
-      words: this.words[pid],
+      target: isBR || this.targets[pid],
+      words: isBR || this.words[pid],
+      targets: isBR && this.players
+        .filter(p => p !== pid)
+        .map(p => ({target: p, words: this.words[p]})),
     };
   }
 
   getState() {
     return {
+      battleRoyale: this.config.battleRoyale,
       // players who are writing have pencil icons, players who are not have a clock icon
       icons: this.players.reduce((obj, p) => ({
         ...obj,
