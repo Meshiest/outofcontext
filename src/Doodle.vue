@@ -1,12 +1,16 @@
 <template>
   <div class="ooc-doodle">
+    <ooc-timer v-if="timer > 0"
+      :start="timerStart"
+      :duration="timer">
+    </ooc-timer>
     <sui-card>
       <sui-card-content class="container">
         <canvas ref="canvas"></canvas>
       </sui-card-content>
-      <sui-card-content class="gadgets" v-if="!readOnly">
+      <sui-card-content class="gadgets" v-if="!isReadOnly || timerStart">
         <sui-button-group>
-          <sui-button :disabled="!paths.length"
+          <sui-button :disabled="!paths.length || isReadOnly"
             icon="undo"
             @click="pressUndo"
             size="tiny"
@@ -43,7 +47,7 @@
         <span style="flex: 1"></span>
         <sui-button-group>
           <sui-button primary
-            :disabled="!paths.length"
+            :disabled="!paths.length && !isReadOnly"
             @click="pressDone"
             icon="check"
             size="tiny"
@@ -86,13 +90,17 @@
 import paper, { Path, Tool, PaperScope } from 'paper';
 
 export default {
-  props: ['read-only', 'image', 'colors'],
+  props: ['read-only', 'image', 'colors', 'timer'],
   colors: ['black', 'red', 'yellow', 'green', 'blue'],
   data() {
     return {
       color: 0,
       width: 0,
+      timerStart: 0,
       height: 0,
+      timerSched: '',
+      isReadOnly: this.readOnly,
+      path: '',
       paths: [],
       paper: new PaperScope(),
       tool: new Tool(),
@@ -107,11 +115,17 @@ export default {
     pressDone() {
       this.$emit('save', this.paths.map(p => p.exportJSON({asString: false})));
       this.clear();
+      clearTimeout(this.timerSched);
+      this.timerStart = 0;
+      this.isReadOnly = false;
     },
     clear() {
       this.paths.forEach(p => p.remove());
       this.paths = [];
     },
+  },
+  beforeDestroy() {
+    clearTimeout(this.timerSched);
   },
   watch: {
     image(newImage) {
@@ -132,27 +146,36 @@ export default {
       this.paths = this.image.map(p => new Path().importJSON(JSON.stringify(p)));
     }
 
-    if(this.readOnly) {
+    if(this.isReadOnly) {
       return;
     }
 
     this.paper.tools.push(this.tool);
     this.paper.tool = this.tool;
-    let path;
 
     this.tool.onMouseDown = ({ point }) => {
-      path = new Path({
+      if(this.isReadOnly) return;
+
+      if(!this.timerStart) {
+        this.timerStart = Date.now();
+        clearTimeout(this.timerSched);
+        this.timerSched = setTimeout(() => this.isReadOnly = true, this.timer * 1000);
+      }
+
+      this.path = new Path({
         segments: [point],
         strokeColor: this.$options.colors[this.color],
       });
     };
     this.tool.onMouseDrag = ({ point }) => {
-      path.add(point);
+      if(this.isReadOnly) return;
+      this.path.add(point);
     };
 
     this.tool.onMouseUp = () => {
-      path.simplify(10);
-      this.paths.push(path);
+      if(this.isReadOnly) return;
+      this.path.simplify(10);
+      this.paths.push(this.path);
     };
 
     this.tool.activate();

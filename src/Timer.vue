@@ -15,10 +15,20 @@ export default {
       now: Date.now(),
     };
   },
+  watch: {
+    start() {
+      if(!this.timer) {
+        this.update();
+        clearInterval(this.update);
+        this.timer = setInterval(this.update, 500);
+      }
+    }
+  },
   methods: {
     update() {
       this.now = Date.now();
-      const secLeft = this.duration - Math.round((this.now - this.start)/1000);
+      const start = this.start || this.now;
+      const secLeft = this.duration - Math.round((this.now - start)/1000);
       this.time = Math.max(Math.round(secLeft), 0);
 
       if(secLeft >= 60) {
@@ -33,7 +43,9 @@ export default {
     },
   },
   created() {
-    this.timer = setInterval(this.update, 500);
+    this.update();
+    if(this.start)
+      this.timer = setInterval(this.update, 500);
   },
   beforeDestroy() {
     clearInterval(this.timer);

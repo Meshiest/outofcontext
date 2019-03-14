@@ -33,6 +33,7 @@
       </sui-form>
       <div v-else-if="player.link && player.link.type === 'desc'">
         <ooc-doodle @save="image => $socket.emit('game:message', 'draw:image', image)"
+          :timer="game.timeLimit"
           :colors="game.colors">
         </ooc-doodle>
       </div>
