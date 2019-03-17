@@ -156,7 +156,7 @@ export default {
     this.tool.onMouseDown = ({ point }) => {
       if(this.isReadOnly) return;
 
-      if(!this.timerStart) {
+      if(!this.timerStart && this.timer) {
         this.timerStart = Date.now();
         clearTimeout(this.timerSched);
         this.timerSched = setTimeout(() => this.isReadOnly = true, this.timer * 1000);
@@ -168,12 +168,12 @@ export default {
       });
     };
     this.tool.onMouseDrag = ({ point }) => {
-      if(this.isReadOnly) return;
+      if(this.isReadOnly || !this.path) return;
       this.path.add(point);
     };
 
     this.tool.onMouseUp = () => {
-      if(this.isReadOnly) return;
+      if(this.isReadOnly || !this.path) return;
       this.path.simplify(10);
       this.paths.push(this.path);
     };
