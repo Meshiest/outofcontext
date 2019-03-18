@@ -12,7 +12,9 @@ function readDict(file) {
     .split('\n');
 }
 
-const WORDS = readDict(DICT_FILE).slice(DICT_START, DICT_END - DICT_START);
+const WORDS = readDict(DICT_FILE)
+  .slice(DICT_START, DICT_END - DICT_START)
+  .filter(word => word.length > 4);
 const ANIMALS = readDict('animals.dict');
 const COLORS = readDict('colors.dict');
 
