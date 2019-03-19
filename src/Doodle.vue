@@ -17,6 +17,20 @@
             compact/>
         </sui-button-group>
         <span style="flex: 1"></span>
+        <sui-button-group>
+          <sui-button v-if="colors"
+            class="icon"
+            @click="thick = (thick + 1) % 3"
+            size="tiny"
+            compact>
+            <div class="center-icon">
+              <sui-icon name="circle"
+                fitted
+                :size="['tiny', 'small', 'standard'][thick]"/>
+            </div>
+          </sui-button>
+        </sui-button-group>
+        <span style="flex: 1"></span>
         <sui-button-group v-if="colors">
           <sui-button :icon="color == 1 ? 'circle' : ' '"
             @click="color = 1"
@@ -83,6 +97,13 @@
   top: 0;
   width: 100%;
 }
+
+.center-icon {
+  width: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 </style>
 
 <script>
@@ -99,6 +120,7 @@ export default {
       timerStart: 0,
       height: 0,
       timerSched: '',
+      thick: 0,
       isReadOnly: this.readOnly,
       path: '',
       paths: [],
@@ -164,6 +186,8 @@ export default {
 
       this.path = new Path({
         segments: [point],
+        strokeWidth: this.thick * 10 + 3,
+        strokeCap: 'round',
         strokeColor: this.$options.colors[this.color],
       });
     };
@@ -174,7 +198,7 @@ export default {
 
     this.tool.onMouseUp = () => {
       if(this.isReadOnly || !this.path) return;
-      this.path.simplify(10);
+      this.path.simplify(5);
       this.paths.push(this.path);
     };
 
