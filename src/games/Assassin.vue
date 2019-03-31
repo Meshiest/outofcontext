@@ -31,7 +31,7 @@
           </sui-label>
         </sui-card-content>
       </sui-card>
-      <sui-table v-else basic>
+      <sui-table v-else basic unstackable>
         <sui-table-header>
           <sui-table-row>
             <sui-table-header-cell>
@@ -48,7 +48,7 @@
               {{nameTable[obj.target]}}
             </sui-table-cell>
             <sui-table-cell>
-              <sui-label v-for="word in obj.words" :key="word">
+              <sui-label v-for="word in obj.words" :key="word" style="margin-top: 4px">
                 {{word}}
               </sui-label>
             </sui-table-cell>

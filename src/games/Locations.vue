@@ -14,7 +14,8 @@
       </h2>
       <sui-card v-if="showRole">
         <sui-card-content v-if="player.state === 'LOCATION'">
-          The location is <b>{{player.location}}</b>.
+          The location is <b>{{player.location}}</b>.<br/>
+          Find the underground player before time runs out!
         </sui-card-content>
         <sui-card-content v-else-if="player.state === 'UNDERGROUND'">
           You are <b>Underground</b>.<br/>
@@ -43,7 +44,7 @@
     </div>
     <div>
       <sui-divider horizontal>Locations</sui-divider>
-      <sui-table basic>
+      <sui-table basic unstackable>
         <sui-table-body>
           <sui-table-row v-for="(row, i) in locationArr" :key="i">
             <sui-table-cell v-for="(cell, j) in row"
