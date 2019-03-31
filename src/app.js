@@ -15,6 +15,11 @@ Vue.use(new VueSocketIO({
   connection: io(),
 }));
 
+window.vibrate = arg =>
+  window.navigator &&
+  window.navigator.vibrate &&
+  window.navigator.vibrate(arg);
+
 const router = new VueRouter({
   mode: 'history',
   base: '/',

@@ -7,6 +7,8 @@ module.exports = class Draw extends Story {
     super(lobby, config, players);
 
     this.config.numStories = config.players;
+    // Make the number of links odd
+    this.config.numLinks -= (this.config.numLinks - 1) % 2;
 
     // Make sure the same player does not edit the chain until other players had a chance
     this.clearance = config.players - 1;

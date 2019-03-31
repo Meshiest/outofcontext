@@ -19,6 +19,7 @@ class Lobby {
     this.admin = '';
     this.lobbyState = 'WAITING';
     this.game = null;
+    this.expires = Date.now(); // TODO: soon make lobbies that can last multiple days
   }
 
   // Start the game
@@ -443,5 +444,31 @@ Lobby.lobbies = {};
 
 Lobby.lobbyExists = code =>
   Lobby.lobbies.hasOwnProperty(code) && Lobby.lobbies[code];
+
+/**
+ * Removes player from his/her lobby
+ * @param  {Member} player Player potentially in a lobby
+ */
+Lobby.removePlayer = player => {
+  const lobby = player.lobby;
+
+  if(!lobby)
+    return;
+
+  lobby.removeMember(player);
+  player.lobby = undefined;
+  if(lobby.empty() && lobby.expires < Date.now()) {
+    if(lobby.game) {
+      lobby.game.stop();
+      lobby.game.cleanup();
+      lobby.game = undefined;
+    }
+    Lobby.lobbies[lobby.code] = false;
+  }
+}
+
+// dev lobby expires in 2 hours
+Lobby.lobbies.aaaa = new Lobby();
+Lobby.lobbies.aaaa.expires = Date.now() + 2 * 60 * 60 * 1000;
 
 module.exports = Lobby;

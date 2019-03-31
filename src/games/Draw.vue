@@ -50,12 +50,13 @@
       </sui-divider>
       <div>
         <sui-card v-for="(chain, i) in game.chains" :key="i">
-          <sui-card-content>
+          <sui-card-content style="padding: 14px 0;">
             <sui-comment-group>
               <sui-comment v-for="(entry, j) in chain" :key="j">
                 <sui-comment-content>
                   <sui-comment-text>
-                    <p style="font-family: 'Lora', serif;" v-if="entry.link.type === 'desc'">
+                    <p v-if="entry.link.type === 'desc'"
+                      style="font-family: 'Lora', serif; padding: 0 14px">
                       {{entry.link.data}}
                     </p>
                     <div v-else-if="entry.link.type === 'image'"
@@ -66,12 +67,21 @@
                     </div>
                   </sui-comment-text>
                   <sui-comment-author v-if="nameTable[entry.editor]"
-                    style="text-align: right;">
+                    style="text-align: right; padding: 0 14px">
                     &mdash;{{nameTable[entry.editor]}}
                   </sui-comment-author>
                 </sui-comment-content>
               </sui-comment>
             </sui-comment-group>
+          </sui-card-content>
+          <sui-card-content v-if="chain.length % 2 == 1">
+            <div style="font-family: 'Lora', serif; padding: 0 14px">
+              {{chain[0].link.data}}
+            </div>
+            <sui-divider horizontal>TO</sui-divider>
+            <div style="font-family: 'Lora', serif; padding: 0 14px">
+              {{chain[chain.length-1].link.data}}
+            </div>
           </sui-card-content>
         </sui-card>
       </div>
@@ -110,9 +120,20 @@ export default {
       this.game = info;
     },
     'game:player:info': function(info) {
+      if(this.player.state !== info.state) {
+        switch(info.state) {
+        case 'WAITING':
+          this.line = '';
+          break;
+        case 'EDITING':
+          vibrate(40);
+          break;
+        case 'READING':
+          vibrate(40, 100, 40);
+          break;
+        }
+      }
       this.player = info;
-      if(info.state === 'WAITING')
-        this.line = '';
     }
   },
   created() {

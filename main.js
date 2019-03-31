@@ -14,28 +14,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const Member = require('./core/Member');
 const Lobby = require('./core/Lobby');
 
-/**
- * Removes player from his/her lobby
- * @param  {Member} player Player potentially in a lobby
- */
-function removePlayerFromLobby(player) {
-  const lobby = player.lobby;
-
-  if(!lobby)
-    return;
-
-  lobby.removeMember(player);
-  player.lobby = undefined;
-  if(lobby.empty()) {
-    if(lobby.game) {
-      lobby.game.stop();
-      lobby.game.cleanup();
-      lobby.game = undefined;
-    }
-    Lobby.lobbies[lobby.code] = false;
-  }
-}
-
 io.on('connection', socket => {
   const player = new Member(socket);
   socket.emit('member:id', player.id);
@@ -177,12 +155,12 @@ io.on('connection', socket => {
   // Leave the lobby if a player is in one
   socket.on('lobby:leave', () => {
     player.name = '';
-    removePlayerFromLobby(player);
+    Lobby.removePlayer(player);
   });
 
   // Remove the player from a lobby on disconnection
   socket.on('disconnect', data => {
-    removePlayerFromLobby(player);
+    Lobby.removePlayer(player);
   });
 });
 

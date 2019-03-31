@@ -20,12 +20,13 @@
       <sui-form @submit="writeLine">
         <sui-form-field>
           <label>The Story Goes...</label>
-          <textarea v-model="line" rows="2"></textarea>
+          <textarea v-model="line" rows="2">
+          </textarea>
         </sui-form-field>
         <sui-button type="submit"
           primary
           :disabled="line.length < 1 || line.length > 255">
-          Sign
+          {{player.isLastLink ? 'Finish' : 'Sign'}}
         </sui-button>
       </sui-form>
     </div>
@@ -95,9 +96,20 @@ export default {
       this.game = info;
     },
     'game:player:info': function(info) {
+      if(this.player.state !== info.state) {
+        switch(info.state) {
+        case 'WAITING':
+          this.line = '';
+          break;
+        case 'EDITING':
+          vibrate(40);
+          break;
+        case 'READING':
+          vibrate(40, 100, 40);
+          break;
+        }
+      }
       this.player = info;
-      if(info.state === 'WAITING')
-        this.line = '';
     }
   },
   created() {
