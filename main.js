@@ -4,7 +4,7 @@ const _ = require('lodash');
 const path = require('path');
 
 const app = express();
-var server = require('http').Server(app);
+const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const PORT = process.env.PORT || 8080;
 
@@ -176,6 +176,18 @@ app.get('/api/v1/lobby/:code', (req, res) => {
       message: 'Lobby Does Not Exist',
     });
   }
+});
+
+app.get('/api/v1/info', (req, res) => {
+  res.status(200).json({
+    lobbies: _.size(Lobby.lobbies),
+    games: _.chain(Lobby.lobbies)
+      .values()
+      .filter(l => l.game)
+      .size()
+      .value(),
+    players: io.engine.clientsCount,
+  });
 });
 
 // Every request goes through the index, Vue will handle 404s

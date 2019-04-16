@@ -31,9 +31,6 @@
             to="/games">
             Game Info
           </router-link>
-          <sui-button disabled>
-            Screenshots
-          </sui-button>
           <a is="sui-button"
             href="https://github.com/meshiest/outofcontext"
             target="_blank"
