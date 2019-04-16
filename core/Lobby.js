@@ -134,9 +134,10 @@ class Lobby {
       } else {
         // value is too small or too large
         if(val < conf.min || val > conf.max && conf.max) {
-          return;
+          val = val > conf.max && conf.max ? conf.max : val;
         }
       }
+      val = val == '#numPlayers' ? val : Math.floor(val);
 
       this.gameConfig[name] = val;
       break;
@@ -166,7 +167,7 @@ class Lobby {
         if(rawVal === '#numPlayers')
           val = numPlayers;
         else
-          val = rawVal;
+          val = Math.floor(rawVal);
         break;
       case 'bool':
         val = rawVal === 'true';

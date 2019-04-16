@@ -92,7 +92,7 @@ module.exports = class Story extends Game {
 
       const line = data.replace(/[\u200B-\u200D\uFEFF\n\t]/g, '').trim();
 
-      if(line.length < 1 || line.length > 255)
+      if(line.length < 1 || line.length > 512)
         return;
 
       this.lastEdit[pid] = Date.now();

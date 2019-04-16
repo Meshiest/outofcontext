@@ -22,10 +22,13 @@
           <label>The Story Goes...</label>
           <textarea v-model="line" rows="2">
           </textarea>
+          <div class="char-count">
+            {{line.length}}/512
+          </div>
         </sui-form-field>
         <sui-button type="submit"
           primary
-          :disabled="line.length < 1 || line.length > 255">
+          :disabled="line.length < 1 || line.length > 512">
           {{player.isLastLink ? 'Finish' : 'Sign'}}
         </sui-button>
       </sui-form>
@@ -41,25 +44,28 @@
         Stories
       </sui-divider>
       <div style="text-align: left">
-        <sui-card v-for="(story, i) in game.stories" :key="i">
-          <sui-card-content>
-            <sui-comment-group>
-              <sui-comment v-for="(entry, j) in story" :key="j">
-                <sui-comment-content>
-                  <sui-comment-text>
-                    <p style="font-family: 'Lora', serif;">
-                      {{entry.link}}
-                    </p>
-                  </sui-comment-text>
-                  <sui-comment-author v-if="nameTable[entry.editor]"
-                    style="text-align: right;">
-                    &mdash;{{nameTable[entry.editor]}}
-                  </sui-comment-author>
-                </sui-comment-content>
-              </sui-comment>
-            </sui-comment-group>
-          </sui-card-content>
-        </sui-card>
+        <div v-for="(story, i) in game.stories" :key="i">
+          <sui-divider horizonal v-if="i > 0"></sui-divider>
+          <sui-card>
+            <sui-card-content>
+              <sui-comment-group>
+                <sui-comment v-for="(entry, j) in story" :key="j">
+                  <sui-comment-content>
+                    <sui-comment-text>
+                      <p style="font-family: 'Lora', serif;">
+                        {{entry.link}}
+                      </p>
+                    </sui-comment-text>
+                    <sui-comment-author v-if="nameTable[entry.editor]"
+                      style="text-align: right;">
+                      &mdash;{{nameTable[entry.editor]}}
+                    </sui-comment-author>
+                  </sui-comment-content>
+                </sui-comment>
+              </sui-comment-group>
+            </sui-card-content>
+          </sui-card>
+        </div>
       </div>
       <sui-button v-if="player.state === 'READING'"
         style="margin-top: 16px"
@@ -84,6 +90,21 @@
 </template>
 
 <style>
+
+.field {
+  position: relative;
+}
+
+.sub.header {
+  word-break: break-all;
+}
+
+.char-count {
+  color: #999;
+  font-size: 0.7em;
+  text-align: right;
+}
+
 </style>
 
 <script>
@@ -125,7 +146,7 @@ export default {
     writeLine(event) {
       event.preventDefault();
 
-      if(this.line.length < 1 || this.line.length > 255)
+      if(this.line.length < 1 || this.line.length > 512)
         return;
 
       this.$socket.emit('game:message', 'story:line', this.line);
