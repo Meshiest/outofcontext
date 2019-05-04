@@ -7,6 +7,7 @@
         :icon="player.link.type === 'desc' ? 'paint brush' : 'pencil'">
         <div v-if="player.link.type === 'image'">
           The last player drew...
+          <div style="margin-top: 14px"></div>
           <ooc-doodle read-only="true" :image="player.link.data">
           </ooc-doodle>
         </div>
@@ -133,6 +134,7 @@ export default {
           break;
         }
       }
+      info.link = info.link && info.link[0];
       this.player = info;
     }
   },

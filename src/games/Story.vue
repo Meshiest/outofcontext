@@ -2,19 +2,27 @@
   <div>
     <div v-if="player.state === 'EDITING'"
       style="margin: 16px 0">
-      <h2 is="sui-header" icon="pencil" v-if="player.isLastLink">
-        Finish the story! The last author wrote...
-        <sui-header-subheader>
-          {{player.link}}
-        </sui-header-subheader>
+      <h2 is="sui-header" icon="pencil" v-if="player.link.length === 2">
+        {{player.isLastLink ? 'Finish the story! ' : ''}}The last authors wrote....
+        <div style="margin-top: 10px">
+          <sui-header-subheader>
+            {{player.link[0]}}
+          </sui-header-subheader>
+          <sui-divider horizontal>Then</sui-divider>
+          <sui-header-subheader>
+            {{player.link[1]}}
+          </sui-header-subheader>
+        </div>
       </h2>
-      <h2 is="sui-header" icon="pencil" v-else-if="player.link">
-        The last author wrote....
-        <sui-header-subheader>
-          {{player.link}}
-        </sui-header-subheader>
+      <h2 is="sui-header" icon="pencil" v-else-if="player.link.length === 1">
+        {{player.isLastLink ? 'Finish the story! ' : ''}}The last author wrote....<br/>
+        <div style="margin-top: 10px">
+          <sui-header-subheader>
+            {{player.link[0]}}
+          </sui-header-subheader>
+        </div>
       </h2>
-      <h2 is="sui-header" icon="pencil" v-else-if="!player.link">
+      <h2 is="sui-header" icon="pencil" v-else-if="player.link.length === 0">
         Write the first line
       </h2>
       <sui-form @submit="writeLine">

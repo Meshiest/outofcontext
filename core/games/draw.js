@@ -5,6 +5,7 @@ const Story = require('./story');
 module.exports = class Draw extends Story {
   constructor(lobby, config, players) {
     super(lobby, config, players);
+    this.config.moreContext = false;
 
     this.config.numStories = config.players;
     // Make the number of links odd

@@ -124,7 +124,7 @@ module.exports = class Story extends Game {
       id: pid,
       state: 'EDITING',
       isLastLink: story.chain.length === this.config.numLinks - 1,
-      link: story.chain.slice(-1)[0],
+      link: story.chain.slice(this.config.moreContext ? -2 : -1),
     } : {
       id: pid,
       state: done ? 'READING' : 'WAITING',

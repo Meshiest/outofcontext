@@ -47,6 +47,13 @@ module.exports = {
         type: 'bool',
         defaults: 'false',
       },
+      moreContext: {
+        name: 'Add Another Line of Context',
+        text: 'Extra Line',
+        info: 'Adding an additional line helps make stories flow better',
+        type: 'bool',
+        defaults: 'false',
+      }
     },
   },
   draw: {
