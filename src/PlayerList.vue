@@ -8,14 +8,30 @@
         <sui-table-row>
           <th style="position: relative;">
             Players
-            <span class="user-icons" v-if="isAdmin">
+            <span class="user-icons">
+              <sui-popup hoverable>
+                <div class="emote-list">
+                  <sui-button v-for="emote in emotes"
+                    circular
+                    @click="$socket.emit('lobby:emote', emote)"
+                    :icon="emote" />
+                </div>
+                <sui-button basic
+                  slot="trigger"
+                  color="green"
+                  icon="chat"
+                  size="tiny">
+                </sui-button>
+              </sui-popup>
               <sui-button :basic="!changeMode"
+                v-if="isAdmin"
                 @click="changeMode = !changeMode; removeMode = false"
                 color="blue"
                 icon="shield"
                 size="tiny">
               </sui-button>
               <sui-button :basic="!removeMode"
+                v-if="isAdmin"
                 @click="removeMode = !removeMode; changeMode = false"
                 color="red"
                 icon="times"
@@ -32,6 +48,7 @@
           :positive="$root.playerId === p.id">
           <td>
             {{p.name}}
+            <span class="emote-container" :ref="`emote_${p.id}`"></span>
             <span class="user-icons">
               <sui-button v-if="!p.connected && isSpectator"
                 size="tiny"
@@ -91,6 +108,7 @@
           :positive="$root.playerId === p.id">
           <td v-if="p.name">
             {{p.name}}
+            <span class="emote-container" :ref="`emote_${p.id}`"></span>
             <span class="user-icons">
               <sui-icon
                 v-if="$root.playerId === p.id"
@@ -161,6 +179,71 @@ td {
   height: 18px;
 }
 
+
+.emote-list {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.emote-list .button {
+  margin: 2px !important;
+}
+
+.emote-list .button i {
+  align-items: center;
+  display: flex;
+  font-size: 24px;
+  height: 24px !important;
+  justify-content: center;
+  width: 24px !important;
+}
+
+.emote-container {
+  position: relative;
+  width: 30px;
+  margin-left: 20px;
+  display: inline-block;
+}
+
+.emote {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px !important;
+  opacity: 0;
+  animation: emote 3s ease-in-out;
+  transition: opacity .5s;
+}
+
+.emote.end-anim {
+  opacity: 0;
+  animation: none;
+}
+
+@keyframes emote {
+  0% {
+    opacity: 0.2;
+    transform: translate(calc(-50% - 20px), -50%) scale(.9);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  90% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    display: none;
+    opacity: 0;
+    transform: translate(calc(-50% + 20px), -50%) scale(.9);
+  }
+}
+
 </style>
 
 <script>
@@ -170,6 +253,18 @@ export default {
     'isSpectator', 'canJoinPlayers',
     'lobbyState', 'gameState',
   ],
+  sockets: {
+    'lobby:emote': function([pid, emote]) {
+      const parent = this.$refs[`emote_${pid}`][0];
+      parent.childNodes.forEach(e => {
+        e.classList.add('end-anim');
+      });
+      const elem = document.createElement('i');
+      elem.setAttribute('class', `emote icon grey ${emote}`);
+      setTimeout(() => elem.remove(), 3000);
+      parent.appendChild(elem);
+    },
+  },
   methods: {
     tryEndGame() {
       clearTimeout(this.confirmTimeout);
@@ -195,6 +290,20 @@ export default {
       confirmEndGame: false,
       removeMode: false,
       changeMode: false,
+      emotes: [
+        'smile',
+        'frown',
+        'hand peace',
+        'heart',
+        'question',
+        'exclamation',
+        'wait',
+        'write',
+        'check',
+        'times',
+        'thumbs up',
+        'thumbs down',
+      ],
     };
   },
 };

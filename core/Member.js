@@ -7,6 +7,7 @@ class Member {
     this.lobby = undefined;
     this.name = '';
     this.color = 0;
+    this.lastEmote = Date.now();
   }
 
   isAdmin() {

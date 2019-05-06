@@ -14,6 +14,21 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const Member = require('./core/Member');
 const Lobby = require('./core/Lobby');
 
+const EMOTES = [
+  'smile',
+  'frown',
+  'hand peace',
+  'heart',
+  'question',
+  'exclamation',
+  'wait',
+  'write',
+  'check',
+  'times',
+  'thumbs up',
+  'thumbs down',
+];
+
 io.on('connection', socket => {
   const player = new Member(socket);
   socket.emit('member:id', player.id);
@@ -82,6 +97,19 @@ io.on('connection', socket => {
   socket.on('lobby:replace', pid => {
     if(player.lobby) {
       player.lobby.replacePlayer(player, pid);
+    } else {
+      socket.emit('lobby:leave');
+    }
+  });
+
+  socket.on('lobby:emote', emote => {
+    if(player.lobby) {
+      const now = Date.now();
+      if(now - player.lastEmote < 1000 || !EMOTES.includes(emote))
+        return;
+
+      player.lastEmote = now;
+      player.lobby.emitAll('lobby:emote', player.id, emote);
     } else {
       socket.emit('lobby:leave');
     }
