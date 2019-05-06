@@ -111,7 +111,15 @@
             </sui-form-field>
             <div v-if="currGame">
               <sui-form-field v-for="(opt, name) in currGame.config" v-if="!opt.hidden" :key="name">
-                <label>{{opt.name}}</label>
+                <label>
+                  <span>{{opt.name}}</span>
+                  <sui-popup :content="opt.info">
+                    <sui-icon
+                      name="info circle"
+                      slot="trigger">
+                    </sui-icon>
+                  </sui-popup>
+                </label>
                 <div v-if="opt.type === 'int'" style="display: flex">
                   <sui-input
                     type="number"

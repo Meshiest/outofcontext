@@ -2,24 +2,15 @@
   <div>
     <div v-if="player.state === 'EDITING'"
       style="margin: 16px 0">
-      <h2 is="sui-header" icon="pencil" v-if="player.link.length === 2">
-        {{player.isLastLink ? 'Finish the story! ' : ''}}The last authors wrote....
+      <h2 is="sui-header" icon="pencil" v-if="player.link.length !== 0">
+        {{player.isLastLink ? 'Finish the story! ' : ''}}The last author{{player.link.length !== 1 ? 's' : ''}} wrote....
         <div style="margin-top: 10px">
-          <sui-header-subheader>
-            {{player.link[0]}}
-          </sui-header-subheader>
-          <sui-divider horizontal>Then</sui-divider>
-          <sui-header-subheader>
-            {{player.link[1]}}
-          </sui-header-subheader>
-        </div>
-      </h2>
-      <h2 is="sui-header" icon="pencil" v-else-if="player.link.length === 1">
-        {{player.isLastLink ? 'Finish the story! ' : ''}}The last author wrote....<br/>
-        <div style="margin-top: 10px">
-          <sui-header-subheader>
-            {{player.link[0]}}
-          </sui-header-subheader>
+          <div v-for="(link, i) in player.link">
+            <sui-divider horizontal v-if="i !== 0">Then</sui-divider>
+            <sui-header-subheader>
+              {{link}}
+            </sui-header-subheader>
+          </div>
         </div>
       </h2>
       <h2 is="sui-header" icon="pencil" v-else-if="player.link.length === 0">

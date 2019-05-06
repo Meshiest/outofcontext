@@ -47,12 +47,29 @@ module.exports = {
         type: 'bool',
         defaults: 'false',
       },
-      moreContext: {
-        name: 'Add Another Line of Context',
-        text: 'Extra Line',
-        info: 'Adding an additional line helps make stories flow better',
-        type: 'bool',
-        defaults: 'false',
+      contextLen: {
+        name: 'Extra Context',
+        text: 'More Context',
+        info: 'Adding additional lines of context helps make stories flow better',
+        type: 'list',
+        defaults: 'regular',
+        options: [{
+          name: 'regular',
+          text: 'No',
+          value: 1,
+        }, {
+          name: 'one',
+          text: '1 Line',
+          value: 2,
+        }, {
+          name: 'two',
+          text: '2 Lines',
+          value: 3,
+        }, {
+          name: 'three',
+          text: '3 Lines',
+          value: 4,
+        }],
       }
     },
   },

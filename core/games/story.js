@@ -105,6 +105,10 @@ module.exports = class Story extends Game {
     case 'story:done':
       this.finishedReading[pid] = data === true;
       this.sendGameInfo();
+
+      if(this.players.every(p => this.finishedReading[p]))
+        this.lobby.endGame();
+
       break;
     }
   }
@@ -124,7 +128,7 @@ module.exports = class Story extends Game {
       id: pid,
       state: 'EDITING',
       isLastLink: story.chain.length === this.config.numLinks - 1,
-      link: story.chain.slice(this.config.moreContext ? -2 : -1),
+      link: story.chain.slice(-this.config.contextLen),
     } : {
       id: pid,
       state: done ? 'READING' : 'WAITING',

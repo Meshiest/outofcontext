@@ -61,6 +61,10 @@ module.exports = class Assassin extends Game {
     case 'assassin:done':
       this.finishedLooking[pid] = data === true;
       this.sendGameInfo();
+
+      if(this.players.every(p => this.finishedLooking[p]))
+        this.lobby.endGame();
+
       break;
     }
   }

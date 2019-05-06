@@ -5,7 +5,7 @@ const Story = require('./story');
 module.exports = class Draw extends Story {
   constructor(lobby, config, players) {
     super(lobby, config, players);
-    this.config.moreContext = false;
+    this.config.contextLen = 1;
 
     this.config.numStories = config.players;
     // Make the number of links odd
@@ -54,6 +54,10 @@ module.exports = class Draw extends Story {
     case 'draw:done':
       this.finishedReading[pid] = data === true;
       this.sendGameInfo();
+
+      if(this.players.every(p => this.finishedReading[p]))
+        this.lobby.endGame();
+
       break;
     }
   }
