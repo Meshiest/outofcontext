@@ -13,6 +13,7 @@
                 <div class="emote-list">
                   <sui-button v-for="emote in emotes"
                     circular
+                    :key="emote"
                     @click="$socket.emit('lobby:emote', emote)"
                     :icon="emote" />
                 </div>
