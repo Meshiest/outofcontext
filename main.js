@@ -8,6 +8,8 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const PORT = process.env.PORT || 8080;
 
+const VERSION = require('./package.json').version;
+
 app.use(express.static('./public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -32,6 +34,7 @@ const EMOTES = [
 io.on('connection', socket => {
   const player = new Member(socket);
   socket.emit('member:id', player.id);
+  socket.emit('version', VERSION);
 
   socket.on('member:name', name => {
 

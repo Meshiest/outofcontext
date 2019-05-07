@@ -7,6 +7,8 @@ import './style.css';
 import '../res/favicon.ico';
 import VueDefaultValue from 'vue-default-value';
 
+const VERSION = require('../package.json').version;
+
 Vue.use(VueRouter);
 Vue.use(VueDefaultValue);
 Vue.use(PortalVue);
@@ -67,6 +69,10 @@ new Vue({
       console.log('Connected');
       this.connected = true;
       this.disconnected = false;
+    },
+    'version': function(version) {
+      if(version !== VERSION)
+        location.reload();
     },
     disconnect() {
       console.log('Disconnected');
