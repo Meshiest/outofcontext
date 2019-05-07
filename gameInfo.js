@@ -102,16 +102,16 @@ module.exports = {
         name: 'Round Count',
         text: 'Rounds',
         type: 'int',
-        info: 'Number of times a chain is added to',
+        info: 'Number of times a chain is added to. If not odd, will be rounded down to an odd number.',
         min: 3,
         max: 256,
         defaults: '#numPlayers',
       },
       colors: {
-        name: 'Allow Colors',
+        name: 'Colored Drawings',
         type: 'bool',
         text: 'Colors',
-        info: 'Enable drawing in red, green, blue, and yellow',
+        info: 'Enable drawing in red, green, blue, and yellow. Also enables brush thickness.',
         defaults: 'false',
       },
       timeLimit: {
@@ -155,7 +155,8 @@ module.exports = {
   assassin: {
     title: 'Wurderer',
     subtitle: 'Murdered by Words',
-    description: 'Players are each given a target and a word they need to get their targets to say.',
+    description: 'Players are each given a target and a word they need to get their targets to say. ' +
+      'This website is only a setup for playing the game in person.',
     more: 'Wurderer is inspired the assassin game in hopes to create a game that can be played over the ' +
       'course of multiple days. This website only orchestrates setting up the game by giving players the ' +
       'words they need to get their target to say. Players will have to handle passing their words off ' +
