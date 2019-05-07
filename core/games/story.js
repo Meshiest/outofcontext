@@ -7,7 +7,7 @@ module.exports = class Story extends Game {
     super(lobby, config, players);
     this.chains = [];
 
-    this.clearance = 2;
+    this.clearance = Math.min(config.players - 1, config.contextLen + 1);
 
     this.lastEdit = {};
     for(const p of players)

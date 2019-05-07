@@ -37,6 +37,12 @@
             rel="noopener noreferrer">
             Read the Code
           </a>
+          <a is="sui-button"
+            href="https://github.com/Meshiest/outofcontext/issues/new"
+            target="_blank"
+            rel="noopener noreferrer">
+            Request a Game
+          </a>
         </sui-button-group>
       </div>
     </ooc-menu>

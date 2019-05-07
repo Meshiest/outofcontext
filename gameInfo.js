@@ -2,7 +2,7 @@ module.exports = {
   story: {
     title: 'Raconteur',
     subtitle: 'Ghost Writers',
-    description: 'Players contribute one line at a time to stories they only know the last line to.',
+    description: 'Collaborate in writing stories one line at a time with minimal context.',
     more: 'Raconteur is inspired by improv-type games where players contribute to a story one sentence or one word at a time. ' +
       'The idea is to create unique stories from a train of thought going who knows where. Continuity is held only ' +
       'by the last line in the story, so writing with ambiguity allows for more interesting stories.',
@@ -76,7 +76,7 @@ module.exports = {
   draw: {
     title: 'Scribble',
     subtitle: 'Drawing Conclusions',
-    description: 'Players will alternate between drawing and describing the previous rounds\' output.',
+    description: 'Players alternate between drawing and describing in a telephone-pictionary hybrid game.',
     more: 'Scribble is inspired by games like Tanner Krewson\'s Drawphone, Telestrations, and Pictionary. ' +
       'Players put their minds in maximum overdrive to decipher what on earth the other players are trying ' +
       'to convey with what little space they have. At the end of the game, the pictures and descriptions ' +
@@ -197,6 +197,7 @@ module.exports = {
     },
   },
   locations: {
+    hidden: true,
     title: 'Underground',
     subtitle: 'Where are you?',
     description: 'One hidden player is trying to figure out where everyone is while avoiding other players\' questioning.',

@@ -8,7 +8,7 @@
       Home
     </router-link>
     <sui-divider horizontal>Games</sui-divider>
-    <sui-card v-for="(info, key) in gameInfo" :key="key">
+    <sui-card v-for="(info, key) in gameInfo" :key="key" v-if="!info.hidden">
       <sui-card-content>
         <sui-card-header>
           {{info.title}}

@@ -23,6 +23,7 @@ module.exports = class Game {
   }
 
   handleMessage(pid, type, data) {}
+
   start() {}
   stop() {}
   cleanup() {}

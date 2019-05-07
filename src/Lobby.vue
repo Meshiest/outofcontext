@@ -282,7 +282,8 @@ export default {
       lobbyInfo: emptyInfo(),
       state: 'LOADING',
       gameInfo,
-      gameOptions: _.map(gameInfo, (v, k) => ({value: k, text: v.title})),
+      gameOptions: _.map(gameInfo, (v, k) => ({value: k, text: v.title, h: v.hidden}))
+        .filter(o => !o.h),
     };
   },
   computed:  {
