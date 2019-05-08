@@ -465,6 +465,7 @@ Lobby.removePlayer = player => {
       lobby.game = undefined;
     }
     Lobby.lobbies[lobby.code] = false;
+    delete Lobby.lobbies[lobby.code];
   }
 }
 

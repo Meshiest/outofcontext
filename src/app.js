@@ -71,8 +71,9 @@ new Vue({
       this.disconnected = false;
     },
     'version': function(version) {
-      if(version !== VERSION)
-        location.reload();
+      if(version !== VERSION) {
+        setTimeout(() => location.reload(), 2000);
+      }
     },
     disconnect() {
       console.log('Disconnected');
