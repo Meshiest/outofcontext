@@ -21,7 +21,7 @@ const EMOTES = [
   'meh',
   'frown',
   'heart',
-  'hand peace',
+  'bug',
   'hand rock',
   'hand paper',
   'hand scissors',
