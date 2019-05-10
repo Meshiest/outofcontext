@@ -95,7 +95,8 @@
 }
 
 .sub.header {
-  word-break: break-all;
+  word-break: break-word;
+  max-width: 292px;
 }
 
 .char-count {

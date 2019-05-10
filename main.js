@@ -18,9 +18,13 @@ const Lobby = require('./core/Lobby');
 
 const EMOTES = [
   'smile',
+  'meh',
   'frown',
-  'hand peace',
   'heart',
+  'hand peace',
+  'hand rock',
+  'hand paper',
+  'hand scissors',
   'question',
   'exclamation',
   'wait',
@@ -108,7 +112,7 @@ io.on('connection', socket => {
   socket.on('lobby:emote', emote => {
     if(player.lobby) {
       const now = Date.now();
-      if(now - player.lastEmote < 1000 || !EMOTES.includes(emote))
+      if(now - player.lastEmote < 400 || !EMOTES.includes(emote))
         return;
 
       player.lastEmote = now;

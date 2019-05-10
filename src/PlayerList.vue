@@ -9,21 +9,12 @@
           <th style="position: relative;">
             Players
             <span class="user-icons">
-              <sui-popup hoverable>
-                <div class="emote-list">
-                  <sui-button v-for="emote in emotes"
-                    circular
-                    :key="emote"
-                    @click="$socket.emit('lobby:emote', emote)"
-                    :icon="emote" />
-                </div>
-                <sui-button basic
-                  slot="trigger"
-                  color="green"
-                  icon="chat"
-                  size="tiny">
-                </sui-button>
-              </sui-popup>
+              <sui-button :basic="!showEmotes"
+                color="green"
+                icon="chat"
+                size="tiny"
+                @click="showEmotes = !showEmotes">
+              </sui-button>
               <sui-button :basic="!changeMode"
                 v-if="isAdmin"
                 @click="changeMode = !changeMode; removeMode = false"
@@ -39,6 +30,15 @@
                 size="tiny">
               </sui-button>
             </span>
+            <sui-card :class="['ooc-popup', {hidden: !showEmotes}]">
+              <div class="emote-list">
+                <sui-button v-for="emote in emotes"
+                  circular
+                  :key="emote"
+                  @click="$socket.emit('lobby:emote', emote)"
+                  :icon="emote" />
+              </div>
+            </sui-card>
           </th>
         </sui-table-row>
       </sui-table-header>
@@ -225,6 +225,22 @@ td {
   animation: none;
 }
 
+.ooc-popup {
+  display: block;
+  position: absolute !important;
+  top: -18px;
+  right: 0;
+  transform: translateY(-100%);
+  z-index: 9999 !important;
+  padding: 8px !important;
+  width: 220px;
+  max-width: 220px !important;
+}
+
+.ooc-popup.hidden {
+  display: none;
+}
+
 @keyframes emote {
   0% {
     opacity: 0.2;
@@ -291,11 +307,16 @@ export default {
       confirmEndGame: false,
       removeMode: false,
       changeMode: false,
+      showEmotes: false,
       emotes: [
         'smile',
+        'meh',
         'frown',
-        'hand peace',
         'heart',
+        'hand peace',
+        'hand rock',
+        'hand paper',
+        'hand scissors',
         'question',
         'exclamation',
         'wait',
@@ -308,4 +329,4 @@ export default {
     };
   },
 };
-</script>
+</script>fd
