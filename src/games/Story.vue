@@ -26,7 +26,7 @@
           </div>
         </sui-form-field>
         <sui-button type="submit"
-          primary
+          :color="player.isLastLink ? 'green' : 'blue'"
           :disabled="line.length < 1 || line.length > 512">
           {{player.isLastLink ? 'Finish' : 'Sign'}}
         </sui-button>
@@ -46,6 +46,15 @@
         <div v-for="(story, i) in game.stories" :key="i">
           <sui-divider horizonal v-if="i > 0"></sui-divider>
           <sui-card>
+            <div class="like-bar">
+              <div :is="player.state ? 'sui-button' : 'sui-label'"
+                :color="player.state && !player.liked[i] ? 'grey' : 'red'"
+                @click="player.state && $socket.emit('game:message', 'chain:like', i)"
+                icon="heart"
+                size="tiny">
+                {{game.likes[i]}}
+              </div>
+            </div>
             <sui-card-content>
               <sui-comment-group>
                 <sui-comment v-for="(entry, j) in story" :key="j">
@@ -97,12 +106,6 @@
 .sub.header {
   word-break: break-word;
   max-width: 292px;
-}
-
-.char-count {
-  color: #999;
-  font-size: 0.7em;
-  text-align: right;
 }
 
 </style>
@@ -157,7 +160,7 @@ export default {
     return {
       line: '',
       player: { state: '', id: '', },
-      game: { icons: {} },
+      game: { icons: {}, likes: [], },
       lobby: ({
         admin: '',
         players: [],

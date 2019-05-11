@@ -5,3 +5,29 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.char-count {
+  color: #999;
+  font-size: 0.7em;
+  text-align: right;
+}
+
+.like-bar {
+  align-items: center;
+  bottom: 6px;
+  display: flex;
+  left: 6px;
+  position: absolute;
+  width: 100%;
+  z-index: 10;
+}
+
+.like-bar .button, .like-bar .label {
+  font-size: .71428571rem !important;
+  padding: .5833em .833em !important;
+}
+
+.like-bar .ui .icon {
+  margin-right: 7.5px !important;
+  margin-left: 0px !important;
+}

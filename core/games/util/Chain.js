@@ -18,6 +18,9 @@ module.exports = class Chain {
 
     // List of editors
     this.editors = [];
+
+    // Players that like this story
+    this.likes = {};
   }
 
   avgEdits() {

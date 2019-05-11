@@ -110,6 +110,14 @@ module.exports = class Story extends Game {
         this.lobby.endGame();
 
       break;
+
+    case 'chain:like':
+      const progress = this.getGameProgress();
+      if(typeof data === 'number' && data >= 0 && data <= this.chains.length && progress === 1) {
+        this.chains[data].likes[pid] = !this.chains[data].likes[pid];
+        this.sendGameInfo();
+      }
+      break;
     }
   }
 
@@ -131,6 +139,7 @@ module.exports = class Story extends Game {
       link: story.chain.slice(-this.config.contextLen),
     } : {
       id: pid,
+      liked: this.chains.map(s => s.likes[pid]),
       state: done ? 'READING' : 'WAITING',
     };
   }
@@ -161,6 +170,7 @@ module.exports = class Story extends Game {
             'clock')
       }), {}),
       progress,
+      likes: this.chains.map(s => _.size(_.filter(s.likes, l => l))),
       stories: progress === 1 ? this.compileStories() : [],
     };
   }

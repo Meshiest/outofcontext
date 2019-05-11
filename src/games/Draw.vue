@@ -25,6 +25,9 @@
         <sui-form-field>
           <label>{{!player.link ? 'Thing to Draw' : 'This is...'}}</label>
           <textarea v-model="line" rows="2"></textarea>
+          <div class="char-count">
+            {{line.length}}/255
+          </div>
         </sui-form-field>
         <sui-button type="submit"
           primary
@@ -51,6 +54,15 @@
       </sui-divider>
       <div>
         <sui-card v-for="(chain, i) in game.chains" :key="i">
+          <div class="like-bar">
+            <div :is="player.state ? 'sui-button' : 'sui-label'"
+              :color="player.state && !player.liked[i] ? 'grey' : 'red'"
+              @click="player.state && $socket.emit('game:message', 'chain:like', i)"
+              icon="heart"
+              size="tiny">
+              {{game.likes[i]}}
+            </div>
+          </div>
           <sui-card-content style="padding: 14px 0;">
             <sui-comment-group>
               <sui-comment v-for="(entry, j) in chain" :key="j">
@@ -76,11 +88,11 @@
             </sui-comment-group>
           </sui-card-content>
           <sui-card-content v-if="chain.length % 2 == 1">
-            <div style="font-family: 'Lora', serif; padding: 0 14px">
+            <div style="font-family: 'Lora', serif; padding: 0 14px; word-break: break-word;">
               {{chain[0].link.data}}
             </div>
             <sui-divider horizontal>TO</sui-divider>
-            <div style="font-family: 'Lora', serif; padding: 0 14px">
+            <div style="font-family: 'Lora', serif; padding: 0 14px; word-break: break-word;">
               {{chain[chain.length-1].link.data}}
             </div>
           </sui-card-content>
@@ -162,7 +174,7 @@ export default {
     return {
       line: '',
       player: { state: '', id: '', },
-      game: { icons: {} },
+      game: { icons: {}, likes: [], },
       lobby: ({
         admin: '',
         players: [],

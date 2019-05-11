@@ -59,7 +59,16 @@ module.exports = class Draw extends Story {
         this.lobby.endGame();
 
       break;
+
+    case 'chain:like':
+      const progress = this.getGameProgress();
+      if(typeof data === 'number' && data >= 0 && data <= this.chains.length && progress === 1) {
+        this.chains[data].likes[pid] = !this.chains[data].likes[pid];
+        this.sendGameInfo();
+      }
+      break;
     }
+
   }
 
   getState() {
@@ -82,6 +91,7 @@ module.exports = class Draw extends Story {
       progress,
       timeLimit: this.config.timeLimit,
       colors: this.config.colors,
+      likes: this.chains.map(s => _.size(_.filter(s.likes, l => l))),
       chains: progress === 1 ? this.compileStories() : [],
     };
   }

@@ -41,6 +41,8 @@ class Lobby {
 
     // parse config values
     const newConfig = this.configVals();
+    if(!newConfig)
+      return;
 
     const args = [this, newConfig, this.players.map(p => p.playerId)];
 
@@ -168,6 +170,8 @@ class Lobby {
           val = numPlayers;
         else
           val = Math.floor(rawVal);
+        if(info.min > val || info.max < val)
+          return false;
         break;
       case 'bool':
         val = rawVal === 'true';
