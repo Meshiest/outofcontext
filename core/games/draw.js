@@ -26,6 +26,9 @@ module.exports = class Draw extends Story {
       if(!chain || expectedType !== 'image')
         return;
       
+      if(!_.isArray(data) || !_.isArray(data[0]))
+        return;
+
       if(!data.every(l => l[0] === 'Path'))
         return;
 
@@ -33,15 +36,19 @@ module.exports = class Draw extends Story {
 
       this.lastEdit[pid] = Date.now();
       this.redistribute();
+      break;
 
     // Handle passing of descriptions
     case 'draw:desc':
       if(!chain || expectedType !== 'desc')
         return;
 
+      if(typeof data !== 'string')
+        return;
+
       const line = data.replace(/[\u200B-\u200D\uFEFF\n\t]/g, '').trim();
 
-      if(line.length < 1 || line.length > 255)
+      if(line.length < 1 || line.length > 256)
         return;
 
       this.lastEdit[pid] = Date.now();

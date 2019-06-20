@@ -26,12 +26,12 @@
           <label>{{!player.link ? 'Thing to Draw' : 'This is...'}}</label>
           <textarea v-model="line" rows="2"></textarea>
           <div class="char-count">
-            {{line.length}}/255
+            {{line.length}}/256
           </div>
         </sui-form-field>
         <sui-button type="submit"
           primary
-          :disabled="line.length < 1 || line.length > 255">
+          :disabled="line.length < 1 || line.length > 256">
           Describe
         </sui-button>
       </sui-form>
@@ -163,7 +163,7 @@ export default {
     writeLine(event) {
       event.preventDefault();
 
-      if(this.line.length < 1 || this.line.length > 255)
+      if(this.line.length < 1 || this.line.length > 256)
         return;
 
       this.$socket.emit('game:message', 'draw:desc', this.line);

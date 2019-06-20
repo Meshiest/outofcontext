@@ -90,6 +90,9 @@ module.exports = class Story extends Game {
       if(!story)
         return;
 
+      if(typeof data !== 'string')
+        return;
+
       const line = data.replace(/[\u200B-\u200D\uFEFF\n\t]/g, '').trim();
 
       if(line.length < 1 || line.length > 512)
