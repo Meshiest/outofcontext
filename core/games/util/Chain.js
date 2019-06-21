@@ -29,7 +29,8 @@ module.exports = class Chain {
 
   addLink(pid, link) {
     this.lastEditor = this.editor;
-    this.collaborators[pid] = (this.collaborators[pid] || 0) + 1;
+    if(pid)
+      this.collaborators[pid] = (this.collaborators[pid] || 0) + 1;
     this.chain.push(link);
     this.editors.push(pid);
     this.editor = '';

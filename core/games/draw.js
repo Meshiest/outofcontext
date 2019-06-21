@@ -1,6 +1,7 @@
 const Game = require('./game');
 const _ = require('lodash');
 const Story = require('./story');
+const Sanitize = require('./util/Sanitize');
 
 module.exports = class Draw extends Story {
   constructor(lobby, config, players) {
@@ -46,7 +47,7 @@ module.exports = class Draw extends Story {
       if(typeof data !== 'string')
         return;
 
-      const line = data.replace(/[\u200B-\u200D\uFEFF\n\t]/g, '').trim();
+      const line = Sanitize.str(data);
 
       if(line.length < 1 || line.length > 256)
         return;

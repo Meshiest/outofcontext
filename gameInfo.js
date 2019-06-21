@@ -152,6 +152,150 @@ module.exports = {
       },
     },
   },
+  redacted: {
+    title: 'Redacted',
+    subtitle: 'Corrupted Data',
+    description: 'Collaborate in writing, tampering, and editing stories one line at a time.',
+    more: 'Redacted is an extension upon Raconteur. Players still contribute to a storiy, however ' +
+      'now players are able to interact with the lines other players have written. ' +
+      'This game is meant to be played after a familiarity with no context ' +
+      'line-by-line stories is established.',
+    howTo: [
+      'Every player will be given a line in a story',
+      'The next player will choose to edit the story by either ' +
+        'cutting words off the end, or selecting words in the middle.',
+      'Another player will fill in what information was lost',
+      'Players will then continue the story, one line at a time',
+      'At the end, players can enjoy the crazy stories they wrote',
+    ],
+    playTime: '10-15m',
+    config: {
+      players: {
+        name: 'Max Players',
+        text: 'Players',
+        info: 'Maximum allowed players in the game',
+        type: 'int',
+        min: 4,
+        max: 256,
+        defaults: '#numPlayers',
+      },
+      numStories: {
+        name: 'Story Count',
+        text: 'Stories',
+        info: 'The number of stories being written',
+        type: 'int',
+        min: 1,
+        max: 256,
+        defaults: '#numPlayers',
+      },
+      numLinks: {
+        name: 'Lines per Story',
+        text: 'Lines',
+        info: 'How many lines are in a story, there will be three times as many rounds.',
+        type: 'int',
+        min: 3,
+        max: 256,
+        defaults: 6,
+      },
+      anonymous: {
+        name: 'Hide Authors',
+        text: 'Anonymous',
+        info: 'Whether names are shown at the end',
+        type: 'bool',
+        defaults: 'false',
+      },
+      history: {
+        name: 'Show Edits',
+        text: 'Edits',
+        info: 'Whether pre-edit words are displayed',
+        type: 'list',
+        defaults: 'hide',
+        options: [{
+          name: 'hide',
+          text: 'Hide',
+          value: false,
+        }, {
+          name: 'show',
+          text: 'Show',
+          value: false,
+        }],
+      },
+      gamemode: {
+        name: 'Game Mode',
+        text: 'Mode',
+        type: 'list',
+        info: 'Game Mode determines what editing components are used',
+        defaults: 'normal',
+        options: [{
+          name: 'normal',
+          text: 'Normal',
+          value: {
+            censor: 'player',
+            truncate: 'player',
+          },
+        }, {
+          name: 'censor',
+          text: 'Censor',
+          value: {
+            censor: 'player',
+            truncate: 'none',
+          },
+        }, {
+          name: 'madlib',
+          text: 'Mad Lib',
+          value: {
+            censor: 'random',
+            truncate: 'none',
+          },
+        }, {
+          name: 'truncate',
+          text: 'Truncate',
+          value: {
+            censor: 'none',
+            truncate: 'player',
+          },
+        }, {
+          name: 'shredder',
+          text: 'Shredder',
+          value: {
+            censor: 'none',
+            truncate: 'random',
+          },
+        }, {
+          name: 'chaos',
+          text: 'Chaos',
+          value: {
+            censor: 'random',
+            truncate: 'random',
+          },
+        }],
+      },
+      ink: {
+        name: 'Ink Amount',
+        text: 'Changes',
+        info: 'How many changes players can make during edit phase',
+        type: 'list',
+        defaults: 'normal',
+        options: [{
+          name: 'normal',
+          text: 'Normal',
+          value: 10,
+        }, {
+          name: 'more',
+          text: 'More',
+          value: 15,
+        }, {
+          name: 'many',
+          text: 'Many',
+          value: 20,
+        }, {
+          name: 'unlimited',
+          text: 'Unlimited',
+          value: 500,
+        }]
+      },
+    },
+  },
   assassin: {
     title: 'Wurderer',
     subtitle: 'Murdered by Words',

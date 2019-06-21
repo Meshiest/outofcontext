@@ -5,6 +5,7 @@ const Story = require('./games/story');
 const Assassin = require('./games/assassin');
 const Locations = require('./games/locations');
 const Draw = require('./games/draw');
+const Redacted = require('./games/redacted');
 
 class Lobby {
   constructor() {
@@ -32,8 +33,7 @@ class Lobby {
         this.spectators.push({id: p.id, name: p.name});
       }
     }
-
-    let game;
+;
     const numPlayers = this.players.length;
 
     // cap players
@@ -46,23 +46,16 @@ class Lobby {
 
     const args = [this, newConfig, this.players.map(p => p.playerId)];
 
-    switch(this.selectedGame) {
-      case 'story':
-        game = new Story(...args);
-        break;
-      case 'draw':
-        game = new Draw(...args);
-        break;
-      case 'assassin':
-        game = new Assassin(...args);
-        break;
-      case 'locations':
-        game = new Locations(...args);
-        break;
-    }
+    const Constructor = {
+      story: Story,
+      draw: Draw,
+      assassin: Assassin,
+      redacted: Redacted,
+      locations: Locations
+    }[this.selectedGame];
 
-    if(game) {
-      this.game = game;
+    if(Constructor) {
+      this.game = new Constructor(...args);
       this.lobbyState = 'PLAYING';
       this.updateMembers();
       this.sendLobbyInfo();
