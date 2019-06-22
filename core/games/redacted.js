@@ -75,7 +75,7 @@ module.exports = class Redacted extends Story {
       if(!chain || expectedType !== 'repair')
         return;
 
-      if(lastChain.kind == 'truncate') {
+      if(lastChain.kind === 'truncate') {
         if(typeof data !== 'string')
           return;
 
@@ -86,7 +86,7 @@ module.exports = class Redacted extends Story {
 
         chain.addLink(pid, {type: 'repair', kind: 'truncate', data: line});
 
-      } else if(lastChain.kind == 'censor') {
+      } else if(lastChain.kind === 'censor') {
         if(!_.isArray(data) || data.some(d =>
               !_.isArray(d) ||
               d.length !== 2 ||
@@ -95,22 +95,22 @@ module.exports = class Redacted extends Story {
           return;
 
         // The chain must be the same length
-        if(lastChain.data.length !== data.length)
+        if(lastChain.data.indexes.length !== data.length)
           return;
 
         data = _.uniqBy(data, d => d[0])
-          .map(([i, s]) => Sanitize.str(s));
+          .map(([i, s]) => [i, Sanitize.str(s)]);
 
         // every index must be in the previous chain's index
         // and every "word" must be sufficiently short
         if(!data.every(([i, s]) =>
-            lastChain.data.includes(d[0]) &&
-            s.length >= 1 && s.length <= 256
+            lastChain.data.indexes.includes(i) &&
+            s.length >= 1 && s.length <= 256 &&
+            getWords(s).length === 1
           ))
           return;
 
         chain.addLink(pid, {type: 'repair', kind: 'censor', data});
-
       } else {
         return;
       }
@@ -168,7 +168,7 @@ module.exports = class Redacted extends Story {
       if(data.length * COST.censor > ink || data.length > Math.ceil(wordCount / 2))
         return;
       
-      const words = getWords(lastChain.data).map(w => w.length)
+      const words = getWords(lastChain.data).map(w => w[0].length)
       let i = 0;
 
       // TODO: make helper function to reduce code-reuse
@@ -177,14 +177,14 @@ module.exports = class Redacted extends Story {
         .split('\u200B')
         .map(s => ({
           type: 'string',
-          value: s
+          value: s,
         }));
       const lengths = data
         .map((d, i) => ({
           type: 'count',
           index: d,
           key: i,
-          value: words[d].length
+          value: words[d],
         }));
 
       chain.addLink(pid, {
@@ -195,6 +195,7 @@ module.exports = class Redacted extends Story {
             .zip(lengths)
             .flatten()
             .compact()
+            .filter(f => f.type !== 'string' || f.value)
             .value(),
           indexes: data,
         },
@@ -289,6 +290,7 @@ module.exports = class Redacted extends Story {
                 .zip(lengths)
                 .flatten()
                 .compact()
+                .filter(f => f.type !== 'string' || f.value)
                 .value(),
               indexes,
             },

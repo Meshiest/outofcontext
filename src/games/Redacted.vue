@@ -6,13 +6,13 @@
         v-if="player.link"
         :icon="icons[player.link.type]">
         <div v-if="player.link.type === 'line'">
-          Tamper with the story
+          Tamper With the Story
         </div>
         <div v-else-if="player.link.type === 'tamper' && player.link.kind === 'censor'">
-          fix censored line
+          Decensor Text
         </div>
         <div v-else-if="player.link.type === 'tamper' && player.link.kind === 'truncate'">
-          fix truncated line
+          Replace Text
         </div>
         <div v-else-if="player.link.type === 'repair'">
           write next line, show edited line
@@ -35,10 +35,41 @@
           Sign
         </sui-button>
       </sui-form>
+      <sui-form @submit="editCensor" v-else-if="player.link && player.link.type === 'tamper' && player.link.kind === 'censor'">
+        <div class="redacted-words">
+          <code v-for="word in player.link.data.line"
+            :style="{
+              textAlign: 'center',
+              width: word.type === 'count' ? Math.max(Math.min(word.value, 12), 3) + 'em' : 'auto',
+              display: word.type === 'count' ? 'inline-block' : 'inline',
+              cursor: 'initial',
+            }"
+            :class="[
+              'tamperable',
+              {
+                redacted: word.type === 'count',
+              },
+            ]">
+            {{word.type === 'count' ? word.key + 1 : word.value || ''}}
+          </code>
+        </div>
+        <sui-form-field v-for="(index, i) in player.link.data.indexes">
+          <label>Word {{i + 1}}</label>
+          <sui-input
+            :name="index"
+            v-model="words[i]" />
+          <div class="char-count">
+            {{words[i] ? words[i].length : 0}}/256, {{wordCount(words[i])}} words
+          </div>
+        </sui-form-field>
+        <sui-button type="submit"
+          primary
+          :disabled="!validWords()">
+          Repair
+        </sui-button>
+      </sui-form>
       <sui-form @submit="editTruncate" v-else-if="player.link && player.link.type === 'tamper' && player.link.kind === 'truncate'">
         
-      </sui-form>
-      <sui-form @submit="editCensor" v-else-if="player.link && player.link.type === 'tamper' && player.link.kind === 'censor'">
       </sui-form>
       <div v-else-if="player.link && player.link.type === 'line'">
         <div>
@@ -67,9 +98,7 @@
               'tamperable',
               {redacted: word.type === 'word' && censorWords.includes(word.index)},
               (censorWords.length + 1) * COST.censor <= game.ink ? word.type : 'punctuation',
-            ]">
-            {{word.value.replace(' ', '&nbsp;')}}
-          </code>
+            ]">{{word.value.replace(' ', '&nbsp;')}}</code>
           <div class="word-count">
             Redacting {{censorWords.length}}/{{Math.min(Math.ceil(wordified.count / 2), Math.floor(game.ink / COST.censor))}} words
           </div>
@@ -81,9 +110,8 @@
               'tamperable',
               {redacted: truncateCount >= wordified.count - word.index},
               word.available ? 'word' : 'punctuation',
-            ]">
-            {{word.value.replace(' ', '&nbsp;')}}
-          </code>
+            ]"
+            >{{word.value.replace(' ', '&nbsp;')}}</code>
           <div class="word-count">
             Redacting {{truncateCount}}/{{Math.min(Math.ceil(wordified.count / 2), Math.floor(game.ink / COST.truncate))}} words
           </div>
@@ -187,7 +215,9 @@
 .tamperable {
   margin: 0;
   width: auto;
-  display: inline-block;
+  max-width: 180px;
+  display: inline;
+  transition: background-color 0.2s ease;
 }
 
 .tamperable.punctuation {
@@ -246,6 +276,11 @@ export default {
           break;
         }
       }
+
+      if(info.link && info.link.data && info.link.data.indexes) {
+        this.words = Array(info.link.data.indexes.length).fill('');
+      }
+
       this.player = info;
     }
   },
@@ -287,8 +322,11 @@ export default {
     }
   },
   methods: {
+    log(...str) {
+      console.log(...str);
+    },
     wordCount(str) {
-      return getWords(str).length;
+      return str ? getWords(str).length : 0;
     },
     writeLine(event) {
       event.preventDefault();
@@ -310,12 +348,15 @@ export default {
     },
     editCensor(event) {
       event.preventDefault();
-      // TODO: read in from multiple inputs
-      if(this.line.length < 1 || this.line.length > 256)
+
+      if(!this.validWords())
         return;
 
-      this.$socket.emit('game:message', 'redacted:repair', [this.line]);
-      this.line = '';
+      this.$socket.emit('game:message', 'redacted:repair',
+        this.player.link.data.indexes.map((index, i) => [index, this.words[i]])
+      );
+
+      this.words = [];
     },
     toggleWord(word) {
       if(word.type === 'word') {
@@ -337,11 +378,17 @@ export default {
       this.censorWords = [];
       this.truncateCount = 0;
     },
+    validWords() {
+      return this.words.every(word =>
+        this.wordCount(word) === 1 && word.length > 0 && word.length <= 256
+      );
+    }
   },
   data() {
     return {
       COST,
       line: '',
+      words: [],
       truncateCount: 0,
       censorWords: [],
       player: { state: '', id: '', },
