@@ -213,7 +213,7 @@ module.exports = {
       },
       edits: {
         name: 'Show Censors',
-        info: 'At what point in the game replacement words are displayed.'
+        info: 'At what point in the game replacement words are displayed.',
         text: 'Censors',
         type: 'list',
         defaults: 'end',
