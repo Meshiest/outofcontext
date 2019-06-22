@@ -40,11 +40,10 @@ module.exports = class Redacted extends Story {
     /*
       Config =
         anonymous: bool
-        history: bool
      */
 
     // Make sure the same player does not edit a chain he or she may already have seen
-    this.clearance = config.players - 3;
+    this.clearance = 3;
   }
 
   handleMessage(pid, type, data) {
@@ -52,10 +51,12 @@ module.exports = class Redacted extends Story {
     const expectedType = chain && this.phases[chain.chain.length % 3];
     const lastChain = chain && _.last(chain.chain);
 
+    let line;
+
     // number of words in the previous line
     const wordCount = chain && expectedType === 'tamper'
       ? getWords(lastChain.data).length
-      : 0,
+      : 0;
     const { ink, gamemode } = this.config;
 
     switch(type) {
@@ -68,7 +69,7 @@ module.exports = class Redacted extends Story {
         if(typeof data !== 'string')
           return;
 
-        const line = Sanitize.str(data);
+        line = Sanitize.str(data);
 
         if(line.length < 1 || line.length > 256)
           return;
@@ -161,7 +162,7 @@ module.exports = class Redacted extends Story {
       const i = 0;
 
       // TODO: make helper function to reduce code-reuse
-      const line = lastChain.data
+      line = lastChain.data
         .replace(WORD_REGEX, str => data.includes(i++) ? `\u200B` : str)
         .map(s => ({
           type: 'string',
@@ -183,7 +184,7 @@ module.exports = class Redacted extends Story {
             .zip(lengths)
             .flatten()
             .compact()
-            .value();
+            .value(),
           indexes: data,
         },
       });
@@ -198,10 +199,10 @@ module.exports = class Redacted extends Story {
       if(!chain || expectedType !== 'line')
         return;
 
-      if(typeof line !== 'string')
+      if(typeof data !== 'string')
         return;
 
-      const line = Sanitize.str(data);
+      line = Sanitize.str(data);
 
       if(line.length < 1 || line.length > 256)
         return;
@@ -276,7 +277,7 @@ module.exports = class Redacted extends Story {
                 .zip(lengths)
                 .flatten()
                 .compact()
-                .value();
+                .value(),
               indexes,
             },
           });
@@ -311,12 +312,29 @@ module.exports = class Redacted extends Story {
     return this.chains.map(s =>
       _.chunk(_.zip(s.chain, s.editors), 3)
       .map(([[original, author], [corrupted, tamperer], [edits, editor]]) => ({
-        corrupted
+        corrupted,
+        edits,
         editors: this.config.anonymous
           ? ['', '', '']
           : [author, tamperer, editor],
       }))
     );
+  }
+
+  getPlayerState(pid) {
+    const story = this.chains.find(s => s.editor === pid);
+    const done = this.getGameProgress() === 1;
+
+    return story ? {
+      id: pid,
+      state: 'EDITING',
+      isLastLink: story.chain.length >= this.config.numLinks - 3,
+      link: story.chain.slice(-1)[0],
+    } : {
+      id: pid,
+      liked: this.chains.map(s => s.likes[pid]),
+      state: done ? 'READING' : 'WAITING',
+    };
   }
 
   getState() {

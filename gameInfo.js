@@ -48,26 +48,26 @@ module.exports = {
         defaults: 'false',
       },
       contextLen: {
-        name: 'Extra Context',
-        text: 'More Context',
+        name: 'Context',
+        text: 'Context',
         info: 'Adding additional lines of context helps make stories flow better',
         type: 'list',
         defaults: 'regular',
         options: [{
           name: 'regular',
-          text: 'No',
-          value: 1,
-        }, {
-          name: 'one',
           text: '1 Line',
-          value: 2,
+          value: 1,
         }, {
           name: 'two',
           text: '2 Lines',
-          value: 3,
+          value: 2,
         }, {
           name: 'three',
           text: '3 Lines',
+          value: 3,
+        }, {
+          name: 'four',
+          text: '4 Lines',
           value: 4,
         }],
       }
@@ -123,30 +123,37 @@ module.exports = {
         options: [{
           name: 'none',
           text: 'None',
+          more: 'No Limit',
           value: 0,
         }, {
           name: 'sec5',
           text: '5 sec',
+          more: '5 seconds',
           value: 5,
         }, {
           name: 'sec15',
           text: '15 sec',
+          more: '15 seconds',
           value: 15,
         }, {
           name: 'sec30',
           text: '30 sec',
+          more: '30 seconds',
           value: 30,
         }, {
           name: 'min1',
           text: '1 min',
+          more: '1 minute',
           value: 60,
         }, {
           name: 'min2',
           text: '2 min',
+          more: '2 minutes',
           value: 120,
         }, {
           name: 'min5',
           text: '5 min',
+          more: '5 minutes',
           value: 300,
         }],
       },
@@ -154,8 +161,8 @@ module.exports = {
   },
   redacted: {
     title: 'Redacted',
-    subtitle: 'Corrupted Data',
-    description: 'Collaborate in writing, tampering, and editing stories one line at a time.',
+    subtitle: '█████ ███████',
+    description: 'Collaborate in writing, tampering, and repairing stories one line at a time.',
     more: 'Redacted is an extension upon Raconteur. Players still contribute to a storiy, however ' +
       'now players are able to interact with the lines other players have written. ' +
       'This game is meant to be played after a familiarity with no context ' +
@@ -191,7 +198,7 @@ module.exports = {
       numLinks: {
         name: 'Lines per Story',
         text: 'Lines',
-        info: 'How many lines are in a story, there will be three times as many rounds.',
+        info: 'How many lines are in a story. There will be three times as many rounds.',
         type: 'int',
         min: 3,
         max: 256,
@@ -203,22 +210,6 @@ module.exports = {
         info: 'Whether names are shown at the end',
         type: 'bool',
         defaults: 'false',
-      },
-      history: {
-        name: 'Show Edits',
-        text: 'Edits',
-        info: 'Whether pre-edit words are displayed',
-        type: 'list',
-        defaults: 'hide',
-        options: [{
-          name: 'hide',
-          text: 'Hide',
-          value: false,
-        }, {
-          name: 'show',
-          text: 'Show',
-          value: false,
-        }],
       },
       gamemode: {
         name: 'Game Mode',
@@ -236,6 +227,7 @@ module.exports = {
         }, {
           name: 'censor',
           text: 'Censor',
+          more: 'Censor Only',
           value: {
             censor: 'player',
             truncate: 'none',
@@ -243,20 +235,23 @@ module.exports = {
         }, {
           name: 'madlib',
           text: 'Mad Lib',
+          more: 'Random Censor',
           value: {
             censor: 'random',
             truncate: 'none',
           },
         }, {
-          name: 'truncate',
-          text: 'Truncate',
+          name: 'finish',
+          text: 'Finish',
+          more: 'Truncate Only',
           value: {
             censor: 'none',
             truncate: 'player',
           },
         }, {
-          name: 'shredder',
-          text: 'Shredder',
+          name: 'shred',
+          text: 'Shred',
+          more: 'Random Truncate',
           value: {
             censor: 'none',
             truncate: 'random',
@@ -264,6 +259,7 @@ module.exports = {
         }, {
           name: 'chaos',
           text: 'Chaos',
+          more: 'Random',
           value: {
             censor: 'random',
             truncate: 'random',
@@ -279,18 +275,22 @@ module.exports = {
         options: [{
           name: 'normal',
           text: 'Normal',
+          more: 'Normal - 2 middle, 5 end',
           value: 10,
         }, {
           name: 'more',
           text: 'More',
+          more: 'More - 3 middle, 7 end',
           value: 15,
         }, {
           name: 'many',
           text: 'Many',
-          value: 20,
+          more: 'Many - 5 middle, 12 end',
+          value: 25,
         }, {
-          name: 'unlimited',
-          text: 'Unlimited',
+          name: 'overkill',
+          text: 'Overkill',
+          more: 'Overkill - enough',
           value: 500,
         }]
       },

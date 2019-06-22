@@ -143,7 +143,10 @@
                 </sui-dropdown>
                 <sui-dropdown v-else-if="opt.type === 'list'"
                   :value="deriveConfigValue(name)"
-                  :options="opt.options.map(o => ({text: o.text, value: o.name}))"
+                  :options="opt.options.map(o => ({
+                    text: o.more || o.text,
+                    value: o.name,
+                  }))"
                   @input="val => updateConfig(name, val)"
                   selection>
                 </sui-dropdown>

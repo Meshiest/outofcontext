@@ -1,0 +1,363 @@
+<template>
+  <div>
+    <div v-if="player.state === 'EDITING'"
+      style="margin: 16px 0">
+      <h2 is="sui-header"
+        v-if="player.link"
+        :icon="icons[player.link.type]">
+        <div v-if="player.link.type === 'line'">
+          Tamper with the story
+        </div>
+        <div v-else-if="player.link.type === 'tamper' && player.link.kind === 'censor'">
+          fix censored line
+        </div>
+        <div v-else-if="player.link.type === 'tamper' && player.link.kind === 'truncate'">
+          fix truncated line
+        </div>
+        <div v-else-if="player.link.type === 'repair'">
+          write next line, show edited line
+        </div>
+      </h2>
+      <h2 is="sui-header" icon="pencil" v-else-if="!player.link">
+        Write the first line
+      </h2>
+      <sui-form @submit="writeLine" v-if="!player.link || player.link.type === 'repair'">
+        <sui-form-field>
+          <label>The Story Goes...</label>
+          <textarea v-model="line" rows="2"></textarea>
+          <div class="char-count">
+            {{line.length}}/256, {{wordCount(line)}} words
+          </div>
+        </sui-form-field>
+        <sui-button type="submit"
+          primary
+          :disabled="line.length < 1 || line.length > 256">
+          Describe
+        </sui-button>
+      </sui-form>
+      <sui-form @submit="editTruncate" v-else-if="player.link && player.link.type === 'tamper' && player.link.kind === 'truncate'">
+        
+      </sui-form>
+      <sui-form @submit="editCensor" v-else-if="player.link && player.link.type === 'tamper' && player.link.kind === 'censor'">
+      </sui-form>
+      <div v-else-if="player.link && player.link.type === 'line'">
+        <div>
+          <sui-button-group v-if="game.gamemode.censor !== 'none' && game.gamemode.truncate !== 'none'">
+            <sui-button
+              color="black"
+              icon="cut"
+              @click="tamperType = 'truncate'"
+              :basic="tamperType !== 'truncate'">
+              Truncate
+            </sui-button>
+            <sui-button-or />
+            <sui-button
+              color="black"
+              icon="eraser"
+              @click="tamperType = 'censor'"
+              :basic="tamperType !== 'censor'">
+              Censor
+            </sui-button>
+          </sui-button-group>
+        </div>
+        <div class="redacted-words" v-if="tamperType === 'censor'">
+          <code v-for="word in wordified"
+            @click="toggleWord(word)"
+            :class="[
+              'tamperable',
+              {redacted: word.type === 'word' && censorWords.includes(word.index)},
+              (censorWords.length + 1) * COST.censor <= game.ink ? word.type : 'punctuation',
+            ]">
+            {{word.value.replace(' ', '&nbsp;')}}
+          </code>
+          <div class="word-count">
+            Redacting {{censorWords.length}}/{{Math.min(Math.ceil(wordified.count / 2), Math.floor(game.ink / COST.censor))}} words
+          </div>
+        </div>
+        <div class="redacted-words" v-else-if="tamperType === 'truncate'">
+          <code v-for="word, i in wordified"
+            @click="if(word.available) truncateCount = wordified.count - word.index"
+            :class="[
+              'tamperable',
+              {redacted: truncateCount >= wordified.count - word.index},
+              word.available ? 'word' : 'punctuation',
+            ]">
+            {{word.value.replace(' ', '&nbsp;')}}
+          </code>
+          <div class="word-count">
+            Redacting {{truncateCount}}/{{Math.min(Math.ceil(wordified.count / 2), Math.floor(game.ink / COST.truncate))}} words
+          </div>
+        </div>
+        <sui-button
+          primary
+          @click="submitTamper"
+          :disabled="false">
+          {{tamperType === 'censor' ? 'Censor' : 'Truncate'}} Story
+        </sui-button>
+      </div>
+    </div>
+    <div v-else-if="player.state === 'WAITING'"
+      style="margin: 16px">
+      <sui-loader active centered inline size="huge">
+        Waiting on Other Players
+      </sui-loader>
+    </div>
+    <div v-else-if="player.state === 'READING' || !player.state && game.chains && game.chains.length">
+      <sui-divider horizontal>
+        Chains
+      </sui-divider>
+      <div>
+        <sui-card v-for="(chain, i) in game.chains" :key="i">
+          <div class="like-bar">
+            <div :is="player.state ? 'sui-button' : 'sui-label'"
+              :color="player.state && !player.liked[i] ? 'grey' : 'red'"
+              @click="player.state && $socket.emit('game:message', 'chain:like', i)"
+              icon="heart"
+              size="tiny">
+              {{game.likes[i]}}
+            </div>
+          </div>
+          <sui-card-content style="padding: 14px 0;">
+            <sui-comment-group>
+              <sui-comment v-for="(entry, j) in chain" :key="j">
+                <sui-comment-content>
+                  <sui-comment-text>
+                    <p v-if="entry.link.type === 'desc'"
+                      style="font-family: 'Lora', serif; padding: 0 14px">
+                      {{entry.link.data}}
+                    </p>
+                  </sui-comment-text>
+                  <sui-comment-author v-if="nameTable[entry.editor]"
+                    style="text-align: right; padding: 0 14px">
+                    &mdash;{{nameTable[entry.editors[0]]}}, {{nameTable[entry.editors[1]]}}, {{nameTable[entry.editors[2]]}}
+                  </sui-comment-author>
+                </sui-comment-content>
+              </sui-comment>
+            </sui-comment-group>
+          </sui-card-content>
+          <sui-card-content v-if="chain.length % 2 == 1">
+            <div style="font-family: 'Lora', serif; padding: 0 14px; word-break: break-word;">
+              {{chain[0].link.data}}
+            </div>
+            <sui-divider horizontal>TO</sui-divider>
+            <div style="font-family: 'Lora', serif; padding: 0 14px; word-break: break-word;">
+              {{chain[chain.length-1].link.data}}
+            </div>
+          </sui-card-content>
+        </sui-card>
+      </div>
+      <sui-button v-if="player.state === 'READING'"
+        style="margin-top: 16px"
+        @click="$socket.emit('game:message', 'redacted:done', game.icons[player.id] !== 'check')"
+        primary
+        :basic="game.icons[player.id] === 'check'" >
+        {{game.icons[player.id] === 'check' ? 'Still Reading' : 'Done Reading'}}
+      </sui-button>
+    </div>
+    <div v-else style="margin: 16px">
+      <sui-loader active centered inline size="huge">
+        Evidence is being tampered with
+      </sui-loader>
+    </div>
+    <sui-progress
+      v-if="game.progress !== 1"
+      state="active"
+      progress
+      indicating
+      :percent="Math.round((game.progress || 0) * 100)"/>
+  </div>
+</template>
+
+<style>
+.redacted {
+  background-color: black;
+  color: white;
+}
+
+.redacted-words {
+  margin: 16px 0;
+}
+
+.word-count {
+  font-size: 12px;
+  font-style: italic;
+  margin: 14px 0;
+}
+
+.tamperable {
+  margin: 0;
+  width: auto;
+  display: inline-block;
+}
+
+.tamperable.punctuation {
+  border-bottom: 2px solid transparent;
+}
+
+.tamperable.word {
+  cursor: pointer;
+  border-bottom: 2px solid #d4d4d4;
+}
+
+</style>
+
+<script>
+
+const WORD_REGEX = /(?<=\s|^|\b)(?:[-'%$#&\/]\b|\b[-'%$#&\/]|\d*\.?\d+|[A-Za-z0-9]|\([A-Za-z0-9]+\))+(?=\s|$|\b)/g;
+
+const COST = {
+  truncate: 2,
+  censor: 5,
+}
+
+function getWords(str) {
+  return Array.from(str.matchAll(WORD_REGEX));
+}
+
+import _ from 'lodash';
+
+export default {
+  sockets: {
+    'lobby:info': function(info) {
+      this.lobby = info;
+    },
+    'game:info': function(info) {
+      this.game = info;
+      if(info.gamemode.censor === 'none')
+        this.tamperType = 'truncate';
+      else if(info.gamemode.tamper === 'none')
+        this.tamperType = 'censor';
+    },
+    'game:player:info': function(info) {
+      if(this.player.state !== info.state) {
+        switch(info.state) {
+        case 'WAITING':
+          this.line = '';
+          break;
+        case 'EDITING':
+          vibrate(40);
+          break;
+        case 'READING':
+          vibrate(40, 100, 40);
+          break;
+        }
+      }
+      this.player = info;
+    }
+  },
+  created() {
+    this.$socket.emit('game:info');
+    this.$socket.emit('lobby:info');
+  },
+  computed: {
+    nameTable() {
+      return this.lobby.players.reduce((obj, p) => ({...obj, [p.playerId]: p.name}), {});
+    },
+    wordified() {
+      if(this.player.link.type !== 'line')
+        return [];
+
+      const line = this.player.link.data;
+      const punctuations = line.split(WORD_REGEX)
+        .map((s, i) => ({
+          type: 'punctuation',
+          index: i - 1,
+          value: s,
+        }));
+      const rawWords = getWords(line)
+      const words = rawWords
+        .map((m, i) => ({
+          type: 'word',
+          index: i,
+          available: i >= Math.floor(rawWords.length / 2)
+            && (rawWords.length - i) * COST.truncate <= this.game.ink,
+          value: m[0],
+        }));
+      const wordified = _.chain(punctuations)
+        .zip(words)
+        .flatten()
+        .filter('value')
+        .value();
+      wordified.count = words.length;
+      return wordified;
+    }
+  },
+  methods: {
+    wordCount(str) {
+      return getWords(str).length;
+    },
+    writeLine(event) {
+      event.preventDefault();
+
+      if(this.line.length < 1 || this.line.length > 256)
+        return;
+
+      this.$socket.emit('game:message', 'redacted:line', this.line);
+      this.line = '';
+    },
+    editTamper(event) {
+      event.preventDefault();
+
+      if(this.line.length < 1 || this.line.length > 256)
+        return;
+
+      this.$socket.emit('game:message', 'redacted:repair', this.line);
+      this.line = '';
+    },
+    editCensor(event) {
+      event.preventDefault();
+      // TODO: read in from multiple inputs
+      if(this.line.length < 1 || this.line.length > 256)
+        return;
+
+      this.$socket.emit('game:message', 'redacted:repair', [this.line]);
+      this.line = '';
+    },
+    toggleWord(word) {
+      if(word.type === 'word') {
+        // console.log(word);
+        if(this.censorWords.includes(word.index))
+          this.censorWords = this.censorWords.filter(i => i != word.index);
+        else if((this.censorWords.length + 1) * COST.censor <= this.game.ink)
+          this.censorWords.push(word.index);
+        // this.$forceUpdate();
+      }
+    },
+    submitTamper(event) {
+      event.preventDefault();
+      this.$socket.emit(
+        'game:message',
+        `redacted:${this.tamperType}`,
+        this.tamperType === 'censor' ? this.censorWords : this.truncateCount
+      );
+      this.censorWords = [];
+      this.truncateCount = 0;
+    },
+  },
+  data() {
+    return {
+      COST,
+      line: '',
+      truncateCount: 0,
+      censorWords: [],
+      player: { state: '', id: '', },
+      game: { icons: {}, likes: [], gamemode: {}, ink: 0, },
+      icons: {
+        // shifted one because of editing order
+        line: 'eraser',
+        tamper: 'redo',
+        repair: 'pencil',
+      },
+      tamperType: 'truncate',
+      lobby: ({
+        admin: '',
+        players: [],
+        members: [],
+        spectators: [],
+        game: '',
+        config: {},
+      }),
+    };
+  },
+};
+</script>
