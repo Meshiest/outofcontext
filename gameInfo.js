@@ -163,7 +163,7 @@ module.exports = {
     title: 'Redacted',
     subtitle: '█████ ███████',
     description: 'Collaborate in writing, tampering, and repairing stories one line at a time.',
-    more: 'Redacted is an extension upon Raconteur. Players still contribute to a storiy, however ' +
+    more: 'Redacted is an extension upon Raconteur. Players still contribute to a story, however ' +
       'now players are able to interact with the lines other players have written. ' +
       'This game is meant to be played after a familiarity with no context ' +
       'line-by-line stories is established.',
