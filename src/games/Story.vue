@@ -55,7 +55,7 @@
                 {{game.likes[i]}}
               </div>
             </div>
-            <sui-card-content>
+            <sui-card-content :style="{marginBottom: story[0].editor ? 0 : '14px'}">
               <sui-comment-group>
                 <sui-comment v-for="(entry, j) in story" :key="j">
                   <sui-comment-content>
