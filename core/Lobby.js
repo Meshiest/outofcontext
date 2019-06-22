@@ -23,6 +23,15 @@ class Lobby {
     this.expires = Date.now(); // TODO: soon make lobbies that can last multiple days
   }
 
+  attempt(fn) {
+    try {
+      return fn();
+    } catch (err) {
+      console.log('Lobby Error', err);
+      this.endGame();
+    }
+  }
+
   // Start the game
   startGame() {
     if(!this.selectedGame) return;

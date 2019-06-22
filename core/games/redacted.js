@@ -11,8 +11,18 @@ const COST = {
   censor: 5,
 }
 
+String.prototype.matchAll = function(pattern) {
+  const clone = new RegExp(pattern.source, pattern.flags);
+  const matches = [];
+  let match;
+  while(match = clone.exec(this))
+    matches.push(match);
+
+  return matches;
+};
+
 function getWords(str) {
-  return Array.from(str.matchAll(WORD_REGEX));
+  return str.matchAll(WORD_REGEX);
 }
 
 module.exports = class Redacted extends Story {
@@ -54,7 +64,7 @@ module.exports = class Redacted extends Story {
     let line;
 
     // number of words in the previous line
-    const wordCount = chain && expectedType === 'tamper'
+    const wordCount = lastChain && expectedType === 'tamper'
       ? getWords(lastChain.data).length
       : 0;
     const { ink, gamemode } = this.config;
@@ -157,13 +167,14 @@ module.exports = class Redacted extends Story {
       // can't use too much ink or go over half the words
       if(data.length * COST.censor > ink || data.length > Math.ceil(wordCount / 2))
         return;
-
+      
       const words = getWords(lastChain.data).map(w => w.length)
-      const i = 0;
+      let i = 0;
 
       // TODO: make helper function to reduce code-reuse
       line = lastChain.data
         .replace(WORD_REGEX, str => data.includes(i++) ? `\u200B` : str)
+        .split('\u200B')
         .map(s => ({
           type: 'string',
           value: s
@@ -252,10 +263,11 @@ module.exports = class Redacted extends Story {
           const indexes = _.shuffle(_.range(prevLine.length)).slice(0, count);
 
           const words = prevLine.map(w => w.length)
-          const i = 0;
+          let i = 0;
 
           const newLine = line
             .replace(WORD_REGEX, str => indexes.includes(i++) ? `\u200B` : str)
+            .split('\u200B')
             .map(s => ({
               type: 'string',
               value: s

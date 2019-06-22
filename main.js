@@ -174,7 +174,10 @@ io.on('connection', socket => {
   // Core gameplay messages
   socket.on('game:message', (type, data) => {
     if(player.lobby) {
-      player.lobby.gameMessage(player.id, type, data);
+      // Error handling
+      player.lobby.attempt(() => {
+        player.lobby.gameMessage(player.id, type, data);
+      });
     } else {
       socket.emit('lobby:leave');
     }
@@ -183,7 +186,10 @@ io.on('connection', socket => {
   // Change game config if the player is an admin
   socket.on('lobby:game:config', (name, val) => {
     if(player.isAdmin()) {
-      player.lobby.setConfig(name, val);
+      // Error handling
+      player.lobby.attempt(() => {
+        player.lobby.setConfig(name, val);
+      });
     }
   });
 

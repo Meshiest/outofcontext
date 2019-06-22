@@ -32,7 +32,7 @@
         <sui-button type="submit"
           primary
           :disabled="line.length < 1 || line.length > 256">
-          Describe
+          Sign
         </sui-button>
       </sui-form>
       <sui-form @submit="editTruncate" v-else-if="player.link && player.link.type === 'tamper' && player.link.kind === 'truncate'">
@@ -197,6 +197,10 @@
 .tamperable.word {
   cursor: pointer;
   border-bottom: 2px solid #d4d4d4;
+}
+
+.tamperable.redacted {
+  cursor: pointer;
 }
 
 </style>
