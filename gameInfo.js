@@ -11,7 +11,7 @@ module.exports = {
       'Players will continue the story, one line at a time',
       'At the end, players can enjoy the crazy stories they wrote',
     ],
-    playTime: '10-15m',
+    playTime: '15-20m',
     config: {
       players: {
         name: 'Max Players',
@@ -175,7 +175,7 @@ module.exports = {
       'Players will then continue the story, one line at a time',
       'At the end, players can enjoy the crazy stories they wrote',
     ],
-    playTime: '10-15m',
+    playTime: '15-20m',
     config: {
       players: {
         name: 'Max Players',
@@ -200,7 +200,7 @@ module.exports = {
         text: 'Lines',
         info: 'How many lines are in a story. There will be three times as many rounds.',
         type: 'int',
-        min: 3,
+        min: 2,
         max: 256,
         defaults: 6,
       },
@@ -210,6 +210,28 @@ module.exports = {
         info: 'Whether names are shown at the end',
         type: 'bool',
         defaults: 'false',
+      },
+      edits: {
+        name: 'Show Censors',
+        text: 'Censors',
+        type: 'list',
+        defaults: 'end',
+        options: [{
+          name: 'end',
+          text: 'Show',
+          more: 'End of Game',
+          value: 1,
+        }, {
+          name: 'always',
+          text: 'Always',
+          more: 'All Game',
+          value: 0,
+        }, {
+          name: 'hide',
+          more: 'Never',
+          text: 'Hide',
+          value: 2,
+        }],
       },
       gamemode: {
         name: 'Game Mode',
@@ -234,7 +256,7 @@ module.exports = {
           },
         }, {
           name: 'madlib',
-          text: 'Mad Lib',
+          text: 'Spill',
           more: 'Random Censor',
           value: {
             censor: 'random',

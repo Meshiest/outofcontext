@@ -12,16 +12,26 @@
           Decensor Text
         </div>
         <div v-else-if="player.link.type === 'tamper' && player.link.kind === 'truncate'">
-          Replace Text
+          Repair Text
         </div>
         <div v-else-if="player.link.type === 'repair'">
-          write next line, show edited line
+          Continue the Story
         </div>
       </h2>
       <h2 is="sui-header" icon="pencil" v-else-if="!player.link">
         Write the first line
       </h2>
       <sui-form @submit="writeLine" v-if="!player.link || player.link.type === 'repair'">
+        <div class="redacted-words" v-if="player.link" style="margin-top: 0;">
+          <code v-for="word in player.link.data.line"
+            :style="{ cursor: 'initial' }"
+            :class="[
+              'tamperable',
+              {
+                redacted: word.type === 'word',
+              },
+            ]">{{word.value}}</code>
+        </div>
         <sui-form-field>
           <label>The Story Goes...</label>
           <textarea v-model="line" rows="2"></textarea>
@@ -40,7 +50,7 @@
           <code v-for="word in player.link.data.line"
             :style="{
               textAlign: 'center',
-              width: word.type === 'count' ? Math.max(Math.min(word.value, 12), 3) + 'em' : 'auto',
+              width: word.type === 'count' ? Math.max(Math.min(word.value, 12), 3) * 0.75 + 'em' : 'auto',
               display: word.type === 'count' ? 'inline-block' : 'inline',
               cursor: 'initial',
             }"
@@ -49,9 +59,7 @@
               {
                 redacted: word.type === 'count',
               },
-            ]">
-            {{word.type === 'count' ? word.key + 1 : word.value || ''}}
-          </code>
+            ]">{{word.type === 'count' ? word.key + 1 : word.value || ''}}</code>
         </div>
         <sui-form-field v-for="(index, i) in player.link.data.indexes">
           <label>Word {{i + 1}}</label>
@@ -59,7 +67,7 @@
             :name="index"
             v-model="words[i]" />
           <div class="char-count">
-            {{words[i] ? words[i].length : 0}}/256, {{wordCount(words[i])}} words
+            {{words[i] ? words[i].length : 0}}/32, {{wordCount(words[i])}} words
           </div>
         </sui-form-field>
         <sui-button type="submit"
@@ -69,7 +77,26 @@
         </sui-button>
       </sui-form>
       <sui-form @submit="editTruncate" v-else-if="player.link && player.link.type === 'tamper' && player.link.kind === 'truncate'">
-        
+        <div class="redacted-words">
+          <code class="tamperable">
+            {{player.link.data.line.replace(' ', '&nbsp;')}}
+          </code>
+          <code class="tamperable redacted" style="cursor: initial;">
+            {{lodash.repeat('&nbsp;', Math.floor(player.link.data.length))}}
+          </code>
+        </div>
+        <sui-form-field>
+          <label>Replacement</label>
+          <textarea v-model="line" rows="2"></textarea>
+          <div class="char-count">
+            {{line.length}}/256, {{wordCount(line)}} words
+          </div>
+        </sui-form-field>
+        <sui-button type="submit"
+          primary
+          :disabled="line.length < 1 || line.length > 256">
+          Repair
+        </sui-button>
       </sui-form>
       <div v-else-if="player.link && player.link.type === 'line'">
         <div>
@@ -91,27 +118,31 @@
             </sui-button>
           </sui-button-group>
         </div>
-        <div class="redacted-words" v-if="tamperType === 'censor'">
-          <code v-for="word in wordified"
-            @click="toggleWord(word)"
-            :class="[
-              'tamperable',
-              {redacted: word.type === 'word' && censorWords.includes(word.index)},
-              (censorWords.length + 1) * COST.censor <= game.ink ? word.type : 'punctuation',
-            ]">{{word.value.replace(' ', '&nbsp;')}}</code>
+        <div v-if="tamperType === 'censor'">
+          <div class="redacted-words">
+            <code v-for="word in wordified"
+              @click="toggleWord(word)"
+              :class="[
+                'tamperable',
+                {redacted: word.type === 'word' && censorWords.includes(word.index)},
+                (censorWords.length + 1) * COST.censor <= game.ink ? word.type : 'punctuation',
+              ]">{{word.value.replace(' ', '&nbsp;')}}</code>
+          </div>
           <div class="word-count">
             Redacting {{censorWords.length}}/{{Math.min(Math.ceil(wordified.count / 2), Math.floor(game.ink / COST.censor))}} words
           </div>
         </div>
-        <div class="redacted-words" v-else-if="tamperType === 'truncate'">
-          <code v-for="word, i in wordified"
-            @click="if(word.available) truncateCount = wordified.count - word.index"
-            :class="[
-              'tamperable',
-              {redacted: truncateCount >= wordified.count - word.index},
-              word.available ? 'word' : 'punctuation',
-            ]"
-            >{{word.value.replace(' ', '&nbsp;')}}</code>
+        <div v-else-if="tamperType === 'truncate'">
+          <div class="redacted-words">
+            <code v-for="word, i in wordified"
+              @click="if(word.available) truncateCount = wordified.count - word.index"
+              :class="[
+                'tamperable',
+                {redacted: truncateCount >= wordified.count - word.index},
+                word.available ? 'word' : 'punctuation',
+              ]"
+              >{{word.value.replace(' ', '&nbsp;')}}</code>
+          </div>
           <div class="word-count">
             Redacting {{truncateCount}}/{{Math.min(Math.ceil(wordified.count / 2), Math.floor(game.ink / COST.truncate))}} words
           </div>
@@ -132,7 +163,7 @@
     </div>
     <div v-else-if="player.state === 'READING' || !player.state && game.chains && game.chains.length">
       <sui-divider horizontal>
-        Chains
+        Stories
       </sui-divider>
       <div>
         <sui-card v-for="(chain, i) in game.chains" :key="i">
@@ -150,14 +181,20 @@
               <sui-comment v-for="(entry, j) in chain" :key="j">
                 <sui-comment-content>
                   <sui-comment-text>
-                    <p v-if="entry.link.type === 'desc'"
-                      style="font-family: 'Lora', serif; padding: 0 14px">
-                      {{entry.link.data}}
-                    </p>
+                    <div class="redacted-words" style="padding: 0 14px">
+                      <code v-for="word in entry.data.line"
+                        :style="{ cursor: 'initial' }"
+                        :class="[
+                          'tamperable',
+                          {
+                            redacted: word.type === 'word',
+                          },
+                        ]">{{word.value}}</code>
+                    </div>
                   </sui-comment-text>
-                  <sui-comment-author v-if="nameTable[entry.editor]"
+                  <sui-comment-author v-if="entry.editors[0]"
                     style="text-align: right; padding: 0 14px">
-                    &mdash;{{nameTable[entry.editors[0]]}}, {{nameTable[entry.editors[1]]}}, {{nameTable[entry.editors[2]]}}
+                    &mdash;{{nameTable[entry.editors[0]]}}{{entry.editors[1] ? ', ' : ''}}{{nameTable[entry.editors[1]]}}, {{nameTable[entry.editors[2]]}}
                   </sui-comment-author>
                 </sui-comment-content>
               </sui-comment>
@@ -204,6 +241,8 @@
 
 .redacted-words {
   margin: 16px 0;
+  overflow-wrap: break-word;
+  justify-content: center;
 }
 
 .word-count {
@@ -337,7 +376,7 @@ export default {
       this.$socket.emit('game:message', 'redacted:line', this.line);
       this.line = '';
     },
-    editTamper(event) {
+    editTruncate(event) {
       event.preventDefault();
 
       if(this.line.length < 1 || this.line.length > 256)
@@ -386,6 +425,7 @@ export default {
   },
   data() {
     return {
+      lodash: _,
       COST,
       line: '',
       words: [],

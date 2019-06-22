@@ -135,6 +135,12 @@
                     style="margin-left: 8px"
                     icon="users"/>
                 </div>
+                <div class="char-count" v-if="typeof opt.max !== 'undefined'  && deriveConfigValue(name) > opt.max">
+                  Maximum: {{opt.max}}
+                </div>
+                <div class="char-count" v-if="typeof opt.min !== 'undefined' && deriveConfigValue(name) < opt.min">
+                  Minimum: {{opt.min}}
+                </div>
                 <sui-dropdown v-else-if="opt.type === 'bool'"
                   :value="deriveConfigValue(name)"
                   :options="[{text: 'Enabled', value: 'true'}, {text: 'Disabled', value: 'false'}]"

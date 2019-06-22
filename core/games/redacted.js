@@ -105,7 +105,7 @@ module.exports = class Redacted extends Story {
         // and every "word" must be sufficiently short
         if(!data.every(([i, s]) =>
             lastChain.data.indexes.includes(i) &&
-            s.length >= 1 && s.length <= 256 &&
+            s.length >= 1 && s.length <= 32 &&
             getWords(s).length === 1
           ))
           return;
@@ -145,6 +145,10 @@ module.exports = class Redacted extends Story {
           count: data,
         }
       });
+
+      this.lastEdit[pid] = Date.now();
+      this.redistribute();
+
       break;
 
     // Handle passing of censor style tampers (words in middle)
@@ -234,10 +238,10 @@ module.exports = class Redacted extends Story {
           const middle = (high + low) / 2;
           const range = (high - low) / 2;
 
-          const count = Math.min(Math.max(low, Random.gauss(range, middle)), high);
+          const count = Math.min(Math.max(low, Math.round(Random.gauss(range, middle))), high);
 
           const prevLine = getWords(line);
-          const end = prevLine[prevLine.length - data];
+          const end = prevLine[prevLine.length - count];
 
           // Artificially create link
           chain.addLink('', {
@@ -260,7 +264,7 @@ module.exports = class Redacted extends Story {
 
           const prevLine = getWords(line);
 
-          const count = Math.min(Math.max(low, Random.gauss(range, middle)), high);
+          const count = Math.min(Math.max(low, Math.round(Random.gauss(range, middle))), high);
           const indexes = _.shuffle(_.range(prevLine.length)).slice(0, count);
 
           const words = prevLine.map(w => w.length)
@@ -278,7 +282,7 @@ module.exports = class Redacted extends Story {
               type: 'count',
               index: d,
               key: i,
-              value: words[d].length,
+              value: words[d],
             }));
 
           // Artificially create link
@@ -322,12 +326,60 @@ module.exports = class Redacted extends Story {
 
   }
 
+  constructLine(corrupted, edits, stage=0) {
+    if(stage > this.config.edits) {
+      if(corrupted.kind === 'censor') {
+        return {
+          line: corrupted.data.line
+            .map(l => l.type === 'count' ? {
+              type: 'word',
+              value: (edits.data.find(e => e[0] === l.index) || [0, ''])[1],
+            } : {
+              type: 'punctuation',
+              value: l.value,
+            })
+        }
+      } else if (corrupted.kind === 'truncate') {
+        return {
+          line: [{
+            type: 'punctuation',
+            value: corrupted.data.line,
+          }, {
+            type: 'word',
+            value: edits.data,
+          }],
+        };
+      } else {
+        return { type: 'string', line: '' };
+      }
+    } else {
+      if(corrupted.kind === 'censor') {
+        return {
+          line: [{
+            type: 'punctuation',
+            value: corrupted.data.line
+              .map(l => l.type === 'count' ? (edits.data.find(e => e[0] === l.index) || [0, ''])[1] : l.value)
+              .join(''),
+          }],
+        };
+      } else if (corrupted.kind === 'truncate') {
+        return {
+          line: [{
+            type: 'punctuation',
+            value: corrupted.data.line + edits.data,
+          }],
+        };
+      } else {
+        return { type: 'string', line: '' };
+      }
+    }
+  }
+
   compileStories() {
     return this.chains.map(s =>
       _.chunk(_.zip(s.chain, s.editors), 3)
       .map(([[original, author], [corrupted, tamperer], [edits, editor]]) => ({
-        corrupted,
-        edits,
+        data: this.constructLine(corrupted, edits, 2),
         editors: this.config.anonymous
           ? ['', '', '']
           : [author, tamperer, editor],
@@ -339,11 +391,15 @@ module.exports = class Redacted extends Story {
     const story = this.chains.find(s => s.editor === pid);
     const done = this.getGameProgress() === 1;
 
+    const link = story && story.chain.slice(-1)[0];
     return story ? {
       id: pid,
       state: 'EDITING',
       isLastLink: story.chain.length >= this.config.numLinks - 3,
-      link: story.chain.slice(-1)[0],
+      link: link && link.type === 'repair' ? {
+        ...link,
+        data: this.constructLine(...story.chain.slice(-2), 1),
+      } : link,
     } : {
       id: pid,
       liked: this.chains.map(s => s.likes[pid]),
