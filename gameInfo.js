@@ -43,7 +43,7 @@ module.exports = {
       anonymous: {
         name: 'Hide Authors',
         text: 'Anonymous',
-        info: 'Whether names are shown at the end',
+        info: 'Whether names are shown at the end.',
         type: 'bool',
         defaults: 'false',
       },
@@ -207,12 +207,13 @@ module.exports = {
       anonymous: {
         name: 'Hide Authors',
         text: 'Anonymous',
-        info: 'Whether names are shown at the end',
+        info: 'Whether names are shown at the end.',
         type: 'bool',
         defaults: 'false',
       },
       edits: {
         name: 'Show Censors',
+        info: 'At what point in the game replacement words are displayed.'
         text: 'Censors',
         type: 'list',
         defaults: 'end',
