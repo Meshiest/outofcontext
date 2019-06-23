@@ -267,7 +267,8 @@
 
 <script>
 
-const WORD_REGEX = /(?<=\s|^|\b)(?:[-'%$#&\/]\b|\b[-'%$#&\/]|\d*\.?\d+|[A-Za-z0-9]|\([A-Za-z0-9]+\))+(?=\s|$|\b)/g;
+// const WORD_REGEX = /(?<=\s|^|\b)(?:[-'%$#&\/]\b|\b[-'%$#&\/]|\d*\.?\d+|[A-Za-z0-9]|\([A-Za-z0-9]+\))+(?=\s|$|\b)/g;
+const WORD_REGEX = /(?:\b|^)\S+\b/g;
 
 const COST = {
   truncate: 2,
@@ -283,6 +284,10 @@ String.prototype.matchAllFill = function(pattern) {
 
   return matches;
 };
+
+function zip(...rows) {
+  return [...rows[0]].map((_,c) => rows.map(row => row[c]));
+}
 
 function getWords(str) {
   return Array.from(str.matchAllFill(WORD_REGEX));
@@ -350,11 +355,10 @@ export default {
             && (rawWords.length - i) * COST.truncate <= this.game.ink,
           value: m[0],
         }));
-      const wordified = _.chain(punctuations)
-        .zip(words)
-        .flatten()
-        .filter('value')
-        .value();
+      console.log(zip(punctuations, words).flatMap(a => a));
+      const wordified = zip(punctuations, words)
+        .flatMap(a => a)
+        .filter(a => a && a.value)
       wordified.count = words.length;
       return wordified;
     }
