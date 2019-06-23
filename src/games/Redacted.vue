@@ -61,7 +61,7 @@
               },
             ]">{{word.type === 'count' ? word.key + 1 : word.value || ''}}</code>
         </div>
-        <sui-form-field v-for="(index, i) in player.link.data.indexes">
+        <sui-form-field v-for="(index, i) in player.link.data.indexes" :key="index">
           <label>Word {{i + 1}}</label>
           <sui-input
             :name="index"
@@ -82,7 +82,7 @@
             {{player.link.data.line.replace(' ', '&nbsp;')}}
           </code>
           <code class="tamperable redacted" style="cursor: initial;">
-            {{lodash.repeat('&nbsp;', Math.floor(player.link.data.length))}}
+            {{'&nbsp;'.repeat(Math.floor(player.link.data.length))}}
           </code>
         </div>
         <sui-form-field>
@@ -200,15 +200,6 @@
               </sui-comment>
             </sui-comment-group>
           </sui-card-content>
-          <sui-card-content v-if="chain.length % 2 == 1">
-            <div style="font-family: 'Lora', serif; padding: 0 14px; word-break: break-word;">
-              {{chain[0].link.data}}
-            </div>
-            <sui-divider horizontal>TO</sui-divider>
-            <div style="font-family: 'Lora', serif; padding: 0 14px; word-break: break-word;">
-              {{chain[chain.length-1].link.data}}
-            </div>
-          </sui-card-content>
         </sui-card>
       </div>
       <sui-button v-if="player.state === 'READING'"
@@ -283,11 +274,19 @@ const COST = {
   censor: 5,
 }
 
-function getWords(str) {
-  return Array.from(str.matchAll(WORD_REGEX));
-}
+String.prototype.matchAllFill = function(pattern) {
+  const clone = new RegExp(pattern.source, pattern.flags);
+  const matches = [];
+  let match;
+  while(match = clone.exec(this))
+    matches.push(match);
 
-import _ from 'lodash';
+  return matches;
+};
+
+function getWords(str) {
+  return Array.from(str.matchAllFill(WORD_REGEX));
+}
 
 export default {
   sockets: {
@@ -361,9 +360,6 @@ export default {
     }
   },
   methods: {
-    log(...str) {
-      console.log(...str);
-    },
     wordCount(str) {
       return str ? getWords(str).length : 0;
     },
@@ -399,12 +395,10 @@ export default {
     },
     toggleWord(word) {
       if(word.type === 'word') {
-        // console.log(word);
         if(this.censorWords.includes(word.index))
           this.censorWords = this.censorWords.filter(i => i != word.index);
         else if((this.censorWords.length + 1) * COST.censor <= this.game.ink)
           this.censorWords.push(word.index);
-        // this.$forceUpdate();
       }
     },
     submitTamper(event) {
@@ -425,7 +419,6 @@ export default {
   },
   data() {
     return {
-      lodash: _,
       COST,
       line: '',
       words: [],

@@ -265,7 +265,6 @@
 <script>
 
 import gameInfo from '../gameInfo';
-import _ from 'lodash';
 
 const emptyInfo = () => ({
   admin: '',
@@ -291,7 +290,8 @@ export default {
       lobbyInfo: emptyInfo(),
       state: 'LOADING',
       gameInfo,
-      gameOptions: _.map(gameInfo, (v, k) => ({value: k, text: v.title, h: v.hidden}))
+      gameOptions: Object.entries(gameInfo)
+        .map(([k, v]) => ({value: k, text: v.title, h: v.hidden}))
         .filter(o => !o.h),
     };
   },
