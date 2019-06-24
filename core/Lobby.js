@@ -76,8 +76,10 @@ class Lobby {
     if(!this.selectedGame) return;
     if(this.lobbyState !== 'PLAYING') return;
 
-    this.game.stop();
-    this.game.cleanup();
+    if(this.game) {
+      this.game.stop();
+      this.game.cleanup();
+    }
 
     this.game = undefined;
     this.lobbyState = 'WAITING';

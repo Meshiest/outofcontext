@@ -320,7 +320,7 @@ export default {
         }
       }
 
-      if(info.link && info.link.data && info.link.data.indexes) {
+      if(info.link && info.link.data && info.link.data.indexes && this.words.length === 0) {
         this.words = Array(info.link.data.indexes.length).fill('');
       }
 
