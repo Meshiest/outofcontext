@@ -5,12 +5,10 @@ import VueSocketIO from 'vue-socket.io'
 import PortalVue from 'portal-vue';
 import './style.css';
 import '../res/favicon.ico';
-import VueDefaultValue from 'vue-default-value';
 
 const VERSION = require('../package.json').version;
 
 Vue.use(VueRouter);
-Vue.use(VueDefaultValue);
 Vue.use(PortalVue);
 Vue.use(SemanticUI);
 Vue.use(new VueSocketIO({

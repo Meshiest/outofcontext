@@ -1,6 +1,6 @@
 {
   "name": "ooc",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Out of context games",
   "main": "main.js",
   "scripts": {
@@ -24,7 +24,6 @@
     "socket.io": "^2.2.0",
     "url-loader": "^1.1.2",
     "vue": "^2.6.8",
-    "vue-default-value": "^1.0.2",
     "vue-loader": "^15.7.0",
     "vue-router": "^3.0.2",
     "vue-socket.io": "^3.0.7",

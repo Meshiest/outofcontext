@@ -51,7 +51,7 @@
           <input name="playerName"
             required
             @input="validName = true"
-            v-default-value="oldName"
+            v-model="name"
             minlength="1"
             maxlength="15"
             autocomplete="on"
@@ -278,7 +278,7 @@ const emptyInfo = () => ({
 export default {
   data() {
     return {
-      oldName: localStorage.oocName || '',
+      name: localStorage.oocName || '',
       loading: true,
       creatingLobby: false,
       showJoinLobby: false,
