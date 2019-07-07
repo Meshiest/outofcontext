@@ -90,6 +90,8 @@
               <sui-icon name="users"/> {{
                 `${currGame.config.players.min}${currGame.config.players.max != 256 ? '-' + currGame.config.players.max : '+'}`
               }}
+              <span style="padding-left: 20px"/>
+              <sui-icon name="fire"/> {{currGame.difficulty}}
             </sui-card-content>
           </sui-card>
         </div>

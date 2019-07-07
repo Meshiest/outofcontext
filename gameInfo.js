@@ -2,6 +2,7 @@ module.exports = {
   story: {
     title: 'Raconteur',
     subtitle: 'Ghost Writers',
+    difficulty: 'Simple',
     description: 'Collaborate in writing stories one line at a time with minimal context.',
     more: 'Raconteur is inspired by improv-type games where players contribute to a story one sentence or one word at a time. ' +
       'The idea is to create unique stories from a train of thought going who knows where. Continuity is held only ' +
@@ -76,6 +77,7 @@ module.exports = {
   draw: {
     title: 'Scribble',
     subtitle: 'Drawing Conclusions',
+    difficulty: 'Simple',
     description: 'Players alternate between drawing and describing in a telephone-pictionary hybrid game.',
     more: 'Scribble is inspired by games like Tanner Krewson\'s Drawphone, Telestrations, and Pictionary. ' +
       'Players put their minds in maximum overdrive to decipher what on earth the other players are trying ' +
@@ -162,6 +164,7 @@ module.exports = {
   redacted: {
     title: 'Redacted',
     subtitle: '█████ ███████',
+    difficulty: 'Complex',
     description: 'Collaborate in writing, tampering, and repairing stories one line at a time.',
     more: 'Redacted is an extension upon Raconteur. Players still contribute to a story, however ' +
       'now players are able to interact with the lines other players have written. ' +
@@ -319,9 +322,68 @@ module.exports = {
       },
     },
   },
+  recipe: {
+    title: 'Hodgepodge',
+    subtitle: 'Sue the Chef',
+    difficulty: 'Moderate',
+    description: 'Collaborate in splicing together recipes for anything.',
+    more: 'Hodgepodge is fairly complicated in the sense that there is not a single ' +
+      'streamlined direction for each instruction set. Players submit ' +
+      'steps in a recipe following a theme, ingredients without any context, ' +
+      'and potential hazards without context. This mixture of randomness and ' +
+      'context tends to be awfully delicious.',
+    howTo: [
+      'Every player will be prompted for a theme for the "dish"',
+      'All players contribute a step to the recipe while utilizing ' +
+        'an unknown and later defined ingredient without seeing other steps.',
+      'All players also will be contributing ingredients, or anything really, ' +
+        'to the recipes only seeing the other ingredients.',
+      'Hazards and commentary upon the unknown recipes can be provided for an extra' +
+        'dash of chaos,',
+      'At the end, players can enjoy the crazy recipes they wrote',
+    ],
+    playTime: '5-10m',
+    config: {
+      players: {
+        name: 'Max Players',
+        text: 'Players',
+        info: 'Maximum allowed players in the game',
+        type: 'int',
+        min: 2,
+        max: 256,
+        defaults: '#numPlayers',
+      },
+      numRecipes: {
+        name: 'Recipe Count',
+        text: 'Recipes',
+        info: 'The number of recipes being written',
+        type: 'int',
+        min: 1,
+        max: 256,
+        defaults: '#numPlayers',
+      },
+      numSteps: {
+        name: 'Steps per Recipe',
+        text: 'Steps',
+        info: 'How many steps and ingredients will be in each recipe.',
+        type: 'int',
+        min: 2,
+        max: 256,
+        defaults: 3,
+      },
+      anonymous: {
+        name: 'Hide Authors',
+        text: 'Anonymous',
+        info: 'Whether names are shown at the end.',
+        type: 'bool',
+        defaults: 'false',
+      },
+    },
+  },
   assassin: {
     title: 'Wurderer',
     subtitle: 'Murdered by Words',
+    difficulty: 'Moderate',
     description: 'Players are each given a target and a word they need to get their targets to say. ' +
       'This website is only a setup for playing the game in person.',
     more: 'Wurderer is inspired the assassin game in hopes to create a game that can be played over the ' +
@@ -368,6 +430,7 @@ module.exports = {
     hidden: true,
     title: 'Underground',
     subtitle: 'Where are you?',
+    difficulty: 'Moderate',
     description: 'One hidden player is trying to figure out where everyone is while avoiding other players\' questioning.',
     more: 'Underground is inspired by hidden role games like Spyfall where everyone is looking for the one player that ' +
       'lying their way to victory.',

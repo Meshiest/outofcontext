@@ -1,4 +1,3 @@
-const Game = require('./game');
 const _ = require('lodash');
 const Story = require('./story');
 const Sanitize = require('./util/Sanitize');

@@ -1,11 +1,14 @@
 const _ = require('lodash');
 const gameInfo = require('../gameInfo');
 
-const Story = require('./games/story');
-const Assassin = require('./games/assassin');
-const Locations = require('./games/locations');
-const Draw = require('./games/draw');
-const Redacted = require('./games/redacted');
+const GAMES = {
+  story: require('./games/story'),
+  draw: require('./games/draw'),
+  assassin: require('./games/assassin'),
+  redacted: require('./games/redacted'),
+  locations: require('./games/locations'),
+  recipe: require('./games/recipe'),
+};
 
 class Lobby {
   constructor() {
@@ -55,13 +58,7 @@ class Lobby {
 
     const args = [this, newConfig, this.players.map(p => p.playerId)];
 
-    const Constructor = {
-      story: Story,
-      draw: Draw,
-      assassin: Assassin,
-      redacted: Redacted,
-      locations: Locations
-    }[this.selectedGame];
+    const Constructor = GAMES[this.selectedGame];
 
     if(Constructor) {
       this.game = new Constructor(...args);
