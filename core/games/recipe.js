@@ -9,6 +9,7 @@ const HOTWORD = /ITEM/g;
 module.exports = class Recipe extends Story {
   constructor(lobby, config, players) {
     super(lobby, config, players);
+    this.likes = [];
   }
 
 
@@ -27,6 +28,7 @@ module.exports = class Recipe extends Story {
     // Split up comments from ingredients / steps
     let [ comments, chains ] = _.chain(this.chains)
       .filter(c => !c.editor) // no edited recipes
+      .filter(c => c.lastEditor != player) // no edited recipes
       .filter(c => (c.collaborators[player] || 0) <= c.avgEdits()) // no over-contributed recipes
       .sortBy(c => c.chain.length) // shortest recipes first
       .partition(c => c.type === 'comment') // separate comments from steps and instructions
@@ -49,6 +51,8 @@ module.exports = class Recipe extends Story {
     this.chains = _.range(numRecipes * 3)
       .map(() => new Chain(numPlayers, numSteps));
 
+    this.likes = _.range(numRecipes).map(() => ({}));
+
     // Assign a type to each chain (there are 3 kinds of chains you can edit)
     this.chains.forEach((chain, i) =>
       chain.type = ['step', 'ingredient', 'comment'][i % 3]);
@@ -68,8 +72,9 @@ module.exports = class Recipe extends Story {
   }
 
   handleMessage(pid, type, data) {
-    const chain = this.chains.find(s => s.editor === pid);
-    const noEditors = !this.chains.some(s => s.editor);
+    const chain = this.chains.find(c => c.editor === pid);
+    const noEditors = !this.chains.some(c => c.editor);
+    let line;
 
     switch(type) {
 
@@ -79,13 +84,13 @@ module.exports = class Recipe extends Story {
         return;
 
       // must be actually editing a theme
-      if(chain.type !== 'step' && chain.theme !== '')
+      if(chain.type !== 'step' || chain.theme)
         return;
 
       if(typeof data !== 'string')
         return;
 
-      const line = Sanitize.str(data);
+      line = Sanitize.str(data);
 
       if(line.length < 1 || line.length > 256)
         return;
@@ -111,7 +116,10 @@ module.exports = class Recipe extends Story {
       if(typeof data !== 'string')
         return;
 
-      const line = Sanitize.str(data);
+      line = Sanitize.str(data);
+
+      if(chain.type === 'step' && !line.match(HOTWORD))
+        return;
 
       if(line.length < 1 || line.length > 256)
         return;
@@ -133,9 +141,9 @@ module.exports = class Recipe extends Story {
       break;
 
     case 'chain:like':
-      const progress = this.getGameProgress() && noEditors;
-      if(typeof data === 'number' && data >= 0 && data <= this.chains.length && progress === 1) {
-        this.chains[data].likes[pid] = !this.chains[data].likes[pid];
+      const done = this.getGameProgress() === 1 && noEditors;
+      if(typeof data === 'number' && data >= 0 && data <= this.chains.length && done) {
+        this.likes[data][pid] = !this.likes[data][pid];
         this.sendGameInfo();
       }
       break;
@@ -162,12 +170,12 @@ module.exports = class Recipe extends Story {
       state: 'EDITING',
       link:
         chain.type === 'step' ?
-          (chain.theme === '' ? {
+          (!chain.theme ? {
             type: 'theme'
           } : {
             type: 'step',
             theme: chain.theme,
-            index: chain.length + 1,
+            index: chain.chain.length + 1,
             total: numSteps,
           }) :
         chain.type === 'ingredient' ? {
@@ -181,7 +189,7 @@ module.exports = class Recipe extends Story {
         { type: null },
     } : {
       id: pid,
-      liked: this.chains.map(s => s.likes[pid]),
+      liked: this.likes.map(s => s[pid]),
       state: done ? 'READING' : 'WAITING',
     };
   }
@@ -189,14 +197,25 @@ module.exports = class Recipe extends Story {
   compileRecipes() {
     const { comment, step, ingredient } = _.chain(this.chains)
       .shuffle()
-      .groupBy('type');
+      .groupBy('type')
+      .value();
+
+    ingredient.forEach(i => {
+      const [ editors, chain ] = _.chain(i.editors)
+        .zip(i.chain)
+        .shuffle()
+        .unzip();
+
+      i.editors = editors;
+      i.chain = chain;
+    });
 
     return step.map((s, i) => ({
       theme: s.theme,
-      author: s.themeEditor,
-      steps: _.zip([s.chain, ingredient[i].chain, s.editors, ingredient[i].editors])
-        .map(([instruction, item, edtior, helper]) => ({
-          link: instruction.replace(HOTWORD, item),
+      author: this.config.anonymous ? '' : s.themeEditor,
+      steps: _.zip(s.chain, ingredient[i].chain, s.editors, ingredient[i].editors)
+        .map(([instr, item, editor, helper]) => ({
+          link: instr.replace(HOTWORD, item),
           editors: this.config.anonymous ? ['', ''] : [editor, helper],
         })),
       comments: _.zip(comment[i].chain, comment[i].editors)
@@ -211,6 +230,9 @@ module.exports = class Recipe extends Story {
     const hasRecipe = this.chains.filter(s => s.editor).reduce((obj, i) => ({...obj, [i.editor]: i}), {});
     const progress = this.getGameProgress();
     const noEditors = !this.chains.some(s => s.editor);
+
+    this.compiled = progress == 1 && noEditors && !this.compiled && this.compileRecipes();
+
     return {
       // players who are writing have pencil icons, players who are not have a clock icon
       icons: this.players.reduce((obj, p) => ({
@@ -227,8 +249,8 @@ module.exports = class Recipe extends Story {
           }[hasRecipe[p] ? hasRecipe[p].type : 'wait']
       }), {}),
       progress,
-      likes: this.chains.map(s => _.size(_.filter(s.likes, l => l))),
-      recipes: progress === 1 && noEditors ? this.compileRecipes() : [],
+      likes: this.likes.map(s => _.size(_.filter(s.likes, l => l))),
+      recipes: progress === 1 && noEditors ? this.compiled : [],
     };
   }
 };
