@@ -52,7 +52,7 @@
           `${info.config.players.min}${info.config.players.max != 256 ? '-' + info.config.players.max : '+'}`
         }}
         <span style="padding-left: 20px"/>
-        <sui-icon name="fire"/> {{currGame.difficulty}}
+        <sui-icon name="fire"/> {{info.difficulty}}
       </sui-card-content>
     </sui-card>
   </ooc-menu>
