@@ -338,7 +338,7 @@ module.exports = {
         'an unknown and later defined ingredient without seeing other steps.',
       'All players also will be contributing ingredients, or anything really, ' +
         'to the recipes only seeing the other ingredients.',
-      'Hazards and commentary upon the unknown recipes can be provided for an extra' +
+      'Hazards and commentary upon the unknown recipes can be provided for an extra ' +
         'dash of chaos,',
       'At the end, players can enjoy the crazy recipes they wrote',
     ],
