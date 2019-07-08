@@ -231,7 +231,7 @@ module.exports = class Recipe extends Story {
     const progress = this.getGameProgress();
     const noEditors = !this.chains.some(s => s.editor);
 
-    this.compiled = progress == 1 && noEditors && !this.compiled && this.compileRecipes();
+    this.compiled = this.compiled || progress == 1 && noEditors && this.compileRecipes();
 
     return {
       // players who are writing have pencil icons, players who are not have a clock icon
