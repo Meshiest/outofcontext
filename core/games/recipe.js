@@ -249,7 +249,7 @@ module.exports = class Recipe extends Story {
           }[hasRecipe[p] ? hasRecipe[p].type : 'wait']
       }), {}),
       progress,
-      likes: this.likes.map(s => _.size(_.filter(s.likes, l => l))),
+      likes: this.likes.map(s => _.filter(s, l => l).length),
       recipes: progress === 1 && noEditors ? this.compiled : [],
     };
   }
