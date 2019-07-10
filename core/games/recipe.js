@@ -4,7 +4,21 @@ const Story = require('./story');
 const Sanitize = require('./util/Sanitize');
 const Chain = require('./util/Chain');
 
+const HOTWORDRAND = /ITEM#?R/g;
+const HOTWORDNUM = /ITEM#?\d{1,3}/g;
 const HOTWORD = /ITEM/g;
+
+function parseItem(str, i, items) {
+  return str
+    .replace(HOTWORDRAND, str => _.sample(items)) // Random replacement
+    .replace(HOTWORDNUM, str => { // Specific replacement
+      const parsed = parseInt(str.match(/\d+/)) - 1;
+      const val = _.clamp(parsed, 0, items.length - 1);
+      return items[val];
+    })
+    .replace(HOTWORD, items[i]); // Default replacement
+
+}
 
 module.exports = class Recipe extends Story {
   constructor(lobby, config, players) {
@@ -200,11 +214,13 @@ module.exports = class Recipe extends Story {
       .groupBy('type')
       .value();
 
+    // Shuffle ingredients with its editors
     ingredient.forEach(i => {
       const [ editors, chain ] = _.chain(i.editors)
         .zip(i.chain)
         .shuffle()
-        .unzip();
+        .unzip()
+        .value();
 
       i.editors = editors;
       i.chain = chain;
@@ -214,13 +230,13 @@ module.exports = class Recipe extends Story {
       theme: s.theme,
       author: this.config.anonymous ? '' : s.themeEditor,
       steps: _.zip(s.chain, ingredient[i].chain, s.editors, ingredient[i].editors)
-        .map(([instr, item, editor, helper]) => ({
-          link: instr.replace(HOTWORD, item),
+        .map(([instr, item, editor, helper], j) => ({
+          link: parseItem(instr, j, ingredient[i].chain),
           editors: this.config.anonymous ? ['', ''] : [editor, helper],
         })),
       comments: _.zip(comment[i].chain, comment[i].editors)
         .map(([link, e]) => ({
-          link,
+          link: parseItem(link, _.random(ingredient[i].chain.length), ingredient[i].chain),
           editor: this.config.anonymous ? '' : e,
         }))
     }))

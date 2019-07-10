@@ -71,7 +71,7 @@
           </textarea>
           <div class="char-count">
             <span v-if="line.indexOf('ITEM') === -1">
-              <b>ITEM</b> must be in the instruction.
+              The text <b>ITEM</b> must be in the instruction.
             </span> {{line.length}}/256
           </div>
         </sui-form-field>
