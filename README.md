@@ -30,3 +30,9 @@ See [OutOfContext.party](https://www.outofcontext.party) for more info!
 Copy `docker-compose.letsencrypt.yml` and `nginx.letsencrypt.conf` to `docker-compose.yml` and `nginx.conf` respectively. Edit as necessary
 
 `certbot-auto` works using `public` as webroot. Do not use certbot auto's nginx option as this is a containerized environment.
+
+### Copyright
+
+OutOfContext.party  Copyright (C) 2019  Isaac Hirschfeld
+
+Chain distribution algorithm (games without "rounds" + wait time minimization solution), Redacted game, and Hodgepodge game are original creations and property of Isaac Hirschfeld. If you wish to use them, please ask or give explicit credit where deserved.
