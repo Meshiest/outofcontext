@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
 const path = require('path');
+const cron = require('node-cron');
 
 const app = express();
 const server = require('http').Server(app);
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const Member = require('./core/Member');
 const Lobby = require('./core/Lobby');
+const Persistence = require('./core/Persistence');
 
 const EMOTES = [
   'smile',
@@ -94,7 +96,16 @@ io.on('connection', socket => {
   // Let a player join a lobby with a code
   socket.on('lobby:join', code => {
     code = code.toLowerCase();
+
     if(!player.lobby && Lobby.lobbyExists(code)) {
+
+      // lobby is stored in persistence, load it into memory
+      if (!Lobby.lobbies[code]) {
+        const saveData = Persistence.restoreLobbyState(code);
+        const lobby = new Lobby(saveData);
+        Lobby.lobbies[code] = lobby;
+      }
+
       player.lobby = Lobby.lobbies[code];
       socket.emit('lobby:join', code);
       Lobby.lobbies[code].addMember(player);
@@ -230,6 +241,11 @@ app.get('/api/v1/info', (req, res) => {
     players: io.engine.clientsCount,
   });
 });
+
+
+// Cull saves every tuesday at 4 lol
+Persistence.cullSaves();
+cron.schedule('0 4 * * Tuesday', Persistence.cullSaves);
 
 // Every request goes through the index, Vue will handle 404s
 app.use((req, res) => {

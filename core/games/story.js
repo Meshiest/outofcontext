@@ -18,6 +18,23 @@ module.exports = class Story extends Game {
   }
 
 
+  restore(blob) {
+    if (blob.version !== 1)
+      return;
+
+    this.chains = blob.chains.map(Chain.restore);
+    this.finishedReading = blob.finishedReading;
+  }
+
+  save() {
+    return {
+      version: 1,
+      chains: this.chains.map(s => s.save()),
+      finishedReading: this.finishedReading,
+    }
+  }
+
+
   // Find a story for a player
   findChainForPlayer(player) {
     // Find a chain for a player

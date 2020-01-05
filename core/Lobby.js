@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const gameInfo = require('../gameInfo');
+const Persistence = require('./Persistence');
 
 const GAMES = {
   story: require('./games/story'),
@@ -11,10 +12,23 @@ const GAMES = {
 };
 
 class Lobby {
-  constructor() {
-    do {
-      this.code = _.sampleSize('abcdefghijklmnopqrstuvwxyz0123456789', 4).join('');
-    } while(Lobby.lobbies[this.code]);
+  constructor(lobbyState) {
+    // restore lobby from existing state
+    if (typeof lobbyState !== 'undefined') {
+      this.restoreState(lobbyState);
+    } else {
+      // create a new lobby
+      this.resetLobby();
+    }
+  }
+
+  resetLobby() {
+    if(typeof this.code === 'undefined') {
+      do {
+        this.code = _.sampleSize('abcdefghijklmnopqrstuvwxyz0123456789', 4).join('');
+      } while(Lobby.lobbyExists(this.code));
+    }
+
     this.members = [];
     this.players = [];
     this.spectators = [];
@@ -23,7 +37,60 @@ class Lobby {
     this.admin = '';
     this.lobbyState = 'WAITING';
     this.game = null;
-    this.expires = Date.now(); // TODO: soon make lobbies that can last multiple days
+  }
+
+   saveState() {
+    return {
+      version: 1,
+      code: this.code,
+      date: new Date().toString(),
+      lobbyState: this.lobbyState,
+      selectedGame: this.selectedGame,
+      gameConfig: this.gameConfig,
+      players: this.players.map(p => ({
+        playerId: p.playerId,
+        name: p.member ? p.member.name : p.name,
+      })),
+      game: this.game ? {
+        config: this.game.config,
+        state: this.game.save(),
+      } : null,
+    }
+  }
+
+  restoreState(lobbyState) {
+    this.code = lobbyState.code;
+    this.members = [];
+
+    this.players = lobbyState.players.map(p => ({
+      id: -1,
+      playerId: p.playerId,
+      connected: false,
+      name: p.name,
+    }));
+
+    this.spectators = [];
+    this.selectedGame = lobbyState.selectedGame;
+    this.gameConfig = lobbyState.gameConfig;
+    this.admin = '';
+    this.lobbyState = lobbyState.lobbyState;
+
+    if (lobbyState.game) {
+      const { config, state } = lobbyState.game;
+
+      const Constructor = GAMES[this.selectedGame];
+      if(Constructor) {
+        this.game = new Constructor(this, config, this.players.map(p => p.playerId));
+        this.game.restore(state);
+        const numPlayers = this.players.length;
+
+        // cap players
+        this.gameConfig.players = numPlayers;
+
+      }
+    } else {
+      this.game = null;
+    }
   }
 
   attempt(fn) {
@@ -45,7 +112,7 @@ class Lobby {
         this.spectators.push({id: p.id, name: p.name});
       }
     }
-;
+
     const numPlayers = this.players.length;
 
     // cap players
@@ -449,7 +516,7 @@ class Lobby {
 Lobby.lobbies = {};
 
 Lobby.lobbyExists = code =>
-  Lobby.lobbies.hasOwnProperty(code) && Lobby.lobbies[code];
+  Persistence.saveExists(code) || Lobby.lobbies.hasOwnProperty(code) && Lobby.lobbies[code];
 
 /**
  * Removes player from his/her lobby
@@ -463,19 +530,24 @@ Lobby.removePlayer = player => {
 
   lobby.removeMember(player);
   player.lobby = undefined;
-  if(lobby.empty() && lobby.expires < Date.now()) {
+
+  if(lobby.empty()) {
+    // save the lobby state
+    Persistence.saveLobbyState(lobby);
+
+    // kill and cleanup the game
     if(lobby.game) {
       lobby.game.stop();
       lobby.game.cleanup();
       lobby.game = undefined;
     }
+
+    // remove the lobby from active lobbies structure
     Lobby.lobbies[lobby.code] = false;
     delete Lobby.lobbies[lobby.code];
   }
 }
 
-// dev lobby expires in 2 hours
 Lobby.lobbies.aaaa = new Lobby();
-Lobby.lobbies.aaaa.expires = Date.now() + 2 * 60 * 60 * 1000;
 
 module.exports = Lobby;

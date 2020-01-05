@@ -87,7 +87,7 @@
               </sui-comment>
             </sui-comment-group>
           </sui-card-content>
-          <sui-card-content v-if="chain.length % 2 == 1">
+          <sui-card-content v-if="chain.length % 2 == 1" :style="{marginBottom: '14px'}">
             <div style="font-family: 'Lora', serif; padding: 0 14px; word-break: break-word;">
               {{chain[0].link.data}}
             </div>
