@@ -51,6 +51,26 @@ module.exports = class Assassin extends Game {
     this.sendGameInfo();
   }
 
+  restore(blob) {
+    if (blob.version !== 1)
+      return;
+
+    this.title = blob.title;
+    this.words = blob.words;
+    this.targets = blob.targets;
+    this.finishedLooking = blob.finishedLooking;
+  }
+
+  save() {
+    return {
+      version: 1,
+      title: this.title,
+      words: this.words,
+      targets: this.targets,
+      finishedLooking: this.finishedLooking,
+    };
+  }
+
   stop() {}
 
   cleanup() {}
@@ -61,9 +81,6 @@ module.exports = class Assassin extends Game {
     case 'assassin:done':
       this.finishedLooking[pid] = data === true;
       this.sendGameInfo();
-
-      if(this.players.every(p => this.finishedLooking[p]))
-        this.lobby.endGame();
 
       break;
     }

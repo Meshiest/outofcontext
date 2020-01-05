@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-module.exports = class Chain {
+class Chain {
   constructor(numPlayers, length) {
     this.numPlayers = numPlayers;
 
@@ -23,6 +23,33 @@ module.exports = class Chain {
     this.likes = {};
   }
 
+  save() {
+    return {
+      version: 1,
+      numPlayers: this.numPlayers,
+      collaborators: this.collaborators,
+      lastEditor: this.lastEditor,
+      editor: this.editor,
+      chain: this.chain,
+      type: this.type,
+      editors: this.editors,
+      likes: this.likes,
+    };
+  }
+
+  restore(blob) {
+    if (blob.version !== 1)
+      return;
+
+    this.collaborators = blob.collaborators;
+    this.lastEditor = blob.lastEditor;
+    this.editor = blob.editor;
+    this.chain = blob.chain;
+    this.editors = blob.editors;
+    this.likes = blob.likes;
+    this.type = blob.type;
+  }
+
   avgEdits() {
     return _.sum(_.values(this.collaborators)) / this.numPlayers;
   }
@@ -36,3 +63,12 @@ module.exports = class Chain {
     this.editor = '';
   }
 };
+
+// restore a chain from save data
+Chain.restore = blob => {
+  const c = new Chain(blob.numPlayers);
+  c.restore(blob);
+  return c;
+};
+
+module.exports = Chain;

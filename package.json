@@ -1,6 +1,6 @@
 {
   "name": "ooc",
-  "version": "1.2.7",
+  "version": "1.3.0",
   "description": "Out of context games",
   "main": "main.js",
   "scripts": {
@@ -16,7 +16,10 @@
     "css-loader": "^2.1.1",
     "express": "^4.16.4",
     "file-loader": "^3.0.1",
+    "glob": "^7.1.6",
     "lodash": "^4.17.13",
+    "node-cron": "^2.0.3",
+    "pako": "^1.0.10",
     "paper": "^0.12.0",
     "portal-vue": "^1.5.1",
     "semantic-ui-css": "^2.4.1",

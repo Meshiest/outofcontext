@@ -15,6 +15,7 @@ module.exports = class Game {
     this.lobby.emitPlayers(...msg);
   }
 
+  // broadcast each player's state and 
   sendGameInfo() {
     this.lobby.emitAll('game:info', this.getState());
     for(const player of this.players) {
@@ -22,11 +23,27 @@ module.exports = class Game {
     }
   }
 
+  // receive input from a player, potentially a spectator
   handleMessage(pid, type, data) {}
 
+  // load a blob into game state
+  restore(blob) {}
+
+  // create a game state blob from the current game state
+  save() {}
+
+  // start the game
   start() {}
+
+  // force stop the game
   stop() {}
+
+  // clean up after game finishes
   cleanup() {}
+
+  // player state given a player, spectators do not receive player state
   getPlayerState(pid) { return { state: '', id: pid }; }
+
+  // overall game state
   getState() { return { icons: {} }; }
 };
