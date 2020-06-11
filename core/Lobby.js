@@ -549,5 +549,7 @@ Lobby.removePlayer = player => {
 }
 
 Lobby.lobbies.aaaa = new Lobby();
+Lobby.lobbies.aaaa.code = 'aaaa';
+
 
 module.exports = Lobby;

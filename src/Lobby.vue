@@ -448,6 +448,7 @@ export default {
         gtag('event', 'playing_game', {
           game_name: info.game,
           player_count: info.players.length,
+          lobby_code: this.$route.params.code,
         });
       }
 

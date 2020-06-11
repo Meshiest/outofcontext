@@ -139,7 +139,11 @@ export default {
           this.playing = playing;
           return;
         }
-        gtag('event', event, {[name]: Math.floor((Date.now() - this.timer)/1000)});
+        gtag('event', event, {
+          [name]: Math.floor((Date.now() - this.timer)/1000),
+          game_name: this.lobby.game,
+          lobby_code: this.$route.params.code,
+        });
         this.timer = Date.now();
         this.playing = playing;
       }

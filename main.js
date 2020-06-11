@@ -232,16 +232,70 @@ app.get('/api/v1/lobby/:code', (req, res) => {
 
 app.get('/api/v1/info', (req, res) => {
   res.status(200).json({
-    lobbies: _.size(Lobby.lobbies),
-    games: _.chain(Lobby.lobbies)
+    lobbies: _.chain(Lobby.lobbies) // number of lobbies
       .values()
-      .filter(l => l.game)
+      .filter(l => l.members.length > 0)
       .size()
       .value(),
-    players: io.engine.clientsCount,
+
+    games: _.chain(Lobby.lobbies) // number of active games
+      .values()
+      .filter(l => l.game && l.members.length > 0)
+      .size()
+      .value(),
+
+    players: _.chain(Lobby.lobbies) // number of users in game
+      .values()
+      .filter(l => l.game && l.members.length > 0)
+      .map(l => l.players.filter(p => p.connected && !!p.member).length)
+      .sum()
+      .value(),
+
+    clients: io.engine.clientsCount, // number of connected sockets
+
+    gameDistribution: _.chain(Lobby.lobbies) // distribution of game type across lobbies
+      .values()
+      .filter(l => l.game && l.members.length > 0)
+      .countBy('selectedGame')
+      .value(),
+
+    playerDistribution: _.chain(Lobby.lobbies) // distribution of game type across players
+      .values()
+      .filter(l => l.game && l.members.length > 0)
+      .map(l => [l.selectedGame, l.players.filter(p => p.connected && !!p.member).length])
+      .reduce((acc, [game, players]) => {
+        acc[game] = (acc[game] || 0) + players;
+        return acc;
+      }, {})
+      .value(),
   });
 });
 
+// handle the application closing - save lobbies if there are any
+function exitHandler(options, exitCode) {
+  // save all the current lobbies
+  _.each(Lobby.lobbies, lobby => {
+    if(lobby._saved)
+      return;
+    lobby._saved = true;
+    Persistence.saveLobbyState(lobby);
+
+    if(lobby.game) {
+      lobby.game.stop();
+      lobby.game.cleanup();
+    }
+  });
+
+  if (options.cleanup) console.log('clean exit');
+  if (exitCode || exitCode === 0) console.log('exit code', exitCode);
+  if (options.exit) process.exit();
+}
+
+process.on('exit', exitHandler.bind(null,{cleanup:true}));
+process.on('SIGINT', exitHandler.bind(null, {exit:true}));
+process.on('SIGUSR1', exitHandler.bind(null, {exit:true}));
+process.on('SIGUSR2', exitHandler.bind(null, {exit:true}));
+process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
 
 // Cull saves every tuesday at 4 lol
 Persistence.cullSaves();

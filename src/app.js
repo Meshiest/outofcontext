@@ -10,7 +10,9 @@ const VERSION = require('../package.json').version;
 
 // Google analytics
 window.dataLayer = window.dataLayer || [];
-window.gtag = (...args) => dataLayer.push(args);
+window.gtag = (...args) => {
+  dataLayer.push(args);
+};
 
 gtag('js', new Date());
 gtag('set', 'allow_google_signals', false );
@@ -27,6 +29,7 @@ const config = page_path =>
       metric3: 'wait_duration',
       metric4: 'player_count',
       dimension1: 'game_name',
+      dimension2: 'lobby_code',
     },
   });
 
@@ -74,7 +77,7 @@ Vue.component('ooc-page', Page);
 Vue.component('ooc-game', GameRenderer);
 Vue.component('ooc-doodle', Doodle);
 
-window.app = new Vue({
+new Vue({
   router,
   el: '#app',
   data() {
