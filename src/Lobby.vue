@@ -456,6 +456,16 @@ export default {
       if(this.state === 'PLAYING' && info.state === 'WAITING')
         this.state = 'LOBBY_WAITING';
 
+      const name = localStorage.oocName;
+      const target = info.players.find(p => !p.connected && p.name === name);
+
+      // automatically rejoin if there is a joinable slot with this name
+      if(this.state === 'JOIN_LOBBY' && this.validLobby && name && target) {{
+        this.loadingName = true;
+        this.$socket.emit('member:name', name);
+        this.$socket.emit('lobby:replace', target.playerId);
+      }}
+
       this.lobbyInfo = info;
     },
     disconnect(code) {

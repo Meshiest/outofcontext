@@ -350,7 +350,7 @@ class Lobby {
     const isSpectator = this.spectators.find(p => p.id === id);
     const targetPlayer = this.players.find(p => p.playerId === pid && p.id === -1 && !p.connected);
 
-    if((!isPlayer || isSpectator) && targetPlayer) {
+    if((!isPlayer || isSpectator) && targetPlayer && member.name) {
       targetPlayer.id = id;
       targetPlayer.name = member.name;
       targetPlayer.member = member;
