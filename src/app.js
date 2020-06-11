@@ -8,6 +8,28 @@ import '../res/favicon.ico';
 
 const VERSION = require('../package.json').version;
 
+// Google analytics
+window.dataLayer = window.dataLayer || [];
+window.gtag = (...args) => dataLayer.push(args);
+
+gtag('js', new Date());
+gtag('set', 'allow_google_signals', false );
+gtag('set', 'allow_ad_personalization_signals', false );
+const config = page_path =>
+  gtag('config', 'UA-58828021-7', {
+    page_path,
+    cookie_prefix: 'OOC',
+    cookie_domain: 'www.outofcontext.party',
+    cookie_expires: 28 * 24 * 60 * 60,
+    custom_map: {
+      metric1: 'emote_index',
+      metric2: 'turn_duration',
+      metric3: 'wait_duration',
+      metric4: 'player_count',
+      dimension1: 'game_name',
+    },
+  });
+
 Vue.use(VueRouter);
 Vue.use(PortalVue);
 Vue.use(SemanticUI);
@@ -52,7 +74,7 @@ Vue.component('ooc-page', Page);
 Vue.component('ooc-game', GameRenderer);
 Vue.component('ooc-doodle', Doodle);
 
-new Vue({
+window.app = new Vue({
   router,
   el: '#app',
   data() {
@@ -61,6 +83,9 @@ new Vue({
       disconnected: false,
       playerId: undefined,
     };
+  },
+  created() {
+    config('/' + this.$route.name);
   },
   sockets: {
     connect() {
@@ -81,6 +106,12 @@ new Vue({
     'member:id': function(id) {
       this.playerId = id;
     }
+  },
+  watch: {
+    $route(to, from) {
+      if(to.name !== from.name)
+        config('/' + to.name);
+    },
   },
   render(h) {
     return h({

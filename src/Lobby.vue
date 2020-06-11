@@ -443,8 +443,13 @@ export default {
         this.gameState = { icons: {} };
 
       // Start playing if the lobby is playing
-      if(info.state === 'PLAYING' && this.state === 'LOBBY_WAITING')
+      if(info.state === 'PLAYING' && this.state === 'LOBBY_WAITING') {
         this.state = 'PLAYING';
+        gtag('event', 'playing_game', {
+          game_name: info.game,
+          player_count: info.players.length,
+        });
+      }
 
       // If the lobby says we're not playing, we're probably not playing
       if(this.state === 'PLAYING' && info.state === 'WAITING')

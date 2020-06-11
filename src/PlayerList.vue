@@ -35,7 +35,7 @@
                 <sui-button v-for="emote in emotes"
                   circular
                   :key="emote"
-                  @click="$socket.emit('lobby:emote', emote)"
+                  @click="sendEmote(emote)"
                   :icon="emote" />
               </div>
             </sui-card>
@@ -283,6 +283,10 @@ export default {
     },
   },
   methods: {
+    sendEmote(emote) {
+      this.$socket.emit('lobby:emote', emote);
+      gtag('event', 'emote_event', {'emote_index': this.emotes.indexOf(emote)});
+    },
     tryEndGame() {
       clearTimeout(this.confirmTimeout);
       if(this.confirmEndGame) {
