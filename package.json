@@ -1,7 +1,7 @@
 {
   "name": "ooc",
-  "version": "1.3.0",
-  "description": "Out of context games",
+  "version": "1.3.1",
+  "description": "Out of Context Games",
   "main": "main.js",
   "scripts": {
     "build": "npx webpack",
