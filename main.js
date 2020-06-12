@@ -73,6 +73,7 @@ io.on('connection', socket => {
       Lobby.lobbies[code] = lobby;
       socket.emit('lobby:join', code);
       Lobby.lobbies[code].addMember(player);
+      console.log(new Date(), ` -- [lobby ${code}] created`);
     }
   });
 
@@ -101,6 +102,7 @@ io.on('connection', socket => {
 
       // lobby is stored in persistence, load it into memory
       if (!Lobby.lobbies[code]) {
+        console.log(new Date(), ` -- [lobby ${code}] restored`);
         const saveData = Persistence.restoreLobbyState(code);
         const lobby = new Lobby(saveData);
         Lobby.lobbies[code] = lobby;
@@ -144,12 +146,14 @@ io.on('connection', socket => {
   socket.on('game:start', game => {
     if(player.isAdmin()) {
       player.lobby.startGame();
+      console.log(new Date(), ` -- [lobby ${player.lobby.code}] started game ${player.lobby.selectedGame}`);
     }
   });
 
   socket.on('game:end', game => {
     if(player.isAdmin()) {
       player.lobby.endGame();
+      console.log(new Date(), ` -- [lobby ${player.lobby.code}] ended game ${player.lobby.selectedGame}`);
     }
   });
 

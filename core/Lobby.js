@@ -542,6 +542,8 @@ Lobby.removePlayer = player => {
       lobby.game = undefined;
     }
 
+    console.log(new Date(), ` -- [lobby ${lobby.code}] removed`);
+
     // remove the lobby from active lobbies structure
     Lobby.lobbies[lobby.code] = false;
     delete Lobby.lobbies[lobby.code];
