@@ -236,7 +236,7 @@ module.exports = class Recipe extends Story {
         })),
       comments: _.zip(comment[i].chain, comment[i].editors)
         .map(([link, e]) => ({
-          link: parseItem(link, _.random(ingredient[i].chain.length), ingredient[i].chain),
+          link: parseItem(link, _.random(ingredient[i].chain.length-1), ingredient[i].chain),
           editor: this.config.anonymous ? '' : e,
         }))
     }))
