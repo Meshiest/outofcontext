@@ -8,30 +8,7 @@ import '../res/favicon.ico';
 
 const VERSION = require('../package.json').version;
 
-// Google analytics
-window.dataLayer = window.dataLayer || [];
-window.gtag = (...args) => {
-  dataLayer.push(args);
-};
-
-gtag('js', new Date());
-gtag('set', 'allow_google_signals', false );
-gtag('set', 'allow_ad_personalization_signals', false );
-const config = page_path =>
-  gtag('config', 'UA-58828021-7', {
-    page_path,
-    cookie_prefix: 'OOC',
-    cookie_domain: 'www.outofcontext.party',
-    cookie_expires: 28 * 24 * 60 * 60,
-    custom_map: {
-      metric1: 'emote_index',
-      metric2: 'turn_duration',
-      metric3: 'wait_duration',
-      metric4: 'player_count',
-      dimension1: 'game_name',
-      dimension2: 'lobby_code',
-    },
-  });
+const config = page_path => gtag('config', 'UA-58828021-7', {page_path});
 
 Vue.use(VueRouter);
 Vue.use(PortalVue);
@@ -88,7 +65,7 @@ new Vue({
     };
   },
   created() {
-    config('/' + this.$route.name);
+    config('/' + this.$route.path);
   },
   sockets: {
     connect() {
@@ -112,8 +89,8 @@ new Vue({
   },
   watch: {
     $route(to, from) {
-      if(to.name !== from.name)
-        config('/' + to.name);
+      if(to.path !== from.path)
+        config('/' + to.path);
     },
   },
   render(h) {

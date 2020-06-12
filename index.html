@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-58828021-7"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function gtag(){dataLayer.push(arguments);};
+      gtag('js', new Date());
+      gtag('set', 'allow_google_signals', false );
+      gtag('set', 'allow_ad_personalization_signals', false );
+      gtag('config', 'UA-58828021-7', {
+        cookie_prefix: 'OOC',
+        cookie_domain: 'www.outofcontext.party',
+        cookie_expires: 28 * 24 * 60 * 60,
+        custom_map: {
+          metric1: 'emote_index',
+          metric2: 'turn_duration',
+          metric3: 'wait_duration',
+          metric4: 'player_count',
+          dimension1: 'game_name',
+          dimension2: 'lobby_code',
+        },
+      });
+    </script>
     <meta charset="utf-8">
     <meta name="description" content="Online Social Party Games">
     <meta name="keywords" content="game,games,online,telestrations,spyfall,drawphone,out of context,ooc,outofcontext,party,social,assassin,word assassin,wurderer,raconteur,underground,scribble,crabhat,multiplayer,doodle,telephone">
@@ -8,7 +29,6 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/semantic.min.css">
     <script src="/socket.io/socket.io.js"></script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-58828021-7"></script>
     <title>Out of Context!</title>
   </head>
   <body>
