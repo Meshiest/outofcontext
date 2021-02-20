@@ -55,7 +55,7 @@
           <textarea v-model="line" rows="2">
           </textarea>
           <div class="char-count">
-            {{line.length}}/256
+            This will replace the word  &quot;<b>ITEM</b>&quot; in a random step. {{line.length}}/256
           </div>
         </sui-form-field>
         <sui-button type="submit"
@@ -70,9 +70,12 @@
           <textarea v-model="line" rows="2">
           </textarea>
           <div class="char-count">
-            <span v-if="line.indexOf('ITEM') === -1">
-              The text <b>ITEM</b> must be in the instruction.
+            <span v-if="line.indexOf('ITEM') === -1" style="color: #c99">
+              The text &quot;<b>ITEM</b>&quot; must be in the instruction.
             </span> {{line.length}}/256
+          </div>
+          <div class="char-count">
+            &quot;<b>ITEM</b>&quot; will be replaced with a random ingredient at the end.
           </div>
         </sui-form-field>
         <sui-button type="submit"
