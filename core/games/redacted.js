@@ -32,7 +32,7 @@ module.exports = class Redacted extends Story {
     this.config.contextLen = 1;
 
     // Make the number of links a multiple of 3
-    // 
+    //
     this.icons = {
       line: 'pencil',
       tamper: 'eraser',
@@ -82,7 +82,7 @@ module.exports = class Redacted extends Story {
 
         line = Sanitize.str(data);
 
-        if(line.length < 1 || line.length > 256)
+        if(line.length < 1 || line.length > 256 || getWords(line).length === 0)
           return;
 
         chain.addLink(pid, {type: 'repair', kind: 'truncate', data: line});
@@ -156,7 +156,7 @@ module.exports = class Redacted extends Story {
     case 'redacted:censor':
       if(!chain || expectedType !== 'tamper' || gamemode.censor !== 'player')
         return;
-      
+
       if(!_.isArray(data))
         return;
 
@@ -172,7 +172,7 @@ module.exports = class Redacted extends Story {
       // can't use too much ink or go over half the words
       if(data.length * COST.censor > ink || data.length > Math.ceil(wordCount / 2))
         return;
-      
+
       const words = getWords(lastChain.data).map(w => w[0].length)
       let i = 0;
 
@@ -256,7 +256,7 @@ module.exports = class Redacted extends Story {
           });
 
         } else { // censor === 'random'
-          
+
           // Normally distribute random counts
           const low = 1;
           const high = Math.floor(ink/COST.censor);

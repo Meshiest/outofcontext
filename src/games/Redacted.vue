@@ -41,7 +41,7 @@
         </sui-form-field>
         <sui-button type="submit"
           primary
-          :disabled="line.length < 1 || line.length > 256">
+          :disabled="line.length < 1 || line.length > 256 || wordCount(line) === 0">
           Sign
         </sui-button>
       </sui-form>
