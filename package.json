@@ -32,7 +32,9 @@
     "vue-socket.io": "^3.0.7",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.8",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.11"
+    "webpack": "^4.29.6"
+  },
+  "devDependencies": {
+    "webpack-cli": "^4.5.0"
   }
 }

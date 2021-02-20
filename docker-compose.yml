@@ -2,19 +2,8 @@ game:
   build: .
   restart: always
   command: "npm start"
+  ports:
+   - "8080:8080"
   volumes:
     - .:/usr/src/app
 
-nginx:
-  image: nginx
-  restart: always
-  volumes:
-   - ./nginx.conf:/etc/nginx/conf.d/default.conf
-   - ./public:/nginx/html:ro
-   - ./ssl/cert.crt:/etc/ssl/certs/cert.crt
-   - ./ssl/key.key:/etc/ssl/private/key.key
-  ports:
-   - "443:443"
-   - "80:80"
-  links:
-    - game
