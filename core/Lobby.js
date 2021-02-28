@@ -104,7 +104,7 @@ class Lobby {
           lobby.game = undefined;
         }
 
-        console.log(new Date(), ` -- [lobby ${lobby.code}] removed`);
+        console.log(new Date(), `-- [lobby ${lobby.code}] removed`);
 
         Lobby.cull(lobby.code);
       } catch (err) {

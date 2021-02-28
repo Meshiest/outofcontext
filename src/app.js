@@ -82,7 +82,6 @@ new Vue({
     };
   },
   created() {
-
     // rocketcrab query parsing
     let { rocketcrab, name, ishost } = this.$route.query;
     if (rocketcrab === 'true') {

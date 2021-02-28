@@ -7,7 +7,7 @@ module.exports = {
     more: 'Raconteur is inspired by improv-type games where players contribute to a story one sentence or one word at a time. ' +
       'The idea is to create unique stories from a train of thought going who knows where. Continuity is held only ' +
       'by the last line in the story, so writing with ambiguity allows for more interesting stories. ' +
-      'Based on the old parlor game Consequences.',
+      'Similar to old parlor game Consequences.',
     howTo: [
       'Every player will be given a line in a story',
       'Players will continue the story, one line at a time',
