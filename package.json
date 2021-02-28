@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "build": "npx webpack",
-    "update": "export MODE=production; npm run build && docker-compose restart game",
+    "update": "npm run dist && docker-compose restart game",
+    "dist": "export MODE=production; npm run build ",
     "watch": "npx webpack --watch",
     "start": "node main.js"
   },

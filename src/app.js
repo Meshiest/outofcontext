@@ -61,6 +61,7 @@ if (Vue.prototype.darkMode) {
 }
 
 Vue.prototype.bus = new Vue();
+Vue.prototype.rocketcrab = false;
 
 Vue.prototype.toggleDarkMode = () => {
   if (event) event.preventDefault();
@@ -81,6 +82,18 @@ new Vue({
     };
   },
   created() {
+
+    // rocketcrab query parsing
+    let { rocketcrab, name, ishost } = this.$route.query;
+    if (rocketcrab === 'true') {
+      name = (name || '').replace(/[\u200B-\u200D\uFEFF\n\t]/g, '').trim();
+      console.log('Hello', name, 'from rocketcrab!');
+      Vue.prototype.rocketcrab = {
+        name: !name ? 'Player' : name.length >= 16 ? name.slice(0, 15) : name,
+        isHost: ishost === 'true',
+      };
+    }
+
     config('/' + this.$route.path);
   },
   sockets: {

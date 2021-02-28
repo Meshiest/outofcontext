@@ -91,15 +91,6 @@
                 {{currGame.description}}
               </sui-card-description>
             </sui-card-content>
-            <sui-card-content extra>
-              <sui-icon name="clock"/> {{currGame.playTime}}
-              <span style="padding-left: 20px"/>
-              <sui-icon name="users"/> {{
-                `${currGame.config.players.min}${currGame.config.players.max != 256 ? '-' + currGame.config.players.max : '+'}`
-              }}
-              <span style="padding-left: 20px"/>
-              <sui-icon name="fire"/> {{currGame.difficulty}}
-            </sui-card-content>
             <sui-card-content>
               <sui-card-content style="text-align: left;">
                 <sui-accordion exclusive styled :inverted="darkMode">
@@ -129,6 +120,15 @@
                   </sui-accordion-content>
                 </sui-accordion>
               </sui-card-content>
+            </sui-card-content>
+            <sui-card-content extra>
+              <sui-icon name="clock"/> {{currGame.playTime}}
+              <span style="padding-left: 20px"/>
+              <sui-icon name="users"/> {{
+                `${currGame.config.players.min}${currGame.config.players.max != 256 ? '-' + currGame.config.players.max : '+'}`
+              }}
+              <span style="padding-left: 20px"/>
+              <sui-icon name="fire"/> {{currGame.difficulty}}
             </sui-card-content>
           </sui-card>
         </div>
@@ -183,7 +183,8 @@
                 <div class="char-count" v-if="typeof opt.max !== 'undefined'  && deriveConfigValue(name) > opt.max">
                   Maximum: {{opt.max}}
                 </div>
-                <div class="char-count" v-if="typeof opt.min !== 'undefined' && deriveConfigValue(name) < opt.min">
+                <div class="char-count" v-if="typeof opt.min !== 'undefined' &&
+                (deriveConfigValue(name) < opt.min || configVal(name) === '#numPlayers' && lobbyInfo.players.length < opt.min)">
                   Minimum: {{opt.min}}
                 </div>
                 <sui-dropdown v-else-if="opt.type === 'bool'"
@@ -206,7 +207,7 @@
                 <sui-button
                   type="button"
                   :inverted="darkMode"
-                  :disabled="lobbyInfo.players.length < currGame.config.players.min"
+                  :disabled="invalidConfig"
                   @click="$socket.emit('game:start')"
                   color="blue">
                   Start Game
@@ -267,7 +268,7 @@
       <sui-loader :inverted="darkMode" />
     </sui-dimmer>
     <sui-label
-      v-if="validLobby"
+      v-if="validLobby && !rocketcrab"
       class="lobby-code left"
       attached="top left">
       <code>
@@ -363,6 +364,15 @@ export default {
     isSpectator() {
       return this.lobbyInfo.spectators.find(p => p.id === this.$root.playerId);
     },
+    invalidConfig() {
+      const numPlayers = this.lobbyInfo.players.length;
+      for (const key in this.currGame.config) {
+        if (this.lobbyInfo.config[key] === '#numPlayers' &&
+          numPlayers < this.currGame.config[key].min)
+          return true;
+      }
+      return false;
+    },
     canJoinPlayers() {
       const confPlayers = this.lobbyInfo.config.players;
       const currGame = gameInfo[this.lobbyInfo.game];
@@ -416,7 +426,7 @@ export default {
       case 'int':
         switch(val) {
         case '#numPlayers':
-          return Math.max(Math.min(this.lobbyInfo.players.length, conf.max), conf.min);
+          return Math.min(this.lobbyInfo.players.length, conf.max);
         default:
           return val;
         }
@@ -487,8 +497,10 @@ export default {
       this.showJoinLobby = false;
       this.lobbyInfo = emptyInfo();
       const lobbyCode = this.$route.params.code;
-      if(lobbyCode !== code)
+      if(lobbyCode !== code) {
+        this.$router.replace({ query: 'foo' });
         this.$router.push(`/lobby/${code}`);
+      }
     },
     'lobby:leave': function(code) {
       this.validLobby = false;
@@ -516,14 +528,22 @@ export default {
       }
 
       // If the lobby says we're not playing, we're probably not playing
-      if(this.state === 'PLAYING' && info.state === 'WAITING')
+      if (this.state === 'PLAYING' && info.state === 'WAITING')
         this.state = 'LOBBY_WAITING';
 
-      const name = localStorage.oocName;
+      let name = localStorage.oocName;
       const target = info.players.find(p => !p.connected && p.name === name);
 
+      if (this.state === 'JOIN_LOBBY' && this.rocketcrab && this.$route.params.code.startsWith('rc')) {
+        localStorage.oocName = name = this.rocketcrab.name;
+        this.loadingName = true;
+        this.$socket.emit('member:name', name);
+        if (target)
+          this.$socket.emit('lobby:replace', target.playerId);
+      }
+
       // automatically rejoin if there is a joinable slot with this name
-      if(this.state === 'JOIN_LOBBY' && this.validLobby && name && target) {{
+      else if (this.state === 'JOIN_LOBBY' && this.validLobby && name && target) {{
         this.loadingName = true;
         this.$socket.emit('member:name', name);
         this.$socket.emit('lobby:replace', target.playerId);

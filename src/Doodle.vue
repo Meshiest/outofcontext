@@ -112,6 +112,9 @@
 
 import paper, { Path, Tool, PaperScope } from 'paper';
 
+// maximum number of segments that can be drawn
+const MAX_SEGMENTS = 2000;
+
 export default {
   props: ['read-only', 'image', 'colors', 'timer'],
   colors: ['black', 'red', 'yellow', 'green', 'blue'],
@@ -132,7 +135,7 @@ export default {
   },
   methods: {
     pressUndo() {
-      const [path, ] = this.paths.splice(-1, 1);
+      const path = this.paths.pop();
       if(path)
         path.remove();
     },
@@ -202,6 +205,19 @@ export default {
       if(this.isReadOnly || !this.path) return;
       this.path.simplify(5);
       this.paths.push(this.path);
+
+      // automatically remove paths in excess
+      let sum;
+      do {
+        sum = 0;
+        for (const path of this.paths) {
+          sum += path.segments.length;
+        }
+        if (sum > MAX_SEGMENTS) {
+          const [path] = this.paths.splice(0, 1);
+          path.remove();
+        }
+      } while(sum > MAX_SEGMENTS);
     };
 
     this.tool.activate();

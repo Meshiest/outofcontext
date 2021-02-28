@@ -29,14 +29,19 @@ function cullSave(filename) {
 // attempt to cull the saves
 function cullSaves() {
   const files = glob.sync(saveName('*'), {});
+  let count = 0;
   for (const f of files) {
-    cullSave(f);
+    if (cullSave(f))
+      ++count;
   }
+  if (count > 0)
+    console.log(new Date(), '!- culled', count, 'old saves');
+  return count;
 }
 
 // save a lobby state to compressed file
 function saveLobbyState(lobby) {
-  console.log(Date.now(), `-- [lobby ${lobby.code}] saved`);
+  console.log(new Date(), `-- [lobby ${lobby.code}] saved`);
   const state = lobby.saveState();
   const data = pako.deflate(JSON.stringify(state));
   const fd = fs.openSync(saveName(lobby.code), 'w');

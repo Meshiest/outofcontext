@@ -21,14 +21,58 @@ class Lobby {
     return Lobby.lobbies.hasOwnProperty(code) && Lobby.lobbies[code] || Persistence.saveExists(code);
   }
 
-  // generate a new lobby code
-  static newCode(code) {
-    if(typeof code === 'undefined') {
-      do {
-        code = _.sampleSize('abcdefghijklmnopqrstuvwxyz0123456789', CODE_LENGTH).join('');
-      } while(Lobby.lobbyExists(code));
+  // remove a lobby from active lobbies structure
+  static cull(code) {
+    Lobby.lobbies[code] = false;
+    delete Lobby.lobbies[code];
+  }
+
+  // remove all lobbies with no players
+  static cullEmpty() {
+    const now = Date.now();
+    const keys = Object.keys(Lobby.lobbies);
+    let count = 0, lobby;
+    for (const code in keys) {
+      lobby = Lobby.lobbies[code];
+      // cleanup some garbage
+      if (!lobby) {
+        Lobby.cull(lobby);
+        continue;
+      }
+
+      // delete empty, non-persist, lobbies that are older than 60 seconds
+      if (lobby.empty() && !lobby.persist && now - lobby.created > 60000) {
+        Lobby.cull(code);
+        ++count;
+      }
     }
+    if (count > 0)
+      console.log(new Date(), '!- culled', count, 'empty lobbies');
+    return count;
+  }
+
+  // generate a new lobby code
+  static newCode(prefix='') {
+    let code, counter = 0, length = CODE_LENGTH;
+    do {
+      // after 5 failed attempts at creating a new lobby, increase the code length
+      // this should be astronomically improbable so it's certainly due to collisions
+      if (++counter > 5) {
+        length ++;
+        counter = 0;
+      }
+
+      code = prefix + _.sampleSize('abcdefghijklmnopqrstuvwxyz0123456789', length).join('');
+    } while(Lobby.lobbyExists(code));
     return code;
+  }
+
+  // create a new lobby with a code
+  static create(code, state) {
+    const lobby = new Lobby(state);
+    lobby.code = code;
+    Lobby.lobbies[code] = lobby;
+    return lobby;
   }
 
   /**
@@ -62,9 +106,7 @@ class Lobby {
 
         console.log(new Date(), ` -- [lobby ${lobby.code}] removed`);
 
-        // remove the lobby from active lobbies structure
-        Lobby.lobbies[lobby.code] = false;
-        delete Lobby.lobbies[lobby.code];
+        Lobby.cull(lobby.code);
       } catch (err) {
         //
       }
@@ -72,6 +114,7 @@ class Lobby {
   }
 
   constructor(lobbyState) {
+    this.created = Date.now();
     // restore lobby from existing state
     try {
       if (typeof lobbyState !== 'undefined') {
@@ -88,7 +131,9 @@ class Lobby {
 
   // reset the lobby to initial values
   resetLobby() {
-    this.code = Lobby.newCode(this.code);
+    if (typeof this.code === 'undefined') {
+      this.code = Lobby.newCode();
+    }
 
     this.members = [];
     this.players = [];
@@ -122,23 +167,33 @@ class Lobby {
 
   // restore a lobby from the save state
   restoreState(lobbyState) {
-    this.code = lobbyState.code;
+    if (lobbyState.code)
+      this.code = lobbyState.code;
     this.members = [];
 
-    this.players = lobbyState.players.map(p => ({
-      id: -1,
-      playerId: p.playerId,
-      connected: false,
-      name: p.name,
-    }));
+    if (lobbyState.players) {
+      this.players = lobbyState.players.map(p => ({
+        id: -1,
+        playerId: p.playerId,
+        connected: false,
+        name: p.name,
+      }));
+    } else {
+      this.players = [];
+    }
 
     this.spectators = [];
-    this.selectedGame = lobbyState.selectedGame;
-    this.gameConfig = lobbyState.gameConfig;
-    this.admin = '';
-    this.lobbyState = lobbyState.lobbyState;
+    this.selectedGame = lobbyState.selectedGame || '';
+    // use the provided game config or defaults
+    this.gameConfig = lobbyState.gameConfig ||
+      this.selectedGame
+        ? _.mapValues(gameInfo[game].config, v => v.defaults)
+        : {players: '#numPlayers'};
 
-    if (lobbyState.game) {
+    this.admin = '';
+    this.lobbyState = lobbyState.lobbyState || 'WAITING';
+
+    if (lobbyState.game && this.players.length > 0) {
       const { config, state } = lobbyState.game;
 
       const Constructor = GAMES[this.selectedGame];
@@ -587,8 +642,7 @@ class Lobby {
 }
 
 // dev lobby
-Lobby.lobbies.aaaa = new Lobby();
-Lobby.lobbies.aaaa.code = 'aaaa';
+Lobby.create('devaaaa').persist = true;
 
 
 module.exports = Lobby;

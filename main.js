@@ -13,10 +13,12 @@ const VERSION = require('./package.json').version;
 
 app.use(express.static('./public'));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ strict:  true }));
 
 const Member = require('./core/Member');
 const Lobby = require('./core/Lobby');
 const Persistence = require('./core/Persistence');
+const GAMES = require('./gameInfo.js');
 
 const EMOTES = [
   'smile',
@@ -146,7 +148,8 @@ io.on('connection', socket => {
   socket.on('game:start', game => {
     if(player.isAdmin()) {
       player.lobby.startGame();
-      console.log(new Date(), `-- [lobby ${player.lobby.code}] started game ${player.lobby.selectedGame}`);
+      if (player.lobby.game)
+        console.log(new Date(), `-- [lobby ${player.lobby.code}] started game ${player.lobby.selectedGame}`);
     }
   });
 
@@ -276,6 +279,24 @@ app.get('/api/v1/info', (req, res) => {
   });
 });
 
+// rocketcrab api
+app.post('/api/v1/rocketcrab', (req, res) => {
+  const { game, version } = req.body;
+  if (version !== 1) return res.status(426).json({message: 'Unsupported version'});
+  if (!GAMES[game]) return res.status(404).json({message: 'Game not found'});
+
+  // create an empty lobby prefixed with rc
+  const code = Lobby.newCode('rc');
+  const lobby = new Lobby();
+  lobby.code = code;
+  lobby.setGame(game);
+  Lobby.lobbies[code] = lobby;
+  console.log(new Date(), `-- [${code}] created rocketcrab for ${game}`);
+
+  // respond with the code
+  return res.json({ code, version: 1 });
+});
+
 // handle the application closing - save lobbies if there are any
 function exitHandler(options, exitCode) {
   // save all the current lobbies
@@ -302,9 +323,12 @@ process.on('SIGUSR1', exitHandler.bind(null, {exit:true}));
 process.on('SIGUSR2', exitHandler.bind(null, {exit:true}));
 process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
 
-// Cull saves every tuesday at 4 lol
+// Cull saves every monday at 4am lol
 Persistence.cullSaves();
-cron.schedule('0 4 * * Tuesday', Persistence.cullSaves);
+cron.schedule('0 0 4 * * Monday', Persistence.cullSaves);
+
+// cull empty lobbies every minute
+cron.schedule('0 * * * * *', Lobby.cullEmpty);
 
 // Every request goes through the index, Vue will handle 404s
 app.use((req, res) => {
