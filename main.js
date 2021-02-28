@@ -242,19 +242,19 @@ app.get('/api/v1/info', (req, res) => {
   res.status(200).json({
     lobbies: _.chain(Lobby.lobbies) // number of lobbies
       .values()
-      .filter(l => l.members.length > 0)
+      .filter(l => l.members.length > 1)
       .size()
       .value(),
 
     games: _.chain(Lobby.lobbies) // number of active games
       .values()
-      .filter(l => l.game && l.members.length > 0)
+      .filter(l => l.game && l.members.length > 1)
       .size()
       .value(),
 
     players: _.chain(Lobby.lobbies) // number of users in game
       .values()
-      .filter(l => l.game && l.members.length > 0)
+      .filter(l => l.game && l.members.length > 1)
       .map(l => l.players.filter(p => p.connected && !!p.member).length)
       .sum()
       .value(),
@@ -263,13 +263,13 @@ app.get('/api/v1/info', (req, res) => {
 
     gameDistribution: _.chain(Lobby.lobbies) // distribution of game type across lobbies
       .values()
-      .filter(l => l.game && l.members.length > 0)
+      .filter(l => l.game && l.members.length > 1)
       .countBy('selectedGame')
       .value(),
 
     playerDistribution: _.chain(Lobby.lobbies) // distribution of game type across players
       .values()
-      .filter(l => l.game && l.members.length > 0)
+      .filter(l => l.game && l.members.length > 1)
       .map(l => [l.selectedGame, l.players.filter(p => p.connected && !!p.member).length])
       .reduce((acc, [game, players]) => {
         acc[game] = (acc[game] || 0) + players;
