@@ -6,7 +6,7 @@
         {{player.isLastLink ? 'Finish the story! ' : ''}}The last author{{player.link.length !== 1 ? 's' : ''}} wrote....
         <div style="margin-top: 10px">
           <div v-for="(link, i) in player.link">
-            <sui-divider horizontal v-if="i !== 0">Then</sui-divider>
+            <sui-divider horizontal v-if="i !== 0" :inverted="darkMode">Then</sui-divider>
             <sui-header-subheader>
               {{link}}
             </sui-header-subheader>
@@ -16,7 +16,7 @@
       <h2 is="sui-header" icon="pencil" v-else-if="player.link.length === 0">
         Write the first line
       </h2>
-      <sui-form @submit="writeLine">
+      <sui-form @submit="writeLine" :inverted="darkMode">
         <sui-form-field>
           <label>The Story Goes...</label>
           <textarea v-model="line" rows="2">
@@ -27,6 +27,7 @@
         </sui-form-field>
         <sui-button type="submit"
           :color="player.isLastLink ? 'green' : 'blue'"
+          :inverted="darkMode"
           :disabled="line.length < 1 || line.length > 512">
           {{player.isLastLink ? 'Finish' : 'Sign'}}
         </sui-button>
@@ -34,18 +35,18 @@
     </div>
     <div v-else-if="player.state === 'WAITING'"
       style="margin: 16px">
-      <sui-loader active centered inline size="huge">
+      <sui-loader active centered inline size="huge" :inverted="darkMode">
         Waiting on Other Authors
       </sui-loader>
     </div>
     <div v-else-if="player.state === 'READING' || !player.state && game.stories && game.stories.length">
-      <sui-divider horizontal>
+      <sui-divider horizontal :inverted="darkMode">
         Stories
       </sui-divider>
       <div style="text-align: left">
         <div v-for="(story, i) in game.stories" :key="i">
-          <sui-divider horizonal v-if="i > 0"></sui-divider>
-          <sui-card>
+          <sui-divider horizonal v-if="i > 0" :inverted="darkMode"></sui-divider>
+          <sui-card >
             <div class="like-bar">
               <div :is="player.state ? 'sui-button' : 'sui-label'"
                 :color="player.state && !player.liked[i] ? 'grey' : 'red'"
@@ -78,17 +79,19 @@
       <sui-button v-if="player.state === 'READING'"
         style="margin-top: 16px"
         @click="$socket.emit('game:message', 'story:done', game.icons[player.id] !== 'check')"
-        primary
+        color="blue"
+        :inverted="darkMode"
         :basic="game.icons[player.id] === 'check'" >
         {{game.icons[player.id] === 'check' ? 'Still Reading' : 'Done Reading'}}
       </sui-button>
     </div>
     <div v-else style="margin: 16px">
-      <sui-loader active centered inline size="huge">
+      <sui-loader active centered inline size="huge" :inverted="darkMode">
         Stories are Being Written
       </sui-loader>
     </div>
     <sui-progress
+      :inverted="darkMode"
       v-if="game.progress !== 1"
       state="active"
       progress
@@ -154,7 +157,11 @@ export default {
       this.player = info;
     }
   },
+  beforeDestroy() {
+    this.bus.$off('toggle-dark-mode', this.update);
+  },
   created() {
+    this.bus.$on('toggle-dark-mode', this.update);
     this.$socket.emit('game:info');
     this.$socket.emit('lobby:info');
   },
@@ -164,6 +171,7 @@ export default {
     }
   },
   methods: {
+    update() { this.$forceUpdate(); },
     writeLine(event) {
       event.preventDefault();
 
@@ -172,7 +180,7 @@ export default {
 
       this.$socket.emit('game:message', 'story:line', this.line);
       this.line = '';
-    }
+    },
   },
   data() {
     return {

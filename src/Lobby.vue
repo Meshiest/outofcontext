@@ -4,35 +4,39 @@
       title="Invalid Lobby"
       subtitle="This lobby does not exist">
       <div>
-        <sui-divider horizontal>
+        <sui-divider horizontal :inverted="darkMode">
           Lobby
         </sui-divider>
         <sui-button-group>
           <sui-button
             color="green"
+            :inverted="darkMode"
             :loading="creatingLobby"
             @click="createLobby">
             Create
           </sui-button>
           <sui-button-or/>
           <sui-button
-            primary
+            color="blue"
+            :inverted="darkMode"
             :loading="showJoinLobby"
             @click="showJoinLobby = true">
             Join
           </sui-button>
         </sui-button-group>
-        <sui-divider horizontal>
+        <sui-divider horizontal :inverted="darkMode">
           Redirect
         </sui-divider>
-        <sui-button-group vertical basic>
-          <router-link is="sui-button"
+        <sui-button-group vertical :basic="!darkMode" :inverted="darkMode">
+          <router-link is="sui-button" :basic="darkMode" :inverted="darkMode"
             to="/">
             Home
           </router-link>
           <a is="sui-button"
             href="https://github.com/meshiest/outofcontext/issues"
             target="_blank"
+            :basic="darkMode"
+            :inverted="darkMode"
             rel="noopener noreferrer">
             Bug Report
           </a>
@@ -43,6 +47,7 @@
       title="Enter a Name"
       subtitle="Try to be creative">
       <sui-form
+        :inverted="darkMode"
         @submit="e => enterName(e)"
         :error="!validName"
         :loading="loadingName">
@@ -57,11 +62,13 @@
             autocomplete="on"
             placeholder="Ethan">
         </sui-form-field>
-        <sui-button primary type="submit">
+        <sui-button color="blue" :inverted="darkMode" type="submit">
           Join
         </sui-button>
         <router-link
           is="sui-button"
+          :basic="darkMode"
+          :inverted="darkMode"
           to="/">
           Leave
         </router-link>
@@ -72,10 +79,10 @@
       :subtitle="currGame ? currGame.subtitle : 'Waiting for a game to be selected'">
       <div>
         <div v-if="currGame">
-          <sui-divider horizontal>
+          <sui-divider horizontal :inverted="darkMode">
             Game Info
           </sui-divider>
-          <sui-card>
+          <sui-card :inverted="darkMode">
             <sui-card-content>
               <sui-card-header>
                 {{currGame.title}}
@@ -93,13 +100,56 @@
               <span style="padding-left: 20px"/>
               <sui-icon name="fire"/> {{currGame.difficulty}}
             </sui-card-content>
+            <sui-card-content>
+              <sui-card-content style="text-align: left;">
+                <sui-accordion exclusive styled :inverted="darkMode">
+                  <sui-accordion-title>
+                    <sui-icon name="dropdown"/>More Info
+                  </sui-accordion-title>
+                  <sui-accordion-content>
+                    {{currGame.more}}
+                  </sui-accordion-content>
+                  <sui-accordion-title>
+                    <sui-icon name="dropdown"/>How to Play
+                  </sui-accordion-title>
+                  <sui-accordion-content>
+                    <ul style="padding-left: 20px; margin: 0">
+                      <li v-for="step in currGame.howTo">
+                        {{step}}
+                      </li>
+                    </ul>
+                  </sui-accordion-content>
+                  <sui-accordion-title>
+                    <sui-icon name="dropdown"/>Configurations
+                  </sui-accordion-title>
+                  <sui-accordion-content>
+                    <div v-for="(opt, name) in currGame.config" :key="name">
+                      <b>{{opt.name}}</b>: {{opt.info}}
+                    </div>
+                  </sui-accordion-content>
+                </sui-accordion>
+              </sui-card-content>
+            </sui-card-content>
           </sui-card>
         </div>
+        <div v-else>
+          <sui-divider horizontal :inverted="darkMode">
+            Lobby Code
+          </sui-divider>
+          <sui-statistic :inverted="darkMode" style="margin-bottom: 14px; margin-top: 0;">
+            <sui-statistic-value>
+              {{$route.params.code}}
+            </sui-statistic-value>
+            <sui-statistic-label>
+              {{phonetic}}
+            </sui-statistic-label>
+          </sui-statistic>
+        </div>
         <div v-if="lobbyInfo.admin === $root.playerId" style="text-align: left">
-          <sui-divider horizontal>
+          <sui-divider horizontal :inverted="darkMode">
             Game Settings
           </sui-divider>
-          <sui-form @submit="event => event.preventDefault()">
+          <sui-form @submit="event => event.preventDefault()" :inverted="darkMode">
             <sui-form-field>
               <label>Game</label>
               <sui-dropdown
@@ -113,15 +163,7 @@
             </sui-form-field>
             <div v-if="currGame">
               <sui-form-field v-for="(opt, name) in currGame.config" v-if="!opt.hidden" :key="name">
-                <label>
-                  <span>{{opt.name}}</span>
-                  <sui-popup :content="opt.info">
-                    <sui-icon
-                      name="info circle"
-                      slot="trigger">
-                    </sui-icon>
-                  </sui-popup>
-                </label>
+                <label>{{opt.name}}</label>
                 <div v-if="opt.type === 'int'" style="display: flex">
                   <sui-input
                     type="number"
@@ -132,7 +174,8 @@
                     autocomplete="off"/>
                   <sui-button v-if="opt.defaults === '#numPlayers'"
                     type="button"
-                    :primary="configVal(name) === '#numPlayers'"
+                    :color="configVal(name) === '#numPlayers' ? 'blue' : undefined"
+                    :inverted="darkMode"
                     @click="updateConfig(name, '#numPlayers')"
                     style="margin-left: 8px"
                     icon="users"/>
@@ -162,9 +205,10 @@
               <div style="margin: 1em 0; text-align: center">
                 <sui-button
                   type="button"
+                  :inverted="darkMode"
                   :disabled="lobbyInfo.players.length < currGame.config.players.min"
                   @click="$socket.emit('game:start')"
-                  primary>
+                  color="blue">
                   Start Game
                 </sui-button>
               </div>
@@ -172,7 +216,7 @@
           </sui-form>
         </div>
         <div v-else-if="currGame">
-          <sui-divider horizontal>
+          <sui-divider horizontal :inverted="darkMode">
             Game Setup
           </sui-divider>
           <sui-card>
@@ -181,7 +225,7 @@
                 v-if="!opt.hidden"
                 :key="name"
                 style="margin: 8px;">
-                <sui-statistic>
+                <sui-statistic :inverted="darkMode">
                   <sui-statistic-value>
                     {{deriveConfigText(name)}}
                   </sui-statistic-value>
@@ -220,14 +264,14 @@
       </ooc-player-list>
     </ooc-menu>
     <sui-dimmer :active="loading || state === 'LOADING'">
-      <sui-loader />
+      <sui-loader :inverted="darkMode" />
     </sui-dimmer>
     <sui-label
       v-if="validLobby"
       class="lobby-code left"
       attached="top left">
       <code>
-        {{$route.params.code}}
+        {{$route.params.code.toUpperCase()}}
       </code>
     </sui-label>
     <sui-label
@@ -267,6 +311,21 @@
 <script>
 
 import gameInfo from '../gameInfo';
+import converter, { NATO_PHONETIC_ALPHABET } from 'phonetic-alphabet-converter'
+
+const alphabet = {
+  ...NATO_PHONETIC_ALPHABET,
+  '0': 'zero',
+  '1': 'one',
+  '2': 'two',
+  '3': 'three',
+  '4': 'four',
+  '5': 'five',
+  '6': 'six',
+  '7': 'seven',
+  '8': 'eight',
+  '9': 'nine',
+}
 
 const emptyInfo = () => ({
   admin: '',
@@ -298,6 +357,9 @@ export default {
     };
   },
   computed:  {
+    phonetic() {
+      return converter(this.$route.params.code, alphabet).join(' - ');
+    },
     isSpectator() {
       return this.lobbyInfo.spectators.find(p => p.id === this.$root.playerId);
     },
@@ -326,6 +388,7 @@ export default {
     }
   },
   methods: {
+    update() { this.$forceUpdate(); },
     configVal(name) {
       const confVal = this.lobbyInfo.config[name];
       const defVal = gameInfo[this.lobbyInfo.game].config[name].defaults;
@@ -336,7 +399,7 @@ export default {
       const conf = gameInfo[this.lobbyInfo.game].config[name];
 
       switch(conf.type) {
-      case 'int':      
+      case 'int':
         return this.deriveConfigValue(name);
       case 'bool':
         return val === 'true' ? 'Yes' : 'No';
@@ -350,7 +413,7 @@ export default {
       const conf = gameInfo[this.lobbyInfo.game].config[name];
 
       switch(conf.type) {
-      case 'int':      
+      case 'int':
         switch(val) {
         case '#numPlayers':
           return Math.max(Math.min(this.lobbyInfo.players.length, conf.max), conf.min);
@@ -485,7 +548,11 @@ export default {
       }
     }
   },
+  beforeDestroy() {
+    this.bus.$off('toggle-dark-mode', this.update);
+  },
   created() {
+    this.bus.$on('toggle-dark-mode', this.update);
     const lobbyCode = this.$route.params.code;
     if(!lobbyCode || lobbyCode.length !== 4) {
       this.loading = false;

@@ -1,5 +1,5 @@
 <template>
-  <sui-statistic>
+  <sui-statistic :inverted="darkMode">
     <sui-statistic-value>{{time}}</sui-statistic-value>
     <sui-statistic-label>{{label}}</sui-statistic-label>
   </sui-statistic>
@@ -25,6 +25,7 @@ export default {
     }
   },
   methods: {
+    rerender() { this.$forceUpdate(); },
     update() {
       this.now = Date.now();
       const start = this.start || this.now;
@@ -43,11 +44,13 @@ export default {
     },
   },
   created() {
+    this.bus.$on('toggle-dark-mode', this.rerender);
     this.update();
     if(this.start)
       this.timer = setInterval(this.update, 500);
   },
   beforeDestroy() {
+    this.bus.$off('toggle-dark-mode', this.rerender);
     clearInterval(this.timer);
   }
 };

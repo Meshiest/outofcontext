@@ -31,3 +31,69 @@ body {
   margin-right: 7.5px !important;
   margin-left: 0px !important;
 }
+
+
+body.dark-theme {
+  background-color: black;
+}
+
+.draw-chain-ending {
+  font-family: 'Lora', serif;
+  padding: 0 14px;
+  word-break: break-word;
+}
+
+.dark-theme .accordion, .dark-theme .card .header, .dark-theme .card .description {
+  background-color: black !important;
+  color: white !important;
+}
+
+.dark-theme .card {
+  background-color: black;
+}
+
+.dark-theme .header, .dark-theme .comment .content .text {
+  color: white !important;
+}
+
+.dark-theme .sub.header,
+.dark-theme .comment .content .author,
+.dark-theme .card .meta,
+.dark-theme  .draw-chain-ending  {
+  color: #ccc !important;
+}
+
+.dark-theme .card .content:not(:first-child) {
+  border-top: 1px solid rgba(255,255,255,.05)!important;
+}
+
+.dark-theme .card, .dark-theme .accordion {
+  box-shadow: 0 1px 3px 0 #444, 0 0 0 1px #444 !important;
+}
+.dark-theme .accordion .title {
+  border-color: rgba(255,255,255,.05)!important;
+}
+
+.dark-theme .inverted.table {
+  border: 1px solid rgba(200,200,200,.15) !important;
+}
+
+.dark-theme .card .extra {
+  color: #888;
+}
+
+.dark-theme tr.positive td,
+.dark-theme .ui.table tr.positive {
+  color: #ccffcc!important;
+  background-color: #002200!important;
+}
+
+.dark-theme tr.negative td,
+.dark-theme .ui.table tr.negative {
+  color: #ffcccc!important;
+  background-color: #220000!important;
+}
+
+.dark-theme .error.message .header {
+  color: #440000 !important;
+}

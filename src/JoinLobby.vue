@@ -1,6 +1,7 @@
 <template>
   <sui-dimmer :active="active">
     <sui-form
+      :inverted="darkMode"
       @submit="testLobby"
       :error="lobbyError"
       :loading="testingLobby">
@@ -14,25 +15,27 @@
           </sui-card-meta>
         </sui-card-content>
         <sui-card-content>
-            <sui-form-field
-              :error="lobbyError">
-              <label>Lobby Code</label>
-              <input name="lobbyCode"
-                required
-                @input="lobbyError = false"
-                autocomplete="off" 
-                placeholder="c0d3">
-            </sui-form-field>
-            <sui-button
-              primary
-              type="submit">
-              Join
-            </sui-button>
-            <sui-button
-              type="button"
-              @click="$emit('close')">
-              Cancel
-            </sui-button>
+          <sui-form-field
+            :error="lobbyError">
+            <label>Lobby Code</label>
+            <input name="lobbyCode"
+              required
+              @input="lobbyError = false"
+              autocomplete="off"
+              placeholder="c0d3">
+          </sui-form-field>
+          <sui-button
+            color="blue"
+            :inverted="darkMode"
+            type="submit">
+            Join
+          </sui-button>
+          <sui-button
+            :inverted="darkMode"
+            type="button"
+            @click="$emit('close')">
+            Cancel
+          </sui-button>
         </sui-card-content>
       </sui-card>
       <sui-message
@@ -80,7 +83,7 @@ module.exports = {
             this.$socket.emit('lobby:join', code);
             this.$router.push(`/lobby/${code}`);
           } else {
-            this.lobbyError = true;  
+            this.lobbyError = true;
           }
         })
         .catch(() => {

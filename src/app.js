@@ -54,6 +54,22 @@ Vue.component('ooc-page', Page);
 Vue.component('ooc-game', GameRenderer);
 Vue.component('ooc-doodle', Doodle);
 
+// const cssDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+Vue.prototype.darkMode = localStorage.occDarkMode === 'true';
+if (Vue.prototype.darkMode) {
+  document.body.classList.add('dark-theme');
+}
+
+Vue.prototype.bus = new Vue();
+
+Vue.prototype.toggleDarkMode = () => {
+  if (event) event.preventDefault();
+  const mode = Vue.prototype.darkMode = !Vue.prototype.darkMode;
+  document.body.classList[mode ? 'add' : 'remove']('dark-theme');
+  localStorage.occDarkMode = mode;
+  Vue.prototype.bus.$emit('toggle-dark-mode');
+};
+
 new Vue({
   router,
   el: '#app',

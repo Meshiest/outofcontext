@@ -21,7 +21,8 @@
       <h2 is="sui-header" icon="pencil" v-else-if="!player.link">
         What Should be Drawn?
       </h2>
-      <sui-form @submit="writeLine" v-if="!player.link || player.link.type === 'image'">
+      <sui-form @submit="writeLine" v-if="!player.link || player.link.type === 'image'"
+        :inverted="darkMode">
         <sui-form-field>
           <label>{{!player.link ? 'Thing to Draw' : 'This is...'}}</label>
           <textarea v-model="line" rows="2"></textarea>
@@ -30,7 +31,8 @@
           </div>
         </sui-form-field>
         <sui-button type="submit"
-          primary
+          color="blue"
+          :inverted="darkMode"
           :disabled="line.length < 1 || line.length > 256">
           Describe
         </sui-button>
@@ -44,12 +46,12 @@
     </div>
     <div v-else-if="player.state === 'WAITING'"
       style="margin: 16px">
-      <sui-loader active centered inline size="huge">
+      <sui-loader active centered inline size="huge" :inverted="darkMode">
         Waiting on Other Players
       </sui-loader>
     </div>
     <div v-else-if="player.state === 'READING' || !player.state && game.chains && game.chains.length">
-      <sui-divider horizontal>
+      <sui-divider horizontal :inverted="darkMode">
         Chains
       </sui-divider>
       <div>
@@ -88,11 +90,11 @@
             </sui-comment-group>
           </sui-card-content>
           <sui-card-content v-if="chain.length % 2 == 1" :style="{marginBottom: '14px'}">
-            <div style="font-family: 'Lora', serif; padding: 0 14px; word-break: break-word;">
+            <div class="draw-chain-ending">
               {{chain[0].link.data}}
             </div>
-            <sui-divider horizontal>TO</sui-divider>
-            <div style="font-family: 'Lora', serif; padding: 0 14px; word-break: break-word;">
+            <sui-divider horizontal :inverted="darkMode">TO</sui-divider>
+            <div class="draw-chain-ending">
               {{chain[chain.length-1].link.data}}
             </div>
           </sui-card-content>
@@ -101,17 +103,19 @@
       <sui-button v-if="player.state === 'READING'"
         style="margin-top: 16px"
         @click="$socket.emit('game:message', 'draw:done', game.icons[player.id] !== 'check')"
-        primary
+        color="blue"
+        :inverted="darkMode"
         :basic="game.icons[player.id] === 'check'" >
         {{game.icons[player.id] === 'check' ? 'Still Looking' : 'Done Looking'}}
       </sui-button>
     </div>
     <div v-else style="margin: 16px">
-      <sui-loader active centered inline size="huge">
+      <sui-loader active centered inline size="huge" :inverted="darkMode">
         Art is being created and described
       </sui-loader>
     </div>
     <sui-progress
+      :inverted="darkMode"
       v-if="game.progress !== 1"
       state="active"
       progress
@@ -168,7 +172,11 @@ export default {
       this.player = info;
     }
   },
+  beforeDestroy() {
+    this.bus.$off('toggle-dark-mode', this.update);
+  },
   created() {
+    this.bus.$on('toggle-dark-mode', this.update);
     this.$socket.emit('game:info');
     this.$socket.emit('lobby:info');
   },
@@ -178,6 +186,7 @@ export default {
     }
   },
   methods: {
+    update() { this.$forceUpdate(); },
     writeLine(event) {
       event.preventDefault();
 

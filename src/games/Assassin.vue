@@ -31,7 +31,7 @@
           </sui-label>
         </sui-card-content>
       </sui-card>
-      <sui-table v-else basic unstackable>
+      <sui-table v-else basic unstackable :inverted="darkMode">
         <sui-table-header>
           <sui-table-row>
             <sui-table-header-cell>
@@ -57,7 +57,8 @@
       </sui-table>
       <sui-button
         @click="$socket.emit('game:message', 'assassin:done', true)"
-        primary>
+        :inverted="darkMode"
+        color="blue">
         Done
       </sui-button>
     </div>
@@ -68,12 +69,15 @@
       </h2>
       <sui-button style="margin-top: 16px"
         @click="$socket.emit('game:message', 'assassin:done', false)"
-        primary basic>
+        :inverted="darkMode"
+        color="blue"
+        basic
+      >
         Show Dossier
       </sui-button>
     </div>
     <div v-else style="margin: 16px">
-      <sui-loader active centered inline size="huge">
+      <sui-loader active centered inline size="huge" :inverted="darkMode">
         Wurderers Collecting Intel
       </sui-loader>
     </div>
@@ -98,9 +102,16 @@ export default {
         this.line = '';
     }
   },
+  beforeDestroy() {
+    this.bus.$off('toggle-dark-mode', this.update);
+  },
   created() {
+    this.bus.$on('toggle-dark-mode', this.update);
     this.$socket.emit('lobby:info');
     this.$socket.emit('game:info');
+  },
+  methods: {
+    update() { this.$forceUpdate(); },
   },
   computed: {
     nameTable() {

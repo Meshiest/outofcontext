@@ -1,13 +1,14 @@
 <template>
   <ooc-menu title="Game Info" subtitle="Learn the ropes">
-    <sui-divider horizontal>Redirect</sui-divider>
+    <sui-divider horizontal :inverted="darkMode">Redirect</sui-divider>
     <router-link
       is="sui-button"
+      :inverted="darkMode"
       basic
       to="/">
       Home
     </router-link>
-    <sui-divider horizontal>Games</sui-divider>
+    <sui-divider horizontal :inverted="darkMode">Games</sui-divider>
     <sui-card v-for="(info, key) in gameInfo" :key="key" v-if="!info.hidden">
       <sui-card-content>
         <sui-card-header>
@@ -18,7 +19,7 @@
         </sui-card-description>
       </sui-card-content>
       <sui-card-content style="text-align: left;">
-        <sui-accordion exclusive styled>
+        <sui-accordion exclusive styled :inverted="darkMode">
           <sui-accordion-title>
             <sui-icon name="dropdown"/>More Info
           </sui-accordion-title>

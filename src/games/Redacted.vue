@@ -21,7 +21,8 @@
       <h2 is="sui-header" icon="pencil" v-else-if="!player.link">
         Write the first line
       </h2>
-      <sui-form @submit="writeLine" v-if="!player.link || player.link.type === 'repair'">
+      <sui-form @submit="writeLine" v-if="!player.link || player.link.type === 'repair'"
+       :inverted="darkMode">
         <div class="redacted-words" v-if="player.link" style="margin-top: 0;">
           <code v-for="word in player.link.data.line"
             :style="{ cursor: 'initial' }"
@@ -40,12 +41,14 @@
           </div>
         </sui-form-field>
         <sui-button type="submit"
-          primary
+          color="blue"
+          :inverted="darkMode"
           :disabled="line.length < 1 || line.length > 256 || wordCount(line) === 0">
           Sign
         </sui-button>
       </sui-form>
-      <sui-form @submit="editCensor" v-else-if="player.link && player.link.type === 'tamper' && player.link.kind === 'censor'">
+      <sui-form @submit="editCensor" v-else-if="player.link && player.link.type === 'tamper' && player.link.kind === 'censor'"
+        :inverted="darkMode">
         <div class="redacted-words">
           <code v-for="word in player.link.data.line"
             :style="{
@@ -67,16 +70,19 @@
             :name="index"
             v-model="words[i]" />
           <div class="char-count">
+            <span v-if="wordCount(words[i]) > 1" style="color: #c99">Too many words!</span>
             {{words[i] ? words[i].length : 0}}/32, {{wordCount(words[i])}} words
           </div>
         </sui-form-field>
         <sui-button type="submit"
-          primary
+          color="blue"
+          :inverted="darkMode"
           :disabled="!validWords()">
           Repair
         </sui-button>
       </sui-form>
-      <sui-form @submit="editTruncate" v-else-if="player.link && player.link.type === 'tamper' && player.link.kind === 'truncate'">
+      <sui-form @submit="editTruncate" v-else-if="player.link && player.link.type === 'tamper' && player.link.kind === 'truncate'"
+        :inverted="darkMode">
         <div class="redacted-words">
           <code class="tamperable">
             {{player.link.data.line.replace(' ', '&nbsp;')}}
@@ -93,7 +99,8 @@
           </div>
         </sui-form-field>
         <sui-button type="submit"
-          primary
+          color="blue"
+          :inverted="darkMode"
           :disabled="line.length < 1 || line.length > 256">
           Repair
         </sui-button>
@@ -102,7 +109,8 @@
         <div>
           <sui-button-group v-if="game.gamemode.censor !== 'none' && game.gamemode.truncate !== 'none'">
             <sui-button
-              color="black"
+              :color="darkMode ? 'grey' : 'black'"
+              :inverted="darkMode"
               icon="cut"
               @click="tamperType = 'truncate'"
               :basic="tamperType !== 'truncate'">
@@ -110,7 +118,8 @@
             </sui-button>
             <sui-button-or />
             <sui-button
-              color="black"
+              :color="darkMode ? 'grey' : 'black'"
+              :inverted="darkMode"
               icon="eraser"
               @click="tamperType = 'censor'"
               :basic="tamperType !== 'censor'">
@@ -148,7 +157,8 @@
           </div>
         </div>
         <sui-button
-          primary
+          color="blue"
+          :inverted="darkMode"
           @click="submitTamper"
           :disabled="false">
           {{tamperType === 'censor' ? 'Censor' : 'Truncate'}} Story
@@ -157,12 +167,12 @@
     </div>
     <div v-else-if="player.state === 'WAITING'"
       style="margin: 16px">
-      <sui-loader active centered inline size="huge">
+      <sui-loader active centered inline size="huge" :inverted="darkMode">
         Waiting on Other Players
       </sui-loader>
     </div>
     <div v-else-if="player.state === 'READING' || !player.state && game.chains && game.chains.length">
-      <sui-divider horizontal>
+      <sui-divider horizontal :inverted="darkMode">
         Stories
       </sui-divider>
       <div>
@@ -205,18 +215,20 @@
       <sui-button v-if="player.state === 'READING'"
         style="margin-top: 16px"
         @click="$socket.emit('game:message', 'redacted:done', game.icons[player.id] !== 'check')"
-        primary
+        color="blue"
+        :inverted="darkMode"
         :basic="game.icons[player.id] === 'check'" >
         {{game.icons[player.id] === 'check' ? 'Still Reading' : 'Done Reading'}}
       </sui-button>
     </div>
     <div v-else style="margin: 16px">
-      <sui-loader active centered inline size="huge">
+      <sui-loader active centered inline size="huge" :inverted="darkMode">
         Evidence is being tampered with
       </sui-loader>
     </div>
     <sui-progress
       v-if="game.progress !== 1"
+      :inverted="darkMode"
       state="active"
       progress
       indicating
@@ -230,10 +242,19 @@
   color: white;
 }
 
+.dark-theme .redacted {
+  background-color: white;
+  color: black;
+}
+
 .redacted-words {
   margin: 16px 0;
   overflow-wrap: break-word;
   justify-content: center;
+}
+
+.dark-theme .redacted-words {
+  color: #ccc;
 }
 
 .word-count {
@@ -345,7 +366,11 @@ export default {
       this.player = info;
     }
   },
+  beforeDestroy() {
+    this.bus.$off('toggle-dark-mode', this.update);
+  },
   created() {
+    this.bus.$on('toggle-dark-mode', this.update);
     this.$socket.emit('game:info');
     this.$socket.emit('lobby:info');
   },
@@ -373,7 +398,6 @@ export default {
             && (rawWords.length - i) * COST.truncate <= this.game.ink,
           value: m[0],
         }));
-      console.log(zip(punctuations, words).flatMap(a => a));
       const wordified = zip(punctuations, words)
         .flatMap(a => a)
         .filter(a => a && a.value)
@@ -382,6 +406,7 @@ export default {
     }
   },
   methods: {
+    update() { this.$forceUpdate(); },
     wordCount(str) {
       return str ? getWords(str).length : 0;
     },

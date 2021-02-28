@@ -14,12 +14,17 @@ const GAMES = {
 class Lobby {
   constructor(lobbyState) {
     // restore lobby from existing state
-    if (typeof lobbyState !== 'undefined') {
-      this.restoreState(lobbyState);
-    } else {
-      // create a new lobby
-      this.resetLobby();
+    try {
+      if (typeof lobbyState !== 'undefined') {
+        this.restoreState(lobbyState);
+        return;
+      }
+    } catch (err) {
+      // error restoring lobby...
     }
+
+    // create a new lobby
+    this.resetLobby();
   }
 
   resetLobby() {
@@ -159,7 +164,7 @@ class Lobby {
     if(gameInfo.hasOwnProperty(game)) {
       this.selectedGame = game;
       this.gameConfig = _.mapValues(gameInfo[game].config, v => v.defaults);
-      
+
       this.updateMembers();
       this.sendLobbyInfo();
     }
@@ -486,7 +491,7 @@ class Lobby {
       state: this.lobbyState,
       config: this.gameConfig,
       admin: this.admin,
-      gameState: this.game ? this.game.getState() : {}, 
+      gameState: this.game ? this.game.getState() : {},
       members: this.members.map(m => ({
         id: m.id,
         name: m.name || false,
@@ -532,21 +537,29 @@ Lobby.removePlayer = player => {
   player.lobby = undefined;
 
   if(lobby.empty()) {
-    // save the lobby state
-    Persistence.saveLobbyState(lobby);
-
-    // kill and cleanup the game
-    if(lobby.game) {
-      lobby.game.stop();
-      lobby.game.cleanup();
-      lobby.game = undefined;
+    try {
+      // save the lobby state
+      Persistence.saveLobbyState(lobby);
+    } catch (err) {
+      // error saving lobby state
     }
 
-    console.log(new Date(), ` -- [lobby ${lobby.code}] removed`);
+    try {
+      // kill and cleanup the game
+      if(lobby.game) {
+        lobby.game.stop();
+        lobby.game.cleanup();
+        lobby.game = undefined;
+      }
 
-    // remove the lobby from active lobbies structure
-    Lobby.lobbies[lobby.code] = false;
-    delete Lobby.lobbies[lobby.code];
+      console.log(new Date(), ` -- [lobby ${lobby.code}] removed`);
+
+      // remove the lobby from active lobbies structure
+      Lobby.lobbies[lobby.code] = false;
+      delete Lobby.lobbies[lobby.code];
+    } catch (err) {
+      //
+    }
   }
 }
 

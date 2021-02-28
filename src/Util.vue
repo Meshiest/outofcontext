@@ -3,7 +3,7 @@
     <portal-target name="semantic-ui-vue">
     </portal-target>
     <sui-dimmer :active="disconnected" style="position: fixed">
-      <sui-loader>
+      <sui-loader :inverted="darkMode">
         Lost Connection to Server
       </sui-loader>
     </sui-dimmer>

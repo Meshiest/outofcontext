@@ -83,6 +83,7 @@
   padding: 0;
   position: relative;
   width: 100%;
+  overflow: hidden;
 }
 
 .ooc-doodle .gadgets {
@@ -96,6 +97,7 @@
   position: absolute;
   top: 0;
   width: 100%;
+  background-color: white;
 }
 
 .center-icon {
