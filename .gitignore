@@ -1,5 +1,4 @@
 public/
-persistence/
 node_modules/
 ssl
 docker-compose.yml

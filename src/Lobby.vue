@@ -540,7 +540,7 @@ export default {
       if(this.loading) {
         return;
       }
-      if(!lobbyCode || lobbyCode.length !== 4) {
+      if(!lobbyCode || lobbyCode.length < 4) {
         this.loading = false;
         this.state = 'NO_LOBBY';
       } else {
@@ -554,7 +554,7 @@ export default {
   created() {
     this.bus.$on('toggle-dark-mode', this.update);
     const lobbyCode = this.$route.params.code;
-    if(!lobbyCode || lobbyCode.length !== 4) {
+    if(!lobbyCode || lobbyCode.length < 4) {
       this.loading = false;
       this.state = 'NO_LOBBY';
     } else {

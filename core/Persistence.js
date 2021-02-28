@@ -20,7 +20,7 @@ function cullSave(filename) {
     if (Date.now() - EXPIRE_TIME > stat.ctime) {
       fs.unlinkSync(filename);
       return true;
-    }      
+    }
   } catch (e) {}
 
   return false;
@@ -36,7 +36,7 @@ function cullSaves() {
 
 // save a lobby state to compressed file
 function saveLobbyState(lobby) {
-  console.log('Saving lobby', lobby.code);
+  console.log(Date.now(), `-- [lobby ${lobby.code}] saved`);
   const state = lobby.saveState();
   const data = pako.deflate(JSON.stringify(state));
   const fd = fs.openSync(saveName(lobby.code), 'w');

@@ -11,7 +11,66 @@ const GAMES = {
   recipe: require('./games/recipe'),
 };
 
+const CODE_LENGTH = 4;
+
 class Lobby {
+  // list of in-memory lobbies
+  static lobbies = {};
+  // check if a lobby exists
+  static lobbyExists(code) {
+    return Lobby.lobbies.hasOwnProperty(code) && Lobby.lobbies[code] || Persistence.saveExists(code);
+  }
+
+  // generate a new lobby code
+  static newCode(code) {
+    if(typeof code === 'undefined') {
+      do {
+        code = _.sampleSize('abcdefghijklmnopqrstuvwxyz0123456789', CODE_LENGTH).join('');
+      } while(Lobby.lobbyExists(code));
+    }
+    return code;
+  }
+
+  /**
+   * Removes player from his/her lobby
+   * @param  {Member} player Player potentially in a lobby
+   */
+  static removePlayer(player) {
+    if (!player) return;
+    const lobby = player.lobby;
+
+    if(!lobby) return;
+
+    lobby.removeMember(player);
+    player.lobby = undefined;
+
+    if(lobby.empty()) {
+      try {
+        // save the lobby state
+        Persistence.saveLobbyState(lobby);
+      } catch (err) {
+        // error saving lobby state
+      }
+
+      try {
+        // kill and cleanup the game
+        if(lobby.game) {
+          lobby.game.stop();
+          lobby.game.cleanup();
+          lobby.game = undefined;
+        }
+
+        console.log(new Date(), ` -- [lobby ${lobby.code}] removed`);
+
+        // remove the lobby from active lobbies structure
+        Lobby.lobbies[lobby.code] = false;
+        delete Lobby.lobbies[lobby.code];
+      } catch (err) {
+        //
+      }
+    }
+  }
+
   constructor(lobbyState) {
     // restore lobby from existing state
     try {
@@ -27,12 +86,9 @@ class Lobby {
     this.resetLobby();
   }
 
+  // reset the lobby to initial values
   resetLobby() {
-    if(typeof this.code === 'undefined') {
-      do {
-        this.code = _.sampleSize('abcdefghijklmnopqrstuvwxyz0123456789', 4).join('');
-      } while(Lobby.lobbyExists(this.code));
-    }
+    this.code = Lobby.newCode(this.code);
 
     this.members = [];
     this.players = [];
@@ -44,6 +100,7 @@ class Lobby {
     this.game = null;
   }
 
+    // get the lobby's current save state
    saveState() {
     return {
       version: 1,
@@ -63,6 +120,7 @@ class Lobby {
     }
   }
 
+  // restore a lobby from the save state
   restoreState(lobbyState) {
     this.code = lobbyState.code;
     this.members = [];
@@ -84,7 +142,7 @@ class Lobby {
       const { config, state } = lobbyState.game;
 
       const Constructor = GAMES[this.selectedGame];
-      if(Constructor) {
+      if (Constructor) {
         this.game = new Constructor(this, config, this.players.map(p => p.playerId));
         this.game.restore(state);
         const numPlayers = this.players.length;
@@ -98,6 +156,7 @@ class Lobby {
     }
   }
 
+  // "safely" run a function, end the current lobby game if it fails
   attempt(fn) {
     try {
       return fn();
@@ -111,7 +170,8 @@ class Lobby {
   startGame() {
     if(!this.selectedGame) return;
 
-    const isPlayer = this.players.reduce((obj, p) => ({...obj, [p.id]: true}), {});
+    const isPlayer = {};
+    for (const p of this.players) isPlayer[p.id] = true;
     for(const p of this.members) {
       if(!isPlayer[p.id]) {
         this.spectators.push({id: p.id, name: p.name});
@@ -361,6 +421,10 @@ class Lobby {
       targetPlayer.member = member;
       targetPlayer.connected = true;
 
+      // if the player was a spectator, remove them from the spectators
+      if (isSpectator) {
+        this.spectators.splice(this.spectators.indexOf(isSpectator), 1);
+      }
 
       this.updateMembers();
       this.sendLobbyInfo();
@@ -388,8 +452,9 @@ class Lobby {
 
   // Swap a player into/out of spectators group
   toggleSpectate(player) {
-    if(!player.name)
+    if(!player.name) {
       return;
+    }
 
     const isSpectator = this.spectators.find(p => p.id === player.id);
 
@@ -484,8 +549,11 @@ class Lobby {
     }
   }
 
+  // lobby info is the current lobby state sent to the players
   genLobbyInfo() {
-    const isPlayer = this.players.reduce((obj, p) => ({...obj, [p.id]: true}), {});
+    const isPlayer = {};
+    for (const p of this.players) isPlayer[p.id] = true;
+
     const info = {
       game: this.selectedGame,
       state: this.lobbyState,
@@ -518,51 +586,7 @@ class Lobby {
   }
 }
 
-Lobby.lobbies = {};
-
-Lobby.lobbyExists = code =>
-  Persistence.saveExists(code) || Lobby.lobbies.hasOwnProperty(code) && Lobby.lobbies[code];
-
-/**
- * Removes player from his/her lobby
- * @param  {Member} player Player potentially in a lobby
- */
-Lobby.removePlayer = player => {
-  const lobby = player.lobby;
-
-  if(!lobby)
-    return;
-
-  lobby.removeMember(player);
-  player.lobby = undefined;
-
-  if(lobby.empty()) {
-    try {
-      // save the lobby state
-      Persistence.saveLobbyState(lobby);
-    } catch (err) {
-      // error saving lobby state
-    }
-
-    try {
-      // kill and cleanup the game
-      if(lobby.game) {
-        lobby.game.stop();
-        lobby.game.cleanup();
-        lobby.game = undefined;
-      }
-
-      console.log(new Date(), ` -- [lobby ${lobby.code}] removed`);
-
-      // remove the lobby from active lobbies structure
-      Lobby.lobbies[lobby.code] = false;
-      delete Lobby.lobbies[lobby.code];
-    } catch (err) {
-      //
-    }
-  }
-}
-
+// dev lobby
 Lobby.lobbies.aaaa = new Lobby();
 Lobby.lobbies.aaaa.code = 'aaaa';
 
