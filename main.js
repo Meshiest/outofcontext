@@ -261,7 +261,7 @@ app.get('/api/v1/info', (req, res) => {
 
         ++games;
         ++gameDistribution[l.selectedGame];
-        gameDistribution[l.selectedGame] += l.members.length;
+        playerDistribution[l.selectedGame] += l.members.length;
         players += l.members.length;
       } else {
         ++lobbies;
