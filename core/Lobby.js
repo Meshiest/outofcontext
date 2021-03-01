@@ -94,6 +94,7 @@ class Lobby {
         Persistence.saveLobbyState(lobby);
       } catch (err) {
         // error saving lobby state
+        console.error(new Date(), 'error saving', lobbyState.code, err);
       }
 
       try {
@@ -123,6 +124,7 @@ class Lobby {
       }
     } catch (err) {
       // error restoring lobby...
+      console.error(new Date(), 'error restoring', lobbyState.code, err);
     }
 
     // create a new lobby
@@ -186,9 +188,9 @@ class Lobby {
     this.selectedGame = lobbyState.selectedGame || '';
     // use the provided game config or defaults
     this.gameConfig = lobbyState.gameConfig ||
-      this.selectedGame
-        ? _.mapValues(gameInfo[game].config, v => v.defaults)
-        : {players: '#numPlayers'};
+      (this.selectedGame
+        ? _.mapValues(gameInfo[this.selectedGame].config, v => v.defaults)
+        : {players: '#numPlayers'});
 
     this.admin = '';
     this.lobbyState = lobbyState.lobbyState || 'WAITING';
