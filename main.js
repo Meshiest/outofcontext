@@ -239,43 +239,51 @@ app.get('/api/v1/lobby/:code', (req, res) => {
 });
 
 app.get('/api/v1/info', (req, res) => {
+
+  let lobbies = 0, games = 0, players = 0, idleLobbies = 0, idlePlayers = 0, lobbyPlayers = 0, rocketcrabs = 0;
+  const gameDistribution = {}, playerDistribution = {};
+
+  for (const c in Lobby.lobbies) {
+    const l = Lobby.lobbies[c];
+
+    if (l.members.length > 1) {
+      if (l.rocketcrab)
+        ++rocketcrabs;
+
+      if (l.game) {
+        const game = l.selectedGame;
+        const onlinePlayers = _.countBy(l.players, p => p.connected && !!p.member);
+
+        if (!gameDistribution[l.selectedGame]) {
+          gameDistribution[l.selectedGame] = 0;
+          playerDistribution[l.selectedGame] = 0;
+        }
+
+        ++games;
+        ++gameDistribution[l.selectedGame];
+        gameDistribution[l.selectedGame] += l.members.length;
+        players += l.members.length;
+      } else {
+        ++lobbies;
+        lobbyPlayers += l.members.length;
+      }
+    } else {
+      ++idleLobbies;
+      idlePlayers += l.members.length;
+    }
+  }
+
   res.status(200).json({
-    lobbies: _.chain(Lobby.lobbies) // number of lobbies
-      .values()
-      .filter(l => l.members.length > 1)
-      .size()
-      .value(),
-
-    games: _.chain(Lobby.lobbies) // number of active games
-      .values()
-      .filter(l => l.game && l.members.length > 1)
-      .size()
-      .value(),
-
-    players: _.chain(Lobby.lobbies) // number of users in game
-      .values()
-      .filter(l => l.game && l.members.length > 1)
-      .map(l => l.players.filter(p => p.connected && !!p.member).length)
-      .sum()
-      .value(),
-
     clients: io.engine.clientsCount, // number of connected sockets
-
-    gameDistribution: _.chain(Lobby.lobbies) // distribution of game type across lobbies
-      .values()
-      .filter(l => l.game && l.members.length > 1)
-      .countBy('selectedGame')
-      .value(),
-
-    playerDistribution: _.chain(Lobby.lobbies) // distribution of game type across players
-      .values()
-      .filter(l => l.game && l.members.length > 1)
-      .map(l => [l.selectedGame, l.players.filter(p => p.connected && !!p.member).length])
-      .reduce((acc, [game, players]) => {
-        acc[game] = (acc[game] || 0) + players;
-        return acc;
-      }, {})
-      .value(),
+    idleLobbies,
+    idlePlayers,
+    lobbies,
+    lobbyPlayers,
+    games,
+    players,
+    gameDistribution,
+    playerDistribution,
+    rocketcrabs,
   });
 });
 
@@ -289,6 +297,7 @@ app.post('/api/v1/rocketcrab', (req, res) => {
   const code = Lobby.newCode('rc');
   const lobby = new Lobby();
   lobby.code = code;
+  lobby.rocketcrab = true;
   lobby.setGame(game);
   Lobby.lobbies[code] = lobby;
   console.log(new Date(), `-- [${code}] created rocketcrab for ${game}`);
