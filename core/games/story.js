@@ -40,13 +40,14 @@ module.exports = class Story extends Game {
     // Find a chain for a player
     const { numLinks } = this.config;
 
-    // Order chains by length
+    // Order chains by length (shortest chains get touched first)
     let available = _.sortBy(
       this.chains
-        .filter(s => !s.editor) // Only find chains that aren't being worked on
-        .filter(s => s.chain.length < numLinks) // chain is at capacity
-        .filter(s => s.lastEditor != player) // Find chains the player didn't just edit
-        .filter(s => (s.collaborators[player] || 0) <= s.avgEdits()),
+        .filter(s => !s.editor &&  // Only find chains that aren't being worked on
+          s.chain.length < numLinks && // chain is at capacity
+          s.lastEditor != player && // Find chains the player didn't just edit
+          (s.collaborators[player] || 0) <= s.avgEdits() // with edits less than a
+        ),
       s => s.chain.length
     );
 
@@ -176,20 +177,18 @@ module.exports = class Story extends Game {
   }
 
   getState() {
-    const hasStory = this.chains.filter(s => s.editor).reduce((obj, i) => ({...obj, [i.editor]: true}), {});
+    const hasStory = {};
+    for (const c of this.chains.filter(s => s.editor))
+      hasStory[c.editor] = true;
     const progress = this.getGameProgress();
     return {
       // players who are writing have pencil icons, players who are not have a clock icon
-      icons: this.players.reduce((obj, p) => ({
-        ...obj,
-        [p]: progress === 1 ?
-          (this.finishedReading[p] ?
-            'check' :
-            'clock') :
-          (hasStory[p] ?
-            'pencil' :
-            'clock')
-      }), {}),
+      icons: Object.fromEntries(this.players.map(p => ([
+        p,
+        progress === 1
+          ? this.finishedReading[p] ? 'check' : 'clock'
+          : hasStory[p] ? 'pencil' : 'clock',
+      ]))),
       progress,
       likes: this.chains.map(s => _.size(_.filter(s.likes, l => l))),
       stories: progress === 1 ? this.compileStories() : [],

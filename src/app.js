@@ -103,6 +103,7 @@ new Vue({
     },
     'version': function(version) {
       if(version !== VERSION) {
+        console.warn('Incompatible version. Server has', version + '. I have', VERSION);
         setTimeout(() => location.reload(), 2000);
       }
     },

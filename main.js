@@ -345,4 +345,4 @@ app.use((req, res) => {
 });
 
 // Start the webserver
-server.listen(PORT, () => console.log(`Started server on :${PORT}!`));
+server.listen(PORT, () => console.log(`Started ${VERSION} server on :${PORT}!`));

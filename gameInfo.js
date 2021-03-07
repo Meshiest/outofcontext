@@ -10,8 +10,8 @@ module.exports = {
       'Similar to old parlor game Consequences.',
     howTo: [
       'Every player will be given a line in a story',
-      'Players will continue the story, one line at a time',
-      'At the end, players can enjoy the crazy stories they wrote',
+      'Players will continue the story one line at a time',
+      'At the end, players can enjoy the crazy stories they wrote together',
     ],
     playTime: '15-20m',
     config: {
@@ -71,6 +71,123 @@ module.exports = {
           name: 'four',
           text: '4 Lines',
           value: 4,
+        }],
+      }
+    },
+  },
+  comic: {
+    title: 'Dilettante',
+    subtitle: 'Dabble in the Arts',
+    difficulty: 'Simple',
+    description: 'Collaborate in drawing stories or things one picture at a time with minimal context.',
+    more: 'Dilettante is inspired by the game "Exquisite corpse," where players add to a composition one ' +
+      'drawing at a time only seeing the last image. According to Wikipedia, this technique was invented by ' +
+      'surrealists. Dilettante is Raconteur with pictures and Scribble without words. The gamemode option ' +
+      'can make it into Raconteur with pictures, Scribble where everyone draws, or a comic builder.',
+    howTo: [
+      'Every player will be given a picture drawn by another player',
+      'Players continue the composition one drawing at a time',
+      'At the end, players can enjoy the funky art they drew together'
+    ],
+    playTime: '10-15m',
+    config: {
+      players: {
+        name: 'Max Players',
+        text: 'Players',
+        info: 'Maximum allowed players in the game',
+        type: 'int',
+        min: 2,
+        max: 256,
+        defaults: '#numPlayers',
+      },
+      numPieces: {
+        name: 'Chain Count',
+        text: 'Chains',
+        info: 'The number of sequences being written',
+        type: 'int',
+        min: 1,
+        max: 256,
+        defaults: '#numPlayers',
+      },
+      numLinks: {
+        name: 'Drawings per Chain',
+        text: 'Drawings',
+        info: 'How many drawings are in a sequence',
+        type: 'int',
+        min: 3,
+        max: 256,
+        defaults: 4,
+      },
+      anonymous: {
+        name: 'Hide Authors',
+        text: 'Anonymous',
+        info: 'Whether names are shown at the end.',
+        type: 'bool',
+        defaults: 'false',
+      },
+      colors: {
+        name: 'Colored Drawings',
+        type: 'bool',
+        text: 'Colors',
+        info: 'Enable drawing in red, green, blue, and yellow. Also enables brush thickness.',
+        defaults: 'false',
+      },
+      gamemode: {
+        name: 'Game Mode',
+        text: 'Mode',
+        info: 'What players are given as context for their drawings (Captions, Drawings, or Both).',
+        type: 'list',
+        defaults: 'regular',
+        options: [{
+          name: 'regular',
+          text: 'Normal',
+          more: 'Regular Gameplay (Drawings Only)',
+          value: {
+            continuous: false,
+            captions: false,
+            show_drawings: true,
+            show_captions: false,
+          },
+        }, {
+          name: 'collab',
+          text: 'Collab',
+          more: 'One Long Continuous Drawing',
+          value: {
+            continuous: true,
+            captions: false,
+            show_drawings: true,
+            show_captions: false,
+          },
+        }, {
+          name: 'both',
+          more: 'See Drawings and Captions',
+          text: 'Comic',
+          value: {
+            continuous: false,
+            captions: true,
+            show_drawings: true,
+            show_captions: true,
+          },
+        }, {
+          name: 'captions',
+          more: 'See Captions Only',
+          text: 'Caption',
+          value: {
+            continuous: false,
+            captions: true,
+            show_drawings: false,
+            show_captions: true,
+          },
+        }, {
+          name: 'drawings',
+          more: 'See Drawings Only (Still Write Captions)',
+          text: 'Chaos',
+          value: {
+            continuous: false,
+            captions: true,
+            show_drawings: true,
+            show_captions: false,
+          },
         }],
       }
     },

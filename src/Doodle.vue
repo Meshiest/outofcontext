@@ -5,7 +5,7 @@
       :duration="timer">
     </ooc-timer>
     <sui-card>
-      <sui-card-content class="container">
+      <sui-card-content :class="['container', {'show-author': !!author}]" :data-author="author">
         <canvas ref="canvas"></canvas>
       </sui-card-content>
       <sui-card-content class="gadgets" v-if="!isReadOnly || timerStart">
@@ -61,7 +61,7 @@
         <span style="flex: 1"></span>
         <sui-button-group>
           <sui-button primary
-            :disabled="!paths.length && !isReadOnly"
+            :disabled="!paths.length && !isReadOnly || disabled"
             @click="pressDone"
             icon="check"
             size="tiny"
@@ -84,6 +84,41 @@
   position: relative;
   width: 100%;
   overflow: hidden;
+}
+
+.ooc-doodle .container.show-author::before {
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  content: attr(data-author);
+  display: flex;
+  height: 20px;
+  justify-content: center;
+  padding: 4px;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  z-index: 5;
+  border-radius: 4px;
+  opacity: 0.05;
+  animation: author-fade-out 2s 1 linear;
+  transition: opacity .1s ease;
+}
+
+@keyframes author-fade-out {
+  0% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.05;
+  }
+}
+
+.ooc-doodle:hover .container.show-author::before {
+  opacity: 1;
 }
 
 .ooc-doodle .gadgets {
@@ -116,7 +151,7 @@ import paper, { Path, Tool, PaperScope } from 'paper';
 const MAX_SEGMENTS = 2000;
 
 export default {
-  props: ['read-only', 'image', 'colors', 'timer'],
+  props: ['read-only', 'image', 'colors', 'timer', 'disabled', 'author'],
   colors: ['black', 'red', 'yellow', 'green', 'blue'],
   data() {
     return {

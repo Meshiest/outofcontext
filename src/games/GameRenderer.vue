@@ -5,12 +5,14 @@ import Locations from './Locations.vue';
 import Draw from './Draw.vue';
 import Redacted from './Redacted.vue';
 import Recipe from './Recipe.vue';
+import Comic from './Comic.vue';
 
 export default {
   props: ['game'],
   render(h) {
     return h({
       'story': Story,
+      'comic': Comic,
       'assassin': Assassin,
       'locations': Locations,
       'draw': Draw,

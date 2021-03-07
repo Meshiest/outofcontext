@@ -4,6 +4,7 @@ const Persistence = require('./Persistence');
 
 const GAMES = {
   story: require('./games/story'),
+  comic: require('./games/comic'),
   draw: require('./games/draw'),
   assassin: require('./games/assassin'),
   redacted: require('./games/redacted'),

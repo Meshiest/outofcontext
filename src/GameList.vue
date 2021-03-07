@@ -71,5 +71,14 @@ export default {
       showMore: {},
     };
   },
+  methods: {
+    update() { this.$forceUpdate(); },
+  },
+  created() {
+    this.bus.$on('toggle-dark-mode', this.update);
+  },
+  beforeDestroy() {
+    this.bus.$off('toggle-dark-mode', this.update);
+  }
 };
 </script>

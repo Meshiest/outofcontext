@@ -25,7 +25,7 @@ module.exports = class Draw extends Story {
     case 'draw:image':
       if(!chain || expectedType !== 'image')
         return;
-      
+
       if(!_.isArray(data) || !_.isArray(data[0]))
         return;
 
@@ -79,22 +79,19 @@ module.exports = class Draw extends Story {
   }
 
   getState() {
-    const hasChain = this.chains
-      .filter(s => s.editor)
-      .reduce((obj, i) => ({
-        ...obj,
-        [i.editor]: i.chain.length % 2 == 0 ? 'pencil' : 'paint brush'
-      }), {});
+    const hasChain = {};
+    for (const c of this.chains.filter(s => s.editor))
+      hasChain[c.editor] = c.chain.length % 2 == 0 ? 'pencil' : 'paint brush';
 
     const progress = this.getGameProgress();
     return {
       // players who are writing have pencil icons, players who are not have a clock icon
-      icons: this.players.reduce((obj, p) => ({
-        ...obj,
-        [p]: progress === 1 ?
-          (this.finishedReading[p] ? 'check' : 'clock') :
-          (hasChain[p] || 'clock')
-      }), {}),
+      icons: Object.fromEntries(this.players.map(p => ([
+        p,
+        progress === 1
+          ? this.finishedReading[p] ? 'check' : 'clock'
+          : hasChain[p] || 'clock',
+      ]))),
       progress,
       timeLimit: this.config.timeLimit,
       colors: this.config.colors,
