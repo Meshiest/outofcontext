@@ -341,7 +341,7 @@ cron.schedule('0 * * * * *', Lobby.cullEmpty);
 
 // Every request goes through the index, Vue will handle 404s
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 // Start the webserver
