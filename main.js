@@ -45,11 +45,11 @@ io.on('connection', socket => {
   socket.emit('version', VERSION);
 
   socket.on('member:name', name => {
-
     if(!player.lobby) {
       socket.emit('lobby:leave');
       return;
     }
+    player.interact();
 
     // remove zero width no break spaces, trim spaces
     name = name.replace(/[\u200B-\u200D\uFEFF\n\t]/g, '').trim()
@@ -69,6 +69,7 @@ io.on('connection', socket => {
   // Create a lobby if the player is not in one
   socket.on('lobby:create', () => {
     if(!player.lobby) {
+      player.interact();
       const lobby = new Lobby();
       const code = lobby.code;
       player.lobby = lobby;
@@ -101,6 +102,7 @@ io.on('connection', socket => {
     code = code.toLowerCase();
 
     if(!player.lobby && Lobby.lobbyExists(code)) {
+      player.interact();
 
       // lobby is stored in persistence, load it into memory
       if (!Lobby.lobbies[code]) {
@@ -118,6 +120,7 @@ io.on('connection', socket => {
 
   socket.on('lobby:replace', pid => {
     if(player.lobby) {
+      player.interact();
       player.lobby.replacePlayer(player, pid);
     } else {
       socket.emit('lobby:leave');
@@ -130,6 +133,7 @@ io.on('connection', socket => {
       if(now - player.lastEmote < 400 || !EMOTES.includes(emote))
         return;
 
+      player.activity = now;
       player.lastEmote = now;
       player.lobby.emitAll('lobby:emote', player.id, emote);
     } else {
@@ -147,6 +151,7 @@ io.on('connection', socket => {
   // Allow an admin player to change what game is being played
   socket.on('game:start', game => {
     if(player.isAdmin()) {
+      player.interact();
       player.lobby.startGame();
       if (player.lobby.game)
         console.log(new Date(), `-- [lobby ${player.lobby.code}] started game ${player.lobby.selectedGame}`);
@@ -155,6 +160,7 @@ io.on('connection', socket => {
 
   socket.on('game:end', game => {
     if(player.isAdmin()) {
+      player.interact();
       player.lobby.endGame();
       console.log(new Date(), `-- [lobby ${player.lobby.code}] ended game ${player.lobby.selectedGame}`);
     }
@@ -182,6 +188,7 @@ io.on('connection', socket => {
   // Change the admin
   socket.on('lobby:admin:grant', targetId => {
     if(player.isAdmin && targetId !== player.id) {
+      player.interact();
       const targetPlayer = player.lobby.players.find(p => p.id === targetId);
       if(targetPlayer && targetPlayer.member) {
         player.lobby.admin = targetPlayer.id;
@@ -193,6 +200,7 @@ io.on('connection', socket => {
   // Core gameplay messages
   socket.on('game:message', (type, data) => {
     if(player.lobby) {
+      player.interact();
       // Error handling
       player.lobby.attempt(() => {
         player.lobby.gameMessage(player.id, type, data);
@@ -205,6 +213,7 @@ io.on('connection', socket => {
   // Change game config if the player is an admin
   socket.on('lobby:game:config', (name, val) => {
     if(player.isAdmin()) {
+      player.interact();
       // Error handling
       player.lobby.attempt(() => {
         player.lobby.setConfig(name, val);
@@ -221,6 +230,7 @@ io.on('connection', socket => {
   // Remove the player from a lobby on disconnection
   socket.on('disconnect', data => {
     Lobby.removePlayer(player);
+    Member.removePlayer(player);
   });
 });
 
@@ -239,7 +249,6 @@ app.get('/api/v1/lobby/:code', (req, res) => {
 });
 
 app.get('/api/v1/info', (req, res) => {
-
   let lobbies = 0, games = 0, players = 0, idleLobbies = 0, idlePlayers = 0, lobbyPlayers = 0, rocketcrabs = 0;
   const gameDistribution = {}, playerDistribution = {};
 
@@ -338,6 +347,7 @@ cron.schedule('0 0 4 * * Monday', Persistence.cullSaves);
 
 // cull empty lobbies every minute
 cron.schedule('0 * * * * *', Lobby.cullEmpty);
+cron.schedule('0 * * * * *', Member.cullInactive);
 
 // Every request goes through the index, Vue will handle 404s
 app.use((req, res) => {

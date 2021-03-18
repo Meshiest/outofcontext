@@ -50,7 +50,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: './src/index.html',
-      publicPath: './',
+      publicPath: '/',
     }),
     new VueLoaderPlugin(),
   ]
