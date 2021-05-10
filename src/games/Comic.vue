@@ -47,12 +47,15 @@
         Waiting on Other Artists
       </sui-loader>
     </div>
-    <div v-else-if="player.state === 'READING' || !player.state && game.chains && game.chains.length">
+    <div v-else-if="player.state === 'READING' || !player.state">
       <sui-divider horizontal :inverted="darkMode">
         Sequences
       </sui-divider>
+      <sui-loader active centered inline size="huge" :inverted="darkMode" v-if="!chains.length">
+        Loading Chains
+      </sui-loader>
       <div style="text-align: left">
-        <div v-for="(story, i) in game.chains" :key="i">
+        <div v-for="(story, i) in chains" :key="i">
           <sui-divider horizonal v-if="i > 0" :inverted="darkMode"></sui-divider>
           <sui-card >
             <div class="like-bar">
@@ -182,6 +185,13 @@ export default {
     },
     'game:info': function(info) {
       this.game = info;
+      if (this.game.isComplete && !this.requestedResults) {
+        this.$socket.emit('game:message', 'comic:result');
+        this.requestedResults = true;
+      }
+    },
+    'comic:result': function(chains) {
+      this.chains = chains;
     },
     'game:player:info': function(info) {
       // keep track of how long turns are
@@ -248,6 +258,8 @@ export default {
   data() {
     return {
       line: '',
+      requestedResults: false,
+      chains: [],
       player: { state: '', id: '', },
       game: {
         icons: {},

@@ -171,12 +171,15 @@
         Waiting on Other Players
       </sui-loader>
     </div>
-    <div v-else-if="player.state === 'READING' || !player.state && game.chains && game.chains.length">
+    <div v-else-if="player.state === 'READING' || !player.state">
       <sui-divider horizontal :inverted="darkMode">
         Stories
       </sui-divider>
+      <sui-loader active centered inline size="huge" :inverted="darkMode" v-if="!chains.length">
+        Loading Stories
+      </sui-loader>
       <div>
-        <sui-card v-for="(chain, i) in game.chains" :key="i">
+        <sui-card v-for="(chain, i) in chains" :key="i">
           <div class="like-bar">
             <div :is="player.state ? 'sui-button' : 'sui-label'"
               :color="player.state && !player.liked[i] ? 'grey' : 'red'"
@@ -325,6 +328,13 @@ export default {
         this.tamperType = 'truncate';
       else if(info.gamemode.tamper === 'none')
         this.tamperType = 'censor';
+      if (this.game.isComplete && !this.requestedResults) {
+        this.$socket.emit('game:message', 'redacted:result');
+        this.requestedResults = true;
+      }
+    },
+    'redacted:result': function(chains) {
+      this.chains = chains;
     },
     'game:player:info': function(info) {
        // keep track of how long turns are
@@ -469,6 +479,8 @@ export default {
       COST,
       line: '',
       words: [],
+      requestedResults: false,
+      chains: [],
       truncateCount: 0,
       censorWords: [],
       player: { state: '', id: '', },

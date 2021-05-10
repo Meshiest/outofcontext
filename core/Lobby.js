@@ -560,7 +560,7 @@ class Lobby {
 
       // Remove players who are over the max player cap
       while(this.gameConfig.players > 0 && this.players.length > this.gameConfig.players) {
-        const [{id}] = this.players.splice(-1, 1);
+        const {id} = this.players.pop();
 
         // Remove the admin if one of the removed players is the admin somehow
         if(this.admin === id) {

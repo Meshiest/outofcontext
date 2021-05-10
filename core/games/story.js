@@ -103,6 +103,12 @@ module.exports = class Story extends Game {
   handleMessage(pid, type, data) {
     switch(type) {
 
+    case 'story:result':
+      if (this.getGameProgress() === 1) {
+        this.emitTo(pid, 'story:result', this.compileStories());
+      }
+      break;
+
     // Handle writing the next line
     case 'story:line':
       const story = this.chains.find(s => s.editor === pid);
@@ -191,7 +197,7 @@ module.exports = class Story extends Game {
       ]))),
       progress,
       likes: this.chains.map(s => _.size(_.filter(s.likes, l => l))),
-      stories: progress === 1 ? this.compileStories() : [],
+      isComplete: progress === 1,
     };
   }
 };

@@ -96,12 +96,15 @@
         Waiting on Other Chefs
       </sui-loader>
     </div>
-    <div v-else-if="player.state === 'READING' || !player.state && game.recipes && game.recipes.length">
+    <div v-else-if="player.state === 'READING' || !player.state && recipes.length">
       <sui-divider horizontal :inverted="darkMode">
         Recipes
       </sui-divider>
+      <sui-loader active centered inline size="huge" :inverted="darkMode" v-if="!recipes.length">
+        Loading Recipes
+      </sui-loader>
       <div style="text-align: left">
-        <div v-for="(recipe, i) in game.recipes" :key="i">
+        <div v-for="(recipe, i) in recipes" :key="i">
           <sui-divider horizonal v-if="i > 0" :inverted="darkMode"></sui-divider>
           <sui-card>
             <div class="like-bar">
@@ -199,6 +202,13 @@ export default {
     },
     'game:info': function(info) {
       this.game = info;
+      if (this.game.isComplete && !this.requestedResults) {
+        this.$socket.emit('game:message', 'recipe:result');
+        this.requestedResults = true;
+      }
+    },
+    'recipe:result': function(recipes) {
+      this.recipes = recipes;
     },
     'game:player:info': function(info) {
       // keep track of how long turns are
@@ -267,6 +277,8 @@ export default {
   data() {
     return {
       line: '',
+      requestedResults: false,
+      recipes: [],
       player: { state: '', id: '', },
       game: { icons: {}, likes: [], },
       timer: Date.now(),

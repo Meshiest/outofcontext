@@ -21,6 +21,12 @@ module.exports = class Draw extends Story {
 
     switch(type) {
 
+    case 'draw:result':
+      if (this.getGameProgress() === 1) {
+        this.emitTo(pid, 'draw:result', this.compileStories());
+      }
+      break;
+
     // Handle passing of images
     case 'draw:image':
       if(!chain || expectedType !== 'image')
@@ -96,7 +102,7 @@ module.exports = class Draw extends Story {
       timeLimit: this.config.timeLimit,
       colors: this.config.colors,
       likes: this.chains.map(s => _.size(_.filter(s.likes, l => l))),
-      chains: progress === 1 ? this.compileStories() : [],
+      isComplete: progress === 1,
     };
   }
 };

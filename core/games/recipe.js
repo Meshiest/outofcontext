@@ -92,6 +92,12 @@ module.exports = class Recipe extends Story {
 
     switch(type) {
 
+    case 'recipe:result':
+      if (this.compiled) {
+        this.emitTo(pid, 'recipe:result', this.compiled);
+      }
+      break;
+
     // Handle writing the next line
     case 'recipe:theme':
       if(!chain)
@@ -161,6 +167,24 @@ module.exports = class Recipe extends Story {
         this.sendGameInfo();
       }
       break;
+    }
+  }
+
+  restore(blob) {
+    if (blob.version !== 1 && blob.version !== 2)
+      return;
+
+    this.chains = blob.chains.map(Chain.restore);
+    this.finishedReading = blob.finishedReading;
+    this.compiled = blob.compiled;
+  }
+
+  save() {
+    return {
+      version: 2,
+      chains: this.chains.map(s => s.save()),
+      finishedReading: this.finishedReading,
+      compiled: this.compiled,
     }
   }
 
@@ -246,8 +270,7 @@ module.exports = class Recipe extends Story {
     const hasRecipe = this.chains.filter(s => s.editor).reduce((obj, i) => ({...obj, [i.editor]: i}), {});
     const progress = this.getGameProgress();
     const noEditors = !this.chains.some(s => s.editor);
-
-    this.compiled = this.compiled || progress == 1 && noEditors && this.compileRecipes();
+    this.compiled = this.compiled || progress === 1 && noEditors && this.compileRecipes();
 
     return {
       // players who are writing have pencil icons, players who are not have a clock icon
@@ -266,7 +289,7 @@ module.exports = class Recipe extends Story {
       }), {}),
       progress,
       likes: this.likes.map(s => _.filter(s, l => l).length),
-      recipes: progress === 1 && noEditors ? this.compiled : [],
+      isComplete: progress === 1 && noEditors,
     };
   }
 };

@@ -39,12 +39,15 @@
         Waiting on Other Authors
       </sui-loader>
     </div>
-    <div v-else-if="player.state === 'READING' || !player.state && game.stories && game.stories.length">
+    <div v-else-if="player.state === 'READING' || !player.state && stories.length">
       <sui-divider horizontal :inverted="darkMode">
         Stories
       </sui-divider>
+      <sui-loader active centered inline size="huge" :inverted="darkMode" v-if="!stories.length">
+        Loading Stories
+      </sui-loader>
       <div style="text-align: left">
-        <div v-for="(story, i) in game.stories" :key="i">
+        <div v-for="(story, i) in stories" :key="i">
           <sui-divider horizonal v-if="i > 0" :inverted="darkMode"></sui-divider>
           <sui-card >
             <div class="like-bar">
@@ -121,6 +124,13 @@ export default {
     },
     'game:info': function(info) {
       this.game = info;
+      if (this.game.isComplete && !this.requestedResults) {
+        this.$socket.emit('game:message', 'story:result');
+        this.requestedResults = true;
+      }
+    },
+    'story:result': function(stories) {
+      this.stories = stories;
     },
     'game:player:info': function(info) {
       // keep track of how long turns are
@@ -185,6 +195,8 @@ export default {
   data() {
     return {
       line: '',
+      stories: [],
+      requestedResults: false,
       player: { state: '', id: '', },
       game: { icons: {}, likes: [], },
       timer: Date.now(),

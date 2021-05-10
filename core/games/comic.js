@@ -49,6 +49,12 @@ module.exports = class Comic extends Story {
 
     switch(type) {
 
+    case 'comic:result':
+      if (this.getGameProgress() === 1) {
+        this.emitTo(pid, 'comic:result', this.compileStories());
+      }
+      break;
+
     // Handle writing the next line
     case 'comic:line':
       const story = this.chains.find(s => s.editor === pid);
@@ -125,7 +131,7 @@ module.exports = class Comic extends Story {
       showCaptions: this.showCaptions,
       showDrawings: this.showDrawings,
       likes: this.chains.map(s => _.size(_.filter(s.likes, l => l))),
-      chains: progress === 1 ? this.compileStories() : [],
+      isComplete: progress === 1,
     };
   }
 };

@@ -71,6 +71,13 @@ module.exports = class Redacted extends Story {
     const { ink, gamemode } = this.config;
 
     switch(type) {
+
+    case 'redacted:result':
+      if (this.getGameProgress() === 1) {
+        this.emitTo(pid, 'redacted:result', this.compileStories());
+      }
+      break;
+
     // Handle passing of repairs
     case 'redacted:repair':
       if(!chain || expectedType !== 'repair')
@@ -429,7 +436,7 @@ module.exports = class Redacted extends Story {
       gamemode: this.config.gamemode,
       ink: this.config.ink,
       likes: this.chains.map(s => _.size(_.filter(s.likes, l => l))),
-      chains: progress === 1 ? this.compileStories() : [],
+      isComplete: progress === 1,
     };
   }
 };
