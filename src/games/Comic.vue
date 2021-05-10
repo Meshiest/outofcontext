@@ -47,7 +47,7 @@
         Waiting on Other Artists
       </sui-loader>
     </div>
-    <div v-else-if="player.state === 'READING' || !player.state">
+    <div v-else-if="player.state === 'READING' || !player.state && chains.length">
       <sui-divider horizontal :inverted="darkMode">
         Sequences
       </sui-divider>

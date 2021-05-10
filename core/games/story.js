@@ -173,13 +173,15 @@ module.exports = class Story extends Game {
   }
 
   compileStories() {
-    return this.chains.map(s =>
-      _.zip(s.chain, s.editors)
-      .map(([link, e]) => ({
-        link,
-        editor: this.config.anonymous ? '' : e,
-      }))
-    );
+    if (!this.compiled)
+      this.compiled = this.chains.map(s =>
+        _.zip(s.chain, s.editors)
+        .map(([link, e]) => ({
+          link,
+          editor: this.config.anonymous ? '' : e,
+        }))
+      );
+    return this.compiled;
   }
 
   getState() {

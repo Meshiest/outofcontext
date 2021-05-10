@@ -384,15 +384,17 @@ module.exports = class Redacted extends Story {
   }
 
   compileStories() {
-    return this.chains.map(s =>
-      _.chunk(_.zip(s.chain, s.editors), 3)
-      .map(([[original, author], [corrupted, tamperer], [edits, editor]]) => ({
-        data: this.constructLine(corrupted, edits, 2),
-        editors: this.config.anonymous
-          ? ['', '', '']
-          : [author, tamperer, editor],
-      }))
-    );
+    if (!this.compiled)
+      this.compiled = this.chains.map(s =>
+        _.chunk(_.zip(s.chain, s.editors), 3)
+        .map(([[original, author], [corrupted, tamperer], [edits, editor]]) => ({
+          data: this.constructLine(corrupted, edits, 2),
+          editors: this.config.anonymous
+            ? ['', '', '']
+            : [author, tamperer, editor],
+        }))
+      );
+    return this.compiled;
   }
 
   getPlayerState(pid) {

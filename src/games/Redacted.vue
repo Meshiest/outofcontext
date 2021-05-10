@@ -171,7 +171,7 @@
         Waiting on Other Players
       </sui-loader>
     </div>
-    <div v-else-if="player.state === 'READING' || !player.state">
+    <div v-else-if="player.state === 'READING' || !player.state && chains.length">
       <sui-divider horizontal :inverted="darkMode">
         Stories
       </sui-divider>

@@ -290,11 +290,14 @@ class Lobby {
 
   // Pass a message to the game controller
   gameMessage(member, type, data) {
+    if (!this.game) return;
     // find associated player
     const player = this.players.find(p => p.id === member);
 
-    if(this.game && player) {
+    if(player) {
       this.game.handleMessage(player.playerId, type, data);
+    } else {
+      this.game.handleMessage(member, type, data);
     }
   }
 
@@ -439,6 +442,11 @@ class Lobby {
     const player = this.players.find(p => p.playerId === id);
     if(player && player.member) {
       player.member.socket.emit(...args);
+      return;
+    }
+    const member = this.members.find(p => p.id === id);
+    if (member) {
+      member.socket.emit(...args);
     }
   }
 
