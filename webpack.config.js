@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: process.env.MODE || 'development',
-  entry: './src/app.js',
+  entry: './src/loader.js',
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: '[name].[hash:7].js',

@@ -1,5 +1,5 @@
 <template>
-  <sui-dimmer :active="active">
+  <sui-dimmer :active="active" :inverted="darkMode">
     <sui-form
       :inverted="darkMode"
       @submit="testLobby"
@@ -65,6 +65,7 @@ module.exports = {
     }
   },
   methods: {
+    update() { this.$forceUpdate(); },
     testLobby(event) {
       event.preventDefault();
       const form = event.target;
@@ -92,5 +93,11 @@ module.exports = {
         });
     },
   },
+  created() {
+    this.bus.$on('toggle-dark-mode', this.update);
+  },
+  beforeDestroy() {
+    this.bus.$off('toggle-dark-mode', this.update);
+  }
 };
 </script>
