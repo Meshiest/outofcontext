@@ -3,7 +3,7 @@
     <sui-divider horizontal :inverted="darkMode">
       Lobby Members
     </sui-divider>
-    <sui-table basic class="player-table" :inverted="darkMode">
+    <sui-table unstackable basic class="player-table" :inverted="darkMode">
       <sui-table-header>
         <sui-table-row>
           <th style="position: relative;">
@@ -102,7 +102,7 @@
         </sui-table-row>
       </sui-table-body>
     </sui-table>
-    <sui-table basic class="player-table" :inverted="darkMode">
+    <sui-table unstackable basic class="player-table" :inverted="darkMode">
       <sui-table-header>
         <sui-table-row>
           <th>Spectators</th>

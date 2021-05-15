@@ -39,18 +39,26 @@
               :style="{backgroundColor: col}"
               @click="color = col"
             >
-              <sui-icon fitted name="circle" v-if="color === col" />
+              <div class="selected-color" v-if="color === col" />
             </div>
           </div>
         </sui-form-field>
         <sui-form-field>
           <label>Stroke Width</label>
-          <input class="slider"
-            type="range"
-            min="3"
-            max="80"
-            :value="thick"
-            @input="thick=$event.target.value" />
+          <div class="slider-container">
+            <input class="slider"
+              type="range"
+              min="3"
+              :step="27/4"
+              max="30"
+              :value="thick"
+              @input="thick=$event.target.value" />
+            <div class="slider-dots">
+              <div v-for="n in 5"
+                class="dot"
+                :style="{transform: `scale(${(n+1)/8})`}" />
+            </div>
+          </div>
         </sui-form-field>
       </sui-card-content>
     </sui-card>
@@ -122,6 +130,33 @@
   top: 0;
   width: 100%;
   background-color: white;
+}
+
+.gadget-config .slider-container {
+  width: 200px;
+  height: 30.5px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.gadget-config .slider-dots {
+  display: flex;
+  position: absolute;
+  padding: 2px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+
+.gadget-config .slider-dots .dot {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
 }
 
 .gadget-config .slider {
@@ -200,9 +235,12 @@
   justify-content: center;
 }
 
-.color-grid .icon {
-  line-height: 1em;
-  color: #eee;
+.color-grid .selected-color {
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  background-color: #eee;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .color-grid .color:hover {
