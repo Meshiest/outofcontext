@@ -14,59 +14,44 @@
             icon="undo"
             @click="pressUndo"
             size="tiny"
-            compact/>
-        </sui-button-group>
-        <span style="flex: 1"></span>
-        <sui-button-group>
-          <sui-button v-if="colors"
-            class="icon"
-            @click="thick = (thick + 1) % 3"
-            size="tiny"
-            compact>
-            <div class="center-icon">
-              <sui-icon name="circle"
-                fitted
-                :size="['tiny', 'small', 'standard'][thick]"/>
-            </div>
-          </sui-button>
-        </sui-button-group>
-        <span style="flex: 1"></span>
-        <sui-button-group v-if="colors">
-          <sui-button :icon="color == 1 ? 'circle' : ' '"
-            @click="color = 1"
-            size="tiny"
+            label-position="left"
             compact
-            color="red"/>
-          <sui-button :icon="color == 2 ? 'circle' : ' '"
-            @click="color = 2"
-            size="tiny"
-            compact
-            color="yellow"/>
-          <sui-button :icon="color == 3 ? 'circle' : ' '"
-            @click="color = 3"
-            size="tiny"
-            compact
-            color="green"/>
-          <sui-button :icon="color == 4 ? 'circle' : ' '"
-            @click="color = 4"
-            size="tiny"
-            compact
-            color="blue"/>
-          <sui-button :icon="color == 0 ? 'circle' : ' '"
-            @click="color = 0"
-            size="tiny"
-            compact
-            color="black"/>
+            content="Undo"
+          />
         </sui-button-group>
         <span style="flex: 1"></span>
         <sui-button-group>
           <sui-button primary
             :disabled="!paths.length && !isReadOnly || disabled"
             @click="pressDone"
+            label-position="right"
+            content="Done"
             icon="check"
             size="tiny"
-            compact/>
+            compact />
         </sui-button-group>
+      </sui-card-content>
+      <sui-card-content class="ui form gadget-config" v-if="colors">
+        <sui-form-field>
+          <label>Color</label>
+          <div class="color-grid">
+            <div v-for="col in palette" class="color"
+              :style="{backgroundColor: col}"
+              @click="color = col"
+            >
+              <sui-icon fitted name="circle" v-if="color === col" />
+            </div>
+          </div>
+        </sui-form-field>
+        <sui-form-field>
+          <label>Stroke Width</label>
+          <input class="slider"
+            type="range"
+            min="3"
+            max="80"
+            :value="thick"
+            @input="thick=$event.target.value" />
+        </sui-form-field>
       </sui-card-content>
     </sui-card>
   </div>
@@ -121,6 +106,10 @@
   opacity: 1;
 }
 
+.ooc-doodle .gadget-config {
+  padding: 8px !important;
+}
+
 .ooc-doodle .gadgets {
   display: flex;
   padding: 8px !important;
@@ -135,12 +124,95 @@
   background-color: white;
 }
 
-.center-icon {
-  width: 1em;
+.gadget-config .slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 200px;
+  height: 30.5px;
+  background: rgb(224, 225, 226);
+  padding: 0 2px;
+  border-radius: 15.25px;
+  outline: none;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.dark-theme .gadget-config .slider {
+  box-shadow: 0 1px 3px 0 #444, 0 0 0 1px #444 !important;
+}
+
+.dark-theme .gadget-config label {
+  color: rgba(255,255,255,.9) !important;
+}
+
+.gadget-config .slider::-webkit-slider-thumb:hover {
+  filter: brightness(95%);
+}
+
+.gadget-config .slider::-webkit-slider-thumb:active {
+  filter: brightness(85%);
+}
+
+.gadget-config .slider::-moz-slider-thumb:hover {
+  filter: brightness(95%);
+}
+
+.gadget-config .slider::-moz-slider-thumb:active {
+  filter: brightness(85%);
+}
+
+.gadget-config .slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26.5px;
+  height: 26.5px;
+  border-radius: 50%;
+  background: rgb(33, 133, 208);
+  cursor: pointer;
+}
+
+.gadget-config .slider::-moz-range-thumb {
+  width: 26.5px;
+  height: 26.5px;
+  border-radius: 50%;
+  background: rgb(33, 133, 208);
+  cursor: pointer;
+}
+
+.color-grid {
+  display: inline-grid;
+  grid-template-rows: repeat(2, 30.5px);
+  grid-template-columns: repeat(7, 30.5px);
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px 0 #eee, 0 0 0 1px #eee !important;
+}
+
+.dark-theme .color-grid {
+  box-shadow: 0 1px 3px 0 #444, 0 0 0 1px #444 !important;
+}
+
+.color-grid .color {
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
+.color-grid .icon {
+  line-height: 1em;
+  color: #eee;
+}
+
+.color-grid .color:hover {
+  filter: brightness(95%);
+}
+
+.color-grid .color:active {
+  filter: brightness(85%);
+}
+
 </style>
 
 <script>
@@ -152,15 +224,30 @@ const MAX_SEGMENTS = 2000;
 
 export default {
   props: ['read-only', 'image', 'colors', 'timer', 'disabled', 'author'],
-  colors: ['black', 'red', 'yellow', 'green', 'blue'],
   data() {
     return {
-      color: 0,
+      palette: [
+        'black',
+        'grey',
+        'white',
+        'brown',
+        'tan',
+        'red',
+        'orange',
+        'yellow',
+        'green',
+        'cyan',
+        'navy',
+        'blue',
+        'purple',
+        'pink',
+      ],
+      color: 'black',
       width: 0,
       timerStart: 0,
       height: 0,
       timerSched: '',
-      thick: 0,
+      thick: 3,
       isReadOnly: this.readOnly,
       path: '',
       paths: [],
@@ -173,6 +260,10 @@ export default {
       const path = this.paths.pop();
       if(path)
         path.remove();
+      if (this.timerStart && this.paths.length === 0) {
+        this.timerStart = 0;
+        clearTimeout(this.timerSched);
+      }
     },
     pressDone() {
       this.$emit('save', this.paths.map(p => p.exportJSON({asString: false})));
@@ -226,9 +317,9 @@ export default {
 
       this.path = new Path({
         segments: [point],
-        strokeWidth: this.thick * 10 + 3,
+        strokeWidth: this.thick,
         strokeCap: 'round',
-        strokeColor: this.$options.colors[this.color],
+        strokeColor: this.color,
       });
     };
     this.tool.onMouseDrag = ({ point }) => {
@@ -236,9 +327,12 @@ export default {
       this.path.add(point);
     };
 
-    this.tool.onMouseUp = () => {
+    this.tool.onMouseUp = ({ point }) => {
       if(this.isReadOnly || !this.path) return;
-      this.path.simplify(5);
+      if (this.path.length === 0)
+        this.path.add(point);
+      else
+        this.path.simplify(5);
       this.paths.push(this.path);
 
       // automatically remove paths in excess

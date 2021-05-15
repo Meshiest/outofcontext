@@ -37,7 +37,7 @@
           :colors="game.colors">
         </ooc-doodle>
       </sui-form>
-      <h2 is="sui-header" icon="paintbrush" v-if="player.link.length === 0 && game.continuous">
+      <h2 is="sui-header" icon="paintbrush" v-if="!player.isLastLink && game.continuous">
         Connect your drawing to the bottom of the canvas
       </h2>
     </div>

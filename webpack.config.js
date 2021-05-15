@@ -12,6 +12,7 @@ module.exports = {
     filename: '[name].[hash:7].js',
     publicPath: '/',
   },
+  watchOptions: { poll: true },
   module: {
     rules: [
       {
@@ -47,7 +48,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin(),
+    // new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: './src/index.html',
       publicPath: '/',
