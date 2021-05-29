@@ -105,9 +105,7 @@
                   </sui-accordion-title>
                   <sui-accordion-content>
                     <ul style="padding-left: 20px; margin: 0">
-                      <li v-for="step in currGame.howTo">
-                        {{step}}
-                      </li>
+                      <li v-for="(step, i) in currGame.howTo" :key="i">{{step}}</li>
                     </ul>
                   </sui-accordion-content>
                   <sui-accordion-title>
@@ -162,7 +160,7 @@
               </sui-dropdown>
             </sui-form-field>
             <div v-if="currGame">
-              <sui-form-field v-for="(opt, name) in currGame.config" v-if="!opt.hidden" :key="name">
+              <sui-form-field v-for="(opt, name) in currGame.config" :key="name">
                 <label>{{opt.name}}</label>
                 <div v-if="opt.type === 'int'" style="display: flex">
                   <sui-input
@@ -223,7 +221,6 @@
           <sui-card>
             <div style="display: flex; flex-flow: row wrap; align-items: center; justify-content: center;">
               <div v-for="(opt, name) in currGame.config"
-                v-if="!opt.hidden"
                 :key="name"
                 style="margin: 8px;">
                 <sui-statistic :inverted="darkMode">
@@ -311,7 +308,7 @@
 
 <script>
 
-import gameInfo from '../gameInfo';
+import gameInfo from '../../gameInfo';
 import converter, { NATO_PHONETIC_ALPHABET } from 'phonetic-alphabet-converter'
 
 const alphabet = {

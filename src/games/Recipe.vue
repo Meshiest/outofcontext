@@ -23,7 +23,7 @@
           Other reviewers wrote:
         </div>
         <div style="margin-top: 10px">
-          <div v-for="(comment, i) in player.link.comments">
+          <div v-for="(comment, i) in player.link.comments" :key="i">
             <sui-divider horizontal v-if="i !== 0" :inverted="darkMode">And</sui-divider>
             <sui-header-subheader>
               {{comment}}
@@ -37,7 +37,7 @@
           Other Ingredients:
         </div>
         <div style="margin-top: 10px">
-          <div v-for="(ingredients, i) in player.link.ingredients">
+          <div v-for="(ingredients, i) in player.link.ingredients" :key="i">
             <sui-divider horizontal v-if="i !== 0" :inverted="darkMode">And</sui-divider>
             <sui-header-subheader>
               {{ingredients}}

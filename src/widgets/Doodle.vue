@@ -36,6 +36,7 @@
           <label>Color</label>
           <div class="color-grid">
             <div v-for="col in palette" class="color"
+              :key="col"
               :style="{backgroundColor: col}"
               @click="color = col"
             >
@@ -55,6 +56,7 @@
               @input="thick=$event.target.value" />
             <div class="slider-dots">
               <div v-for="n in 5"
+                :key="n"
                 class="dot"
                 :style="{transform: `scale(${(n+1)/8})`}" />
             </div>

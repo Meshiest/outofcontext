@@ -10,7 +10,7 @@
         Home
       </router-link>
       <sui-divider horizontal :inverted="darkMode">Games</sui-divider>
-      <sui-card v-for="(info, key) in gameInfo" :key="key" v-if="!info.hidden">
+      <sui-card v-for="[key, info] in gameInfo" :key="key">
         <sui-card-content>
           <sui-card-header>
             {{info.title}}
@@ -32,9 +32,7 @@
             </sui-accordion-title>
             <sui-accordion-content>
               <ul style="padding-left: 20px; margin: 0">
-                <li v-for="step in info.howTo">
-                  {{step}}
-                </li>
+                <li v-for="(step, i) in info.howTo" :key="i">{{step}}</li>
               </ul>
             </sui-accordion-content>
             <sui-accordion-title>
@@ -62,12 +60,13 @@
 </template>
 
 <script>
-import gameInfo from '../gameInfo';
+import gameInfo from '../../gameInfo';
 
 export default {
   data() {
     return {
-      gameInfo,
+      gameInfo: Object.entries(gameInfo)
+        .filter((key, val) => !val.hidden),
       showMore: {},
     };
   },

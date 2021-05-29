@@ -24,7 +24,8 @@
       <sui-form @submit="writeLine" v-if="!player.link || player.link.type === 'repair'"
        :inverted="darkMode">
         <div class="redacted-words" v-if="player.link" style="margin-top: 0;">
-          <code v-for="word in player.link.data.line"
+          <code v-for="(word, i) in player.link.data.line"
+            :key="i"
             :style="{ cursor: 'initial' }"
             :class="[
               'tamperable',
@@ -50,7 +51,8 @@
       <sui-form @submit="editCensor" v-else-if="player.link && player.link.type === 'tamper' && player.link.kind === 'censor'"
         :inverted="darkMode">
         <div class="redacted-words">
-          <code v-for="word in player.link.data.line"
+          <code v-for="(word, i) in player.link.data.line"
+            :key="i"
             :style="{
               textAlign: 'center',
               width: word.type === 'count' ? Math.max(Math.min(word.value, 12), 3) * 0.75 + 'em' : 'auto',
@@ -129,7 +131,8 @@
         </div>
         <div v-if="tamperType === 'censor'">
           <div class="redacted-words">
-            <code v-for="word in wordified"
+            <code v-for="(word, i) in wordified"
+              :key="i"
               @click="toggleWord(word)"
               :class="[
                 'tamperable',
@@ -144,6 +147,7 @@
         <div v-else-if="tamperType === 'truncate'">
           <div class="redacted-words">
             <code v-for="word, i in wordified"
+              :key="i"
               @click="if(word.available) truncateCount = wordified.count - word.index"
               :class="[
                 'tamperable',
@@ -195,7 +199,8 @@
                 <sui-comment-content>
                   <sui-comment-text>
                     <div class="redacted-words" style="padding: 0 14px">
-                      <code v-for="word in entry.data.line"
+                      <code v-for="(word, i) in entry.data.line"
+                        :key="i"
                         :style="{ cursor: 'initial' }"
                         :class="[
                           'tamperable',

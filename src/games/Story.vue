@@ -5,7 +5,7 @@
       <h2 is="sui-header" icon="pencil" v-if="player.link.length !== 0">
         {{player.isLastLink ? 'Finish the story! ' : ''}}The last author{{player.link.length !== 1 ? 's' : ''}} wrote....
         <div style="margin-top: 10px">
-          <div v-for="(link, i) in player.link">
+          <div v-for="(link, i) in player.link" :key="i">
             <sui-divider horizontal v-if="i !== 0" :inverted="darkMode">Then</sui-divider>
             <sui-header-subheader>
               {{link}}

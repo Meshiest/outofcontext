@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import SemanticUI from 'semantic-ui-vue';
 import VueSocketIO from 'vue-socket.io'
 import PortalVue from 'portal-vue';
+
 import './style.css';
 import '../res/favicon.ico';
 
@@ -32,37 +33,34 @@ const router = new VueRouter({
   ]
 });
 
-import Home from './Home.vue';
-import Lobby from './Lobby.vue';
-import GameList from './GameList.vue';
-import NotFound from './NotFound.vue';
-import Util from './Util.vue';
-import Menu from './Menu.vue';
-import JoinLobby from './JoinLobby.vue';
-import PlayerList from './PlayerList.vue';
-import Page from './Page.vue';
+
+import './widgets';
+
+import Home from './pages/Home.vue';
+import Lobby from './pages/Lobby.vue';
+import GameList from './pages/GameList.vue';
+import NotFound from './pages/NotFound.vue';
+
 import GameRenderer from './games/GameRenderer.vue';
-import Timer from './Timer.vue';
-import Doodle from './Doodle.vue';
-
-Vue.component('ooc-util', Util);
-Vue.component('ooc-timer', Timer);
-Vue.component('ooc-menu', Menu);
-Vue.component('ooc-join-lobby', JoinLobby);
-Vue.component('ooc-player-list', PlayerList);
-Vue.component('ooc-page', Page);
 Vue.component('ooc-game', GameRenderer);
-Vue.component('ooc-doodle', Doodle);
 
+
+Vue.prototype.rocketcrab = false;
+
+// in the future, turn on dark mode when the browser detects a dark theme preference
 // const cssDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// at the moment dark mode will be determined by user selection
 Vue.prototype.darkMode = localStorage.occDarkMode === 'true';
 if (Vue.prototype.darkMode) {
   document.body.classList.add('dark-theme');
 }
 
 Vue.prototype.bus = new Vue();
-Vue.prototype.rocketcrab = false;
 
+// toggling dark mode will emit a message to vue's event bus and update the body
+// if there was actual theming, it would probably have to modify a style tag
+// and there would need to be a lot of css changes for semantic ui to be happy
 Vue.prototype.toggleDarkMode = () => {
   if (event) event.preventDefault();
   const mode = Vue.prototype.darkMode = !Vue.prototype.darkMode;

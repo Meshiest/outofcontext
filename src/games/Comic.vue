@@ -7,7 +7,7 @@
             ? 'Finish the sequence! '
             : game.continuous && player.link.length > 0 ? 'Continue the drawing!' : '' }} The last artist{{player.link.length !== 1 ? 's' : ''}} {{game.showCaptions && !game.showDrawings ? 'wrote' : 'drew'}}....
         <div style="margin-top: 10px">
-          <div v-for="(link, i) in player.link">
+          <div v-for="(link, i) in player.link" :key="i">
             <sui-divider horizontal v-if="i !== 0" :inverted="darkMode">Then</sui-divider>
             <sui-header-subheader v-if="game.showCaptions" style="margin-bottom: 8px;">
               {{link.caption}}
