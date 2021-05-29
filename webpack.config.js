@@ -45,6 +45,11 @@ module.exports = {
           limit: 10000,
         },
       },
+      {
+        test: /\.wav$/,
+        include: path.resolve(__dirname, 'res'),
+        loader: 'file-loader'
+      }
     ]
   },
   plugins: [

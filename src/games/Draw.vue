@@ -171,6 +171,7 @@ export default {
         case 'EDITING':
           vibrate(40);
           logWait('wait_event', 'wait_duration', true);
+          this.playTurnSound();
           break;
         case 'READING':
           vibrate(40, 100, 40);
