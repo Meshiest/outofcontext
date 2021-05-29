@@ -129,7 +129,7 @@ module.exports = {
         name: 'Colored Drawings',
         type: 'bool',
         text: 'Colors',
-        info: 'Enable drawing in red, green, blue, and yellow. Also enables brush thickness.',
+        info: 'Enable drawing in color. Also enables brush thickness.',
         defaults: 'false',
       },
       gamemode: {
