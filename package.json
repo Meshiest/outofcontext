@@ -1,6 +1,6 @@
 {
   "name": "ooc",
-  "version": "1.4.3",
+  "version": "1.4.2",
   "description": "Out of Context Games",
   "main": "main.js",
   "scripts": {
