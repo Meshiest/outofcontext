@@ -130,7 +130,7 @@
             </sui-card-content>
           </sui-card>
         </div>
-        <div v-else>
+        <div v-else-if="!hideLobbyCode">
           <sui-divider horizontal :inverted="darkMode">
             Lobby Code
           </sui-divider>
@@ -265,7 +265,7 @@
       <sui-loader :inverted="darkMode" />
     </sui-dimmer>
     <sui-label
-      v-if="validLobby && !rocketcrab"
+      v-if="validLobby && !rocketcrab && !hideLobbyCode"
       class="lobby-code left"
       attached="top left">
       <code>
@@ -567,9 +567,11 @@ export default {
   },
   beforeDestroy() {
     this.bus.$off('toggle-dark-mode', this.update);
+    this.bus.$off('toggle-hide-lobby', this.update);
   },
   created() {
     this.bus.$on('toggle-dark-mode', this.update);
+    this.bus.$on('toggle-hide-lobby', this.update);
     const lobbyCode = this.$route.params.code;
     if(!lobbyCode || lobbyCode.length < 4) {
       this.loading = false;

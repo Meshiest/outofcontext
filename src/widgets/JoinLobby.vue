@@ -21,6 +21,7 @@
             <input name="lobbyCode"
               required
               @input="lobbyError = false"
+              :type="hideLobbyCode ? 'password' : 'text'"
               autocomplete="off"
               placeholder="c0d3">
           </sui-form-field>
@@ -95,9 +96,11 @@ module.exports = {
   },
   created() {
     this.bus.$on('toggle-dark-mode', this.update);
+    this.bus.$on('toggle-hide-lobby', this.update);
   },
   beforeDestroy() {
     this.bus.$off('toggle-dark-mode', this.update);
+    this.bus.$off('toggle-hide-lobby', this.update);
   }
 };
 </script>

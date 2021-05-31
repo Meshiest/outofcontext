@@ -49,7 +49,7 @@
           {{subtitle}}
         </div>
       </header>
-      <div :style="{textAlign: left ? 'left' : 'inherit'}">
+      <div class="menu-items" :style="{textAlign: left ? 'left' : 'inherit'}">
         <slot></slot>
       </div>
     </div>

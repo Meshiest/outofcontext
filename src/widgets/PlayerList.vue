@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="player-list-widget">
     <sui-divider horizontal :inverted="darkMode">
       Lobby Members
     </sui-divider>

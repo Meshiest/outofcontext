@@ -2,8 +2,6 @@
   <div class="page">
     <slot></slot>
     <ooc-settings></ooc-settings>
-    <div class="footer-links">
-    </div>
   </div>
 </template>
 
