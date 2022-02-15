@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "module": "es6",
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "noEmit": true
+  },
+  "include": [
+    "./*"
+  ],
+}

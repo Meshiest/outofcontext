@@ -1,5 +1,5 @@
-(async() => {
+(async () => {
   console.debug('Loading App');
-  await import('./app.js');
+  await import('./index.jsx');
   console.debug('Finished Loading App');
 })();

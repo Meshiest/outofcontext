@@ -11,10 +11,14 @@ See [OutOfContext.party](https://www.outofcontext.party) for more info!
 
 ### Development
 
-1. Leave `npm run watch` running to rebuild the frontend.
+1. Leave `npm run server` running to rebuild the frontend with hot refresh.
 2. Leave `npm start` running for the backend, restart when server changes are made.
 3. Use Lobby `devaaaa` for development
 4. Open `localhost:8080` in browser
+
+### Translations
+
+Use `en_US.yaml` as a baseline for your language.
 
 ### Production
 
@@ -31,6 +35,6 @@ Follow nginx instructions on certbot
 
 ### Copyright
 
-OutOfContext.party  Copyright (C) 2021  Isaac Hirschfeld
+OutOfContext.party Copyright (C) 2021 Isaac Hirschfeld
 
 Chain distribution algorithm (games without "rounds" + wait time minimization solution), Redacted game, and Hodgepodge game are original creations and property of Isaac Hirschfeld. If you wish to use them, please ask and give explicit credit where deserved.

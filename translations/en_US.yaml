@@ -1,0 +1,14 @@
+name: English (US)
+# see https://react.semantic-ui.com/elements/flag/
+country_code: us
+menus:
+  home:
+    title: Out of Context
+    headline: Party games fueled by your insanity!
+    play_game: Play
+    join_game: Join
+    game_info: Game List
+    source: Read the Code
+    request: Request a Game
+games:
+settings:

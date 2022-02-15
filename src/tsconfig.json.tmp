@@ -1,0 +1,17 @@
+{
+  "include": [
+    "./*"
+  ],
+  "compilerOptions": {
+    "jsx": "react",
+    "module": "es6",
+    "moduleResolution": "node",
+    "paths": {
+      "~/*": [
+        "./*"
+      ]
+    },
+    "baseUrl": "./",
+    "noEmit": true
+  }
+}

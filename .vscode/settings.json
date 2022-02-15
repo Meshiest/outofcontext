@@ -1,0 +1,11 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "files.trimTrailingWhitespace": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "files.eol": "\n",
+  "javascript.preferences.quoteStyle": "single",
+  "javascript.preferences.importModuleSpecifierEnding": "js",
+  "git.autofetch": true,
+}

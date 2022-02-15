@@ -4,6 +4,7 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  background-color: white;
 }
 
 .char-count {
@@ -22,16 +23,16 @@ body {
   z-index: 10;
 }
 
-.like-bar .button, .like-bar .label {
-  font-size: .71428571rem !important;
-  padding: .5833em .833em !important;
+.like-bar .button,
+.like-bar .label {
+  font-size: 0.71428571rem !important;
+  padding: 0.5833em 0.833em !important;
 }
 
 .like-bar .ui .icon {
   margin-right: 7.5px !important;
   margin-left: 0px !important;
 }
-
 
 body.dark-theme {
   background-color: black;
@@ -43,7 +44,9 @@ body.dark-theme {
   word-break: break-word;
 }
 
-.dark-theme .accordion, .dark-theme .card .header, .dark-theme .card .description {
+.dark-theme .accordion,
+.dark-theme .card .header,
+.dark-theme .card .description {
   background-color: black !important;
   color: white !important;
 }
@@ -52,30 +55,32 @@ body.dark-theme {
   background-color: black;
 }
 
-.dark-theme .header, .dark-theme .comment .content .text {
+.dark-theme .header,
+.dark-theme .comment .content .text {
   color: white !important;
 }
 
 .dark-theme .sub.header,
 .dark-theme .comment .content .author,
 .dark-theme .card .meta,
-.dark-theme  .draw-chain-ending  {
+.dark-theme .draw-chain-ending {
   color: #ccc !important;
 }
 
 .dark-theme .card .content:not(:first-child) {
-  border-top: 1px solid rgba(255,255,255,.05)!important;
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
-.dark-theme .card, .dark-theme .accordion {
+.dark-theme .card,
+.dark-theme .accordion {
   box-shadow: 0 1px 3px 0 #444, 0 0 0 1px #444 !important;
 }
 .dark-theme .accordion .title {
-  border-color: rgba(255,255,255,.05)!important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
 }
 
 .dark-theme .inverted.table {
-  border: 1px solid rgba(200,200,200,.15) !important;
+  border: 1px solid rgba(200, 200, 200, 0.15) !important;
 }
 
 .dark-theme .card .extra {
@@ -84,14 +89,14 @@ body.dark-theme {
 
 .dark-theme tr.positive td,
 .dark-theme .ui.table tr.positive {
-  color: #ccffcc!important;
-  background-color: #002200!important;
+  color: #ccffcc !important;
+  background-color: #002200 !important;
 }
 
 .dark-theme tr.negative td,
 .dark-theme .ui.table tr.negative {
-  color: #ffcccc!important;
-  background-color: #220000!important;
+  color: #ffcccc !important;
+  background-color: #220000 !important;
 }
 
 .dark-theme .error.message .header {

@@ -1,49 +1,70 @@
 <!DOCTYPE html>
 <html prefix="og: https://ogp.me/ns#">
   <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-58828021-7"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-58828021-7"
+    ></script>
     <script>
-window.dataLayer = window.dataLayer || [];
-window.gtag = function gtag(){dataLayer.push(arguments);};
-gtag('js', new Date());
-gtag('set', 'allow_google_signals', false );
-gtag('set', 'allow_ad_personalization_signals', false );
-gtag('config', 'UA-58828021-7', {
-  cookie_prefix: 'OOC',
-  cookie_domain: 'www.outofcontext.party',
-  cookie_expires: 28 * 24 * 60 * 60,
-  custom_map: {
-    metric1: 'emote_index',
-    metric2: 'turn_duration',
-    metric3: 'wait_duration',
-    metric4: 'player_count',
-    dimension1: 'game_name',
-    dimension2: 'lobby_code',
-  },
-});
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function gtag() {
+        dataLayer.push(arguments);
+      };
+      gtag('js', new Date());
+      gtag('set', 'allow_google_signals', false);
+      gtag('set', 'allow_ad_personalization_signals', false);
+      gtag('config', 'UA-58828021-7', {
+        cookie_prefix: 'OOC',
+        cookie_domain: 'www.outofcontext.party',
+        cookie_expires: 28 * 24 * 60 * 60,
+        custom_map: {
+          metric1: 'emote_index',
+          metric2: 'turn_duration',
+          metric3: 'wait_duration',
+          metric4: 'player_count',
+          dimension1: 'game_name',
+          dimension2: 'lobby_code',
+        },
+      });
     </script>
-    <meta charset="utf-8">
-    <meta name="description" content="Free online social party games for 2+ players. Similar to Jackbox games, Drawphone and Telestrations, and more!">
-    <meta name="keywords" content="game,games,party games,partygames,telestrations,spyfall,drawphone,out of context,ooc,outofcontext,party,social,assassin,word assassin,wurderer,raconteur,underground,scribble,crabhat,crab hat,multiplayer,doodle,telephone,rocketcrab,foldingstory,folding story,exquisite corpse,consequences,picture consequences,online parlor game,parlor game">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <meta name="audience" content="all">
-    <meta name="page-topic" content="Online Party Games">
-    <meta property="og:title" content="Out Of Context Party Games">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.outofcontext.party">
-    <meta property="og:image" content="https://i.imgur.com/kQZvmf0.png">
-    <meta property="og:image:type" content="image/png">
-    <meta property="og:image:width" content="400">
-    <meta property="og:image:height" content="300">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/semantic.min.css">
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="Free online social party games for 2+ players. Similar to Jackbox games, Drawphone and Telestrations, and more!"
+    />
+    <meta
+      name="keywords"
+      content="game,games,party games,partygames,telestrations,spyfall,drawphone,out of context,ooc,outofcontext,party,social,assassin,word assassin,wurderer,raconteur,underground,scribble,crabhat,crab hat,multiplayer,doodle,telephone,rocketcrab,foldingstory,folding story,exquisite corpse,consequences,picture consequences,online parlor game,parlor game"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta name="audience" content="all" />
+    <meta name="page-topic" content="Online Party Games" />
+    <meta property="og:title" content="Out Of Context Party Games" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.outofcontext.party" />
+    <meta property="og:image" content="https://i.imgur.com/kQZvmf0.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="400" />
+    <meta property="og:image:height" content="300" />
     <script async src="/socket.io/socket.io.js"></script>
     <title>Out of Context!</title>
   </head>
   <body>
     <div id="app">
-      <script>localStorage.occDarkMode=='true'&&document.write('<style>body{background:#000}</style>')</script>
-      <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:40px;">
+      <script>
+        localStorage.occDarkMode == 'true' &&
+          document.write('<style>body{background:#000}</style>');
+      </script>
+      <div
+        style="
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 40px;
+        "
+      >
         🗨️❤️
       </div>
     </div>

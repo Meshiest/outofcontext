@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "ecmel.vscode-html-css",
+    "eg2.vscode-npm-script",
+    "christian-kohler.npm-intellisense",
+    "esbenp.prettier-vscode",
+    "visualstudioexptteam.vscodeintellicode",
+    "aaron-bond.better-comments",
+    "oouo-diogo-perdigao.docthis",
+    "formulahendry.auto-rename-tag",
+    "ofhumanbondage.react-proptypes-intellisense",
+    "diegolincoln.vscode-styled-components"
+  ]
+}
