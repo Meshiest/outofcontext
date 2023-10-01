@@ -28,9 +28,3 @@ See [OutOfContext.party](https://www.outofcontext.party) for more info!
 ### LetsEncrypt
 
 Follow nginx instructions on certbot
-
-### Copyright
-
-OutOfContext.party  Copyright (C) 2021  Isaac Hirschfeld
-
-Chain distribution algorithm (games without "rounds" + wait time minimization solution), Redacted game, and Hodgepodge game are original creations and property of Isaac Hirschfeld. If you wish to use them, please ask and give explicit credit where deserved.

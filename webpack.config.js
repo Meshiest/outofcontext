@@ -26,7 +26,7 @@ module.exports = {
           'style-loader',
           {
             loader: 'css-loader',
-            options: { import: true, },
+            options: { import: true },
           },
         ],
       },
@@ -40,7 +40,7 @@ module.exports = {
       },
       {
         test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-        loader: 'url-loader',
+        loader: 'asset/inline',
         options: {
           limit: 10000,
         },
@@ -48,9 +48,9 @@ module.exports = {
       {
         test: /\.wav$/,
         include: path.resolve(__dirname, 'res'),
-        loader: 'file-loader'
-      }
-    ]
+        loader: 'file-loader',
+      },
+    ],
   },
   plugins: [
     new CleanWebpackPlugin(),
@@ -59,5 +59,5 @@ module.exports = {
       publicPath: '/',
     }),
     new VueLoaderPlugin(),
-  ]
-}
+  ],
+};

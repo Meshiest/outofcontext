@@ -1,9 +1,11 @@
-game:
-  build: .
-  restart: always
-  command: "npm start"
-  ports:
-   - "8080:8080"
-  volumes:
-    - .:/usr/src/app
+version: '2'
+services:
+  game:
+    build: .
+    restart: always
+    command: "npm start"
+    ports:
+    - "8080:8080"
+    volumes:
+      - .:/usr/src/app
 

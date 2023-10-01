@@ -30,16 +30,15 @@
     "semantic-ui-vue": "^0.8.1",
     "socket.io": "^2.5.0",
     "style-loader": "^2.0.0",
-    "url-loader": "^1.1.2",
     "vue": "^2.6.8",
-    "vue-loader": "^15.9.6",
+    "vue-loader": "^15.10.2",
     "vue-router": "^3.0.2",
     "vue-socket.io": "^3.0.7",
-    "vue-style-loader": "^4.1.2",
+    "vue-style-loader": "^4.1.3",
     "vue-template-compiler": "^2.6.8",
-    "webpack": "^5.74.0"
+    "webpack": "^5.88.2"
   },
   "devDependencies": {
-    "webpack-cli": "^4.5.0"
+    "webpack-cli": "^4.10.0"
   }
 }
