@@ -1,0 +1,116 @@
+{
+  "title": "Schwarz auf Weiß",
+  "subtitle": "█████ ███████",
+  "difficulty": "Komplex",
+  "description": "Schreibt, manipuliert und repariert gemeinsam Geschichten, Zeile für Zeile.",
+  "more": "Schwarz auf Weiß baut auf Lügenbaron auf. Ihr schreibt weiterhin gemeinsam an einer Geschichte, aber jetzt könnt ihr in die Zeilen der anderen eingreifen. Spielt es am besten, wenn ihr schon ein bisschen Übung mit Zeile-für-Zeile-Geschichten ohne Kontext habt.",
+  "howTo": [
+    "Jeder Spieler bekommt eine Zeile einer Geschichte",
+    "Der nächste Spieler bearbeitet die Geschichte: Entweder schneidet er Wörter am Ende ab oder schwärzt Wörter in der Mitte.",
+    "Ein anderer Spieler ergänzt, was verloren gegangen ist",
+    "Danach geht die Geschichte weiter, Zeile für Zeile",
+    "Am Ende könnt ihr die verrückten Geschichten genießen, die ihr geschrieben habt"
+  ],
+  "playTime": "15-20 min",
+  "writeFirstLine": "Schreib die erste Zeile",
+  "continueStory": "Schreib die Geschichte weiter",
+  "tamperHeader": "Manipuliere die Geschichte",
+  "decensorHeader": "Entschwärze den Text",
+  "repairHeader": "Repariere den Text",
+  "storyGoesLabel": "So geht die Geschichte...",
+  "wordsHint_one": "{{count}} Wort",
+  "wordsHint_other": "{{count}} Wörter",
+  "sign": "Unterschreiben",
+  "repair": "Reparieren",
+  "modeTruncate": "Abschneiden",
+  "modeCensor": "Schwärzen",
+  "censorStory": "Geschichte schwärzen",
+  "truncateStory": "Geschichte abschneiden",
+  "redacting": "{{used}}/{{max}} Wörter geschwärzt",
+  "wordFieldLabel": "Wort {{number}}",
+  "replacementLabel": "Ersatztext",
+  "tooManyWords": "Zu viele Wörter!",
+  "inkRemaining": "{{remaining}}/{{capacity}} Schwärzungen übrig",
+  "inkDetail": "{{ink}} Tinte, {{cost}} pro Wort",
+  "waitingOnPlayers": "Warten auf die anderen Spieler",
+  "evidenceTampered": "Beweise werden manipuliert",
+  "resultsTitle": "Geschichten",
+  "censorWordAria": "Schwärzung für Wort umschalten: {{word}}",
+  "truncateFromAria": "Geschichte abschneiden ab: {{word}}",
+  "gapAria": "Lücke {{number}}",
+  "redactedWordAria": "Geschwärztes Wort: {{word}}",
+  "config": {
+    "players": {
+      "name": "Max. Spieler",
+      "text": "Spieler",
+      "info": "Wie viele Spieler maximal mitspielen können"
+    },
+    "numStories": {
+      "name": "Anzahl Geschichten",
+      "text": "Geschichten",
+      "info": "Wie viele Geschichten geschrieben werden"
+    },
+    "numLinks": {
+      "name": "Zeilen pro Geschichte",
+      "text": "Zeilen",
+      "info": "Wie viele Zeilen eine Geschichte hat. Es gibt dreimal so viele Runden."
+    },
+    "anonymous": {
+      "name": "Autoren verbergen",
+      "text": "Anonym",
+      "info": "Ob am Ende die Namen angezeigt werden."
+    },
+    "edits": {
+      "name": "Schwärzungen anzeigen",
+      "text": "Schwärzungen",
+      "info": "Ab wann im Spiel die Ersatzwörter angezeigt werden.",
+      "options": {
+        "end": "Anzeigen",
+        "always": "Immer",
+        "hide": "Verbergen"
+      },
+      "optionsMore": {
+        "end": "Am Spielende",
+        "always": "Das ganze Spiel über",
+        "hide": "Nie"
+      }
+    },
+    "gamemode": {
+      "name": "Spielmodus",
+      "text": "Modus",
+      "info": "Der Spielmodus legt fest, welche Bearbeitungsarten verwendet werden",
+      "options": {
+        "normal": "Normal",
+        "censor": "Schwärzen",
+        "madlib": "Klecks",
+        "finish": "Vollenden",
+        "shred": "Schreddern",
+        "chaos": "Chaos"
+      },
+      "optionsMore": {
+        "censor": "Nur Schwärzen",
+        "madlib": "Zufälliges Schwärzen",
+        "finish": "Nur Abschneiden",
+        "shred": "Zufälliges Abschneiden",
+        "chaos": "Zufällig"
+      }
+    },
+    "ink": {
+      "name": "Tintenmenge",
+      "text": "Änderungen",
+      "info": "Wie viele Änderungen Spieler in der Bearbeitungsphase machen dürfen",
+      "options": {
+        "normal": "Normal",
+        "more": "Mehr",
+        "many": "Viele",
+        "overkill": "Overkill"
+      },
+      "optionsMore": {
+        "normal": "Normal - 2 in der Mitte, 5 am Ende",
+        "more": "Mehr - 3 in der Mitte, 7 am Ende",
+        "many": "Viele - 5 in der Mitte, 12 am Ende",
+        "overkill": "Overkill - reicht dicke"
+      }
+    }
+  }
+}

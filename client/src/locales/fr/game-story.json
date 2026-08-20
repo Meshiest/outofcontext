@@ -1,0 +1,57 @@
+{
+  "title": "Racontars",
+  "subtitle": "Plumes fantômes",
+  "difficulty": "Simple",
+  "description": "Écrivez des histoires à plusieurs, une phrase à la fois, avec un minimum de contexte.",
+  "more": "Racontars s'inspire des jeux d'impro où les joueurs font avancer une histoire une phrase ou un mot à la fois. L'idée est de créer des histoires uniques à partir d'un fil de pensée qui part on ne sait où. Seule la dernière phrase assure la continuité, alors un peu d'ambiguïté donne des histoires bien plus intéressantes. Un cousin du bon vieux jeu de salon des petits papiers.",
+  "howTo": [
+    "Chaque joueur reçoit une phrase d'une histoire",
+    "Les joueurs continuent l'histoire une phrase à la fois",
+    "À la fin, tout le monde savoure les histoires délirantes écrites ensemble"
+  ],
+  "playTime": "15-20 min",
+  "writeFirstLine": "Écris la première phrase",
+  "finishPrefix": "Termine l'histoire !",
+  "lastAuthorsWrote_one": "Le dernier auteur a écrit...",
+  "lastAuthorsWrote_other": "Les derniers auteurs ont écrit...",
+  "then": "Puis",
+  "storyGoes": "L'histoire raconte...",
+  "sign": "Signer",
+  "finish": "Terminer",
+  "waitingOnAuthors": "En attente des autres auteurs",
+  "storiesBeingWritten": "Les histoires s'écrivent...",
+  "storiesTitle": "Histoires",
+  "config": {
+    "players": {
+      "name": "Joueurs max",
+      "text": "Joueurs",
+      "info": "Nombre maximum de joueurs dans la partie"
+    },
+    "numStories": {
+      "name": "Nombre d'histoires",
+      "text": "Histoires",
+      "info": "Le nombre d'histoires écrites en même temps"
+    },
+    "numLinks": {
+      "name": "Phrases par histoire",
+      "text": "Phrases",
+      "info": "Le nombre de phrases dans chaque histoire"
+    },
+    "anonymous": {
+      "name": "Masquer les auteurs",
+      "text": "Anonyme",
+      "info": "Affiche ou non les noms des auteurs à la fin."
+    },
+    "contextLen": {
+      "name": "Contexte",
+      "text": "Contexte",
+      "info": "Ajouter des phrases de contexte rend les histoires plus fluides",
+      "options": {
+        "regular": "1 phrase",
+        "two": "2 phrases",
+        "three": "3 phrases",
+        "four": "4 phrases"
+      }
+    }
+  }
+}

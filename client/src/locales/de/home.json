@@ -1,0 +1,26 @@
+{
+  "hero": {
+    "title": "Zock Partyspiele mit deinen Freunden"
+  },
+  "subtitle": "Partyspiele, die von eurem Wahnsinn leben!",
+  "sections": {
+    "lobby": "Lobby",
+    "info": "Info"
+  },
+  "buttons": {
+    "create": "Lobby erstellen",
+    "join": "Lobby beitreten",
+    "gameInfo": "Spielinfos",
+    "readCode": "Quellcode ansehen",
+    "requestGame": "Wünsch dir ein Spiel"
+  },
+  "join": {
+    "title": "Lobby beitreten",
+    "close": "Schließen",
+    "codeLabel": "Lobby-Code",
+    "placeholder": "c0d3",
+    "submit": "Beitreten",
+    "cancel": "Abbrechen",
+    "invalid": "Ungültiger Lobby-Code"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "title": "Batiburrillo",
+  "subtitle": "Su chef, señoría",
+  "difficulty": "Intermedia",
+  "description": "Colaboren para ensamblar recetas de cualquier cosa.",
+  "more": "Batiburrillo es algo enrevesado, en el sentido de que no hay una única dirección clara para cada tanda de instrucciones. Los jugadores aportan pasos de una receta siguiendo un tema, ingredientes sin ningún contexto y posibles peligros, también sin contexto. Esta mezcla de azar y contexto suele quedar terriblemente deliciosa.",
+  "howTo": [
+    "A cada jugador se le pedirá un tema para el \"plato\"",
+    "Todos los jugadores aportan un paso a la receta usando un ingrediente desconocido que se definirá después, sin ver los demás pasos.",
+    "Todos los jugadores también aportan ingredientes (o cualquier cosa, en realidad) a las recetas, viendo solo los demás ingredientes.",
+    "Se pueden añadir peligros y comentarios sobre las recetas misteriosas para una pizca extra de caos.",
+    "Al final, los jugadores pueden disfrutar de las recetas disparatadas que escribieron"
+  ],
+  "playTime": "5-10m",
+  "sign": "Firmar",
+  "finish": "Terminar",
+  "and": "Y",
+  "themeHeader": "Elige un tema",
+  "themeSubheader": "Este tema inspirará las instrucciones",
+  "themeLabel": "Tema de la receta",
+  "stepHeader": "Escribe una instrucción para: {{theme}}",
+  "stepNumber": "Paso {{index}} de {{total}}",
+  "stepLabel": "Instrucciones para el paso {{index}}",
+  "stepItemRequired": "La instrucción debe contener el texto 'ITEM'",
+  "stepItemHelper": "Al final, 'ITEM' se reemplazará por un ingrediente al azar.",
+  "ingredientHeader": "Añade un ingrediente",
+  "ingredientLabel": "Un objeto o cualquier cosa",
+  "ingredientExisting": "Otros ingredientes:",
+  "ingredientHelper": "Esto reemplazará la palabra 'ITEM' en un paso al azar.",
+  "ingredientItemWarning": "¿Seguro que querías poner 'ITEM' aquí?",
+  "commentHeader": "Comenta una receta",
+  "commentLabel": "Comentario de la receta",
+  "commentExisting": "Otros críticos escribieron:",
+  "waiting": "Esperando a los demás chefs",
+  "developing": "Se están elaborando las recetas",
+  "resultsTitle": "Recetas",
+  "by": "por {{name}}",
+  "cardStepNumber": "Paso {{number}}",
+  "cardStepAuthors": "{{writer}} y {{helper}}",
+  "anonymous": "Anónimo",
+  "config": {
+    "players": {
+      "name": "Máximo de jugadores",
+      "text": "Jugadores",
+      "info": "Máximo de jugadores permitidos en la partida"
+    },
+    "numRecipes": {
+      "name": "Número de recetas",
+      "text": "Recetas",
+      "info": "Cuántas recetas se escribirán"
+    },
+    "numSteps": {
+      "name": "Pasos por receta",
+      "text": "Pasos",
+      "info": "Cuántos pasos e ingredientes tendrá cada receta."
+    },
+    "anonymous": {
+      "name": "Ocultar autores",
+      "text": "Anónimo",
+      "info": "Si se muestran los nombres al final."
+    }
+  }
+}

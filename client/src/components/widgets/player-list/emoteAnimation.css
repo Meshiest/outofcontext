@@ -1,0 +1,47 @@
+/* Emote pop animation for PlayerList: slide in from the left, hold, then slide out to the right
+ * over 3s. `.ooc-emote--exiting` snaps to invisible when a newer emote replaces it. Respects
+ * prefers-reduced-motion. */
+@keyframes ooc-emote {
+  0% {
+    opacity: 0.2;
+    transform: translateX(-20px) scale(0.9);
+  }
+  10% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  90% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(20px) scale(0.9);
+  }
+}
+
+/* Fill the slot and center the glyph with flexbox rather than a top/left 50% + translate(-50%,-50%)
+ * trick: the latter centers the inline BOX, whose height comes from the font's line-height, so the
+ * glyph itself landed visually low next to the player name. `inset: 0` + `line-height: 1` centers
+ * the glyph on the slot exactly, and leaves `transform` free for the slide-in/out animation. */
+.ooc-emote {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  animation: ooc-emote 3s ease-in-out forwards;
+  pointer-events: none;
+}
+
+.ooc-emote--exiting {
+  opacity: 0 !important;
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ooc-emote {
+    animation-duration: 0.001ms !important;
+  }
+}

@@ -1,5 +1,37 @@
-public/
+# Backend build output (repo root only, anchored so client/public/ source assets stay tracked)
+/public/
+
+# Dependencies
 node_modules/
+client/node_modules/
+
+# Client build output
+client/dist/
+client/storybook-static/
+
+# Vitest coverage
+coverage/
+client/coverage/
+
+# Deploy / secrets
 ssl
 docker-compose.yml
 nginx.conf
+.claude/settings.local.json
+
+# Environment
+.env
+.env.local
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+nul
+
+# Playwright run artifacts (traces, screenshots, videos)
+test-results/
+playwright-report/

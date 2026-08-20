@@ -1,0 +1,9 @@
+{
+  "LOBBY_NOT_FOUND": "Esa sala no existe.",
+  "LOBBY_FULL": "Esa sala está llena.",
+  "NAME_TAKEN": "Ese nombre ya está en uso.",
+  "NOT_ADMIN": "Solo el anfitrión de la sala puede hacer eso.",
+  "GAME_ALREADY_STARTED": "La partida ya empezó.",
+  "RATE_LIMITED": "Frena un momento y vuelve a intentarlo.",
+  "UNKNOWN": "Algo salió mal. Inténtalo de nuevo."
+}

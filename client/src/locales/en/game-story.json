@@ -1,0 +1,57 @@
+{
+  "title": "Raconteur",
+  "subtitle": "Ghost Writers",
+  "difficulty": "Simple",
+  "description": "Collaborate in writing stories one line at a time with minimal context.",
+  "more": "Raconteur is inspired by improv-type games where players contribute to a story one sentence or one word at a time. The idea is to create unique stories from a train of thought going who knows where. Continuity is held only by the last line in the story, so writing with ambiguity allows for more interesting stories. Similar to old parlor game Consequences.",
+  "howTo": [
+    "Every player will be given a line in a story",
+    "Players will continue the story one line at a time",
+    "At the end, players can enjoy the crazy stories they wrote together"
+  ],
+  "playTime": "15-20m",
+  "writeFirstLine": "Write the first line",
+  "finishPrefix": "Finish the story!",
+  "lastAuthorsWrote_one": "The last author wrote...",
+  "lastAuthorsWrote_other": "The last authors wrote...",
+  "then": "Then",
+  "storyGoes": "The Story Goes...",
+  "sign": "Sign",
+  "finish": "Finish",
+  "waitingOnAuthors": "Waiting on Other Authors",
+  "storiesBeingWritten": "Stories are Being Written",
+  "storiesTitle": "Stories",
+  "config": {
+    "players": {
+      "name": "Max Players",
+      "text": "Players",
+      "info": "Maximum allowed players in the game"
+    },
+    "numStories": {
+      "name": "Story Count",
+      "text": "Stories",
+      "info": "The number of stories being written"
+    },
+    "numLinks": {
+      "name": "Lines per Story",
+      "text": "Lines",
+      "info": "How many lines are in a story"
+    },
+    "anonymous": {
+      "name": "Hide Authors",
+      "text": "Anonymous",
+      "info": "Whether names are shown at the end."
+    },
+    "contextLen": {
+      "name": "Context",
+      "text": "Context",
+      "info": "Adding additional lines of context helps make stories flow better",
+      "options": {
+        "regular": "1 Line",
+        "two": "2 Lines",
+        "three": "3 Lines",
+        "four": "4 Lines"
+      }
+    }
+  }
+}

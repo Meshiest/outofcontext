@@ -1,0 +1,63 @@
+{
+  "title": "Tambouille",
+  "subtitle": "Chef d'accusation",
+  "difficulty": "Modéré",
+  "description": "Concoctez ensemble des recettes de tout et n'importe quoi.",
+  "more": "Tambouille est un peu plus touffu que les autres jeux : il n'y a pas une marche à suivre unique et bien balisée pour chaque consigne. Les joueurs proposent des étapes de recette autour d'un thème, des ingrédients sans aucun contexte, et des mises en garde tout aussi hors contexte. Ce mélange de hasard et de contexte se révèle souvent terriblement délicieux.",
+  "howTo": [
+    "Chaque joueur commence par donner un thème pour le « plat »",
+    "Chacun écrit une étape de la recette en utilisant un ingrédient encore inconnu (défini plus tard), sans voir les autres étapes.",
+    "Tout le monde ajoute aussi des ingrédients, ou n'importe quoi d'autre en fait, aux recettes, en ne voyant que les autres ingrédients.",
+    "Mises en garde et commentaires sur ces recettes mystères sont les bienvenus, pour une pincée de chaos en plus.",
+    "À la fin, les joueurs peuvent déguster les recettes délirantes qu'ils ont écrites"
+  ],
+  "playTime": "5-10 min",
+  "sign": "Signer",
+  "finish": "Terminer",
+  "and": "Et",
+  "themeHeader": "Choisis un thème",
+  "themeSubheader": "Ce thème inspirera les instructions",
+  "themeLabel": "Thème de la recette",
+  "stepHeader": "Écris une instruction pour : {{theme}}",
+  "stepNumber": "Étape {{index}} sur {{total}}",
+  "stepLabel": "Instruction pour l'étape {{index}}",
+  "stepItemRequired": "Le texte 'ITEM' doit apparaître dans l'instruction",
+  "stepItemHelper": "'ITEM' sera remplacé à la fin par un ingrédient au hasard.",
+  "ingredientHeader": "Ajoute un ingrédient",
+  "ingredientLabel": "Un objet ou un truc",
+  "ingredientExisting": "Autres ingrédients :",
+  "ingredientHelper": "Ça remplacera le mot 'ITEM' dans une étape au hasard.",
+  "ingredientItemWarning": "Tu veux vraiment mettre 'ITEM' ici ?",
+  "commentHeader": "Commente une recette",
+  "commentLabel": "Commentaire sur la recette",
+  "commentExisting": "Les autres critiques ont écrit :",
+  "waiting": "En attente des autres chefs",
+  "developing": "Les recettes mijotent...",
+  "resultsTitle": "Recettes",
+  "by": "par {{name}}",
+  "cardStepNumber": "Étape {{number}}",
+  "cardStepAuthors": "{{writer}} & {{helper}}",
+  "anonymous": "Anonyme",
+  "config": {
+    "players": {
+      "name": "Joueurs max",
+      "text": "Joueurs",
+      "info": "Nombre maximum de joueurs dans la partie"
+    },
+    "numRecipes": {
+      "name": "Nombre de recettes",
+      "text": "Recettes",
+      "info": "Le nombre de recettes écrites en même temps"
+    },
+    "numSteps": {
+      "name": "Étapes par recette",
+      "text": "Étapes",
+      "info": "Le nombre d'étapes et d'ingrédients dans chaque recette."
+    },
+    "anonymous": {
+      "name": "Masquer les auteurs",
+      "text": "Anonyme",
+      "info": "Affiche ou non les noms des auteurs à la fin."
+    }
+  }
+}

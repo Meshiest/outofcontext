@@ -1,0 +1,16 @@
+{
+  "title": "Infos des jeux",
+  "subtitle": "Apprends les ficelles",
+  "redirect": "Redirection",
+  "home": "Accueil",
+  "sections": {
+    "moreInfo": "Plus d'infos",
+    "howTo": "Comment jouer",
+    "configurations": "Paramètres"
+  },
+  "labels": {
+    "playTime": "Durée de partie",
+    "players": "Joueurs",
+    "difficulty": "Difficulté"
+  }
+}

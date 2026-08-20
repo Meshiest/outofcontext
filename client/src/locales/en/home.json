@@ -1,0 +1,26 @@
+{
+  "hero": {
+    "title": "Play party games with your friends"
+  },
+  "subtitle": "Party games fueled by your insanity!",
+  "sections": {
+    "lobby": "Lobby",
+    "info": "Info"
+  },
+  "buttons": {
+    "create": "Create Lobby",
+    "join": "Join Lobby",
+    "gameInfo": "Game Info",
+    "readCode": "Read the Code",
+    "requestGame": "Request a Game"
+  },
+  "join": {
+    "title": "Join Lobby",
+    "close": "Close",
+    "codeLabel": "Lobby Code",
+    "placeholder": "c0d3",
+    "submit": "Join",
+    "cancel": "Cancel",
+    "invalid": "Invalid lobby code"
+  }
+}

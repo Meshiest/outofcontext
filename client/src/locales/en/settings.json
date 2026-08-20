@@ -1,0 +1,31 @@
+{
+  "title": "User Preferences",
+  "language": {
+    "label": "Language"
+  },
+  "darkMode": {
+    "label": "Dark mode",
+    "toggle": "Enabled"
+  },
+  "turnSound": {
+    "label": "Turn notification sound",
+    "placeholder": "Select a sound",
+    "preview": "Play sound preview",
+    "none": "None",
+    "options": {
+      "bit": "Bit",
+      "chime": "Chime",
+      "chord": "Chord",
+      "ding": "Ding",
+      "retro": "Retro"
+    }
+  },
+  "soundVolume": {
+    "label": "Notification volume",
+    "muted": "Muted"
+  },
+  "streamerMode": {
+    "label": "Hide lobby code",
+    "toggle": "Hidden"
+  }
+}

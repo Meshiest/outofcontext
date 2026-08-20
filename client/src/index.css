@@ -1,0 +1,744 @@
+/* client/src/index.css
+ * Out Of Context - global styles + design tokens. Tailwind v4, CSS-first.
+ * Theme "OOC THEME v1": paper neutrals, an editorial serif, riso inks, and one flat ink
+ * gesture - the redaction bar - reused for every hidden thing. Controls are "pressed
+ * smooth": soft vertical gradients, keycap presses, debossed Font Awesome icons. The
+ * redaction bar is the ONE element that stays dead flat. Whiteout in dark mode.
+ * Fonts load via <link> in index.html and .storybook/preview-head.html
+ * (Newsreader / Hanken Grotesk / Space Mono). Icons: Font Awesome (webfont).
+ */
+@import "tailwindcss";
+
+/* Class-based dark mode. Opt into html.dark instead of prefers-color-scheme. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@keyframes ooc-dots {
+  0%, 80%, 100% { opacity: 0.25; }
+  40% { opacity: 1; }
+}
+
+/* A reaction someone just left, drifting up off its button. */
+@keyframes ooc-reaction-float {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.6); }
+  15% { opacity: 1; transform: translate(-50%, -8px) scale(1.15); }
+  100% { opacity: 0; transform: translate(-50%, -56px) scale(1); }
+}
+
+/* Semantic tokens that flip between light and dark (referenced by @theme inline below). */
+:root {
+  color-scheme: light;
+  --bg: #e9e5dc;          --surface: #f6f3ec;      --surface-2: #dfdad0;
+  --border: #14120f;      --border-hair: #c9c2b4;  --border-soft: rgba(20, 18, 15, 0.35);
+  --text: #14120f;        --text-muted: #5c574c;   --text-subtle: #8a8377;
+  --primary: #2438e0;     --primary-hover: #1a2ab8;
+  --positive: #0e8a5f;    --negative: #d8321e;     --warning: #e39a05;   --info: #2b7fd4;
+  --highlight: #fff0b8;   /* repaired words + highlighted table rows */
+  --ink: #14120f;         --ink-on: #f6f3ec;       /* redaction fill + revealed content */
+  --pink: #d4308c;        /* reaction accent (brain) - no other token carries a pink */
+
+  /* Pressed-smooth raised surfaces (cards, neutral buttons, keycaps, table). */
+  --raised-top: #fbf9f4;        --raised-bot: #f0ede4;
+  --raised-top-hover: #ffffff;  --raised-bot-hover: #f4f1e9;
+
+  /* Form fields: flat inner-shadowed wells. */
+  --field-bg: #fbf9f4;
+  --field-shadow: inset 0 1px 3px rgba(20, 18, 15, 0.10);
+
+  /* Table header gradient + row rules. */
+  --thead-top: #f2eee4;   --thead-bot: #e5e0d3;
+  --row-rule: rgba(20, 18, 15, 0.12);
+  --row-rule-strong: rgba(20, 18, 15, 0.18);
+  --row-inset: rgba(255, 255, 255, 0.6);
+  --track-shadow: inset 0 1px 2px rgba(20, 18, 15, 0.15);
+
+  /* Elevation. --el-sm/md/lg carry a white inset top edge in light mode. */
+  --el-sm: 0 1px 3px rgba(20, 18, 15, 0.14), inset 0 1px 0 #ffffff;
+  --el-md: 0 2px 6px rgba(20, 18, 15, 0.18), inset 0 1px 0 #ffffff;
+  --el-lg: 0 12px 32px rgba(20, 18, 15, 0.35), inset 0 1px 0 #ffffff;
+  --el-panel: 8px 8px 0 rgba(20, 18, 15, 0.16);   /* riso zine-press hard offset shadow */
+  --scrim: rgba(20, 18, 15, 0.35);
+
+  /* Scrollbar: a track darker than any surface it crosses, under a lighter raised thumb. */
+  --sb-track: #cbc4b4;
+  --sb-thumb-top: #ffffff;
+  --sb-thumb-bot: #efece3;
+  --sb-thumb-edge: rgba(20, 18, 15, 0.30);
+  --focus: rgba(36, 56, 224, 0.55);               /* soft translucent primary for focus rings */
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: #14131a;          --surface: #1d1c25;      --surface-2: #262532;
+  --border: #3a3848;      --border-hair: #ede9e1;  --border-soft: rgba(237, 233, 225, 0.18);
+  --text: #ede9e1;        --text-muted: #a19cae;   --text-subtle: #7a7589;
+  --primary: #7c8bff;     --primary-hover: #9aa5ff;
+  --positive: #3fd39a;    --negative: #ff6b57;     --warning: #ffc24d;   --info: #6fb7ff;
+  --highlight: #4a3f16;
+  --ink: #ede9e1;         --ink-on: #14131a;       /* whiteout, not blackout */
+  --pink: #ff7ac6;
+
+  --raised-top: #23222e;        --raised-bot: #1d1c25;
+  --raised-top-hover: #2a2937;  --raised-bot-hover: #211f2b;
+
+  --field-bg: #1d1c25;
+  --field-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.40);
+
+  --thead-top: #262532;   --thead-bot: #1f1e29;
+  --row-rule: rgba(237, 233, 225, 0.10);
+  --row-rule-strong: rgba(237, 233, 225, 0.16);
+  --row-inset: rgba(255, 255, 255, 0.05);
+  --track-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.40);
+
+  --el-sm: 0 1px 3px rgba(0, 0, 0, 0.40), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --el-md: 0 2px 6px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --el-lg: 0 12px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --el-panel: 8px 8px 0 rgba(0, 0, 0, 0.45);
+  --scrim: rgba(0, 0, 0, 0.55);
+
+  --sb-track: #0e0d13;
+  --sb-thumb-top: #4e4c64;
+  --sb-thumb-bot: #3a3848;
+  --sb-thumb-edge: rgba(0, 0, 0, 0.55);
+  --focus: rgba(124, 139, 255, 0.6);
+}
+
+@theme inline {
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Newsreader", ui-serif, Georgia, serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-hair: var(--border-hair);
+  --color-border-soft: var(--border-soft);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-subtle: var(--text-subtle);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-highlight: var(--highlight);
+  --color-ink: var(--ink);
+  --color-ink-on: var(--ink-on);
+  --color-pink: var(--pink);
+  --color-scrim: var(--scrim);
+  --color-divider: var(--row-rule);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-full: 999px;
+
+  --shadow-sm: var(--el-sm);
+  --shadow-md: var(--el-md);
+  --shadow-lg: var(--el-lg);
+  --shadow-panel: var(--el-panel);
+}
+
+@layer base {
+  html { font-family: var(--font-sans); }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; margin: 0; }
+  h1 { font-size: 48px; line-height: 1.0; letter-spacing: -0.02em; }
+  h2 { font-size: 38px; line-height: 1.05; letter-spacing: -0.01em; }
+  h3 { font-size: 30px; line-height: 1.1; }
+  h4 { font-size: 24px; line-height: 1.2; }
+  h5 { font-family: var(--font-sans); font-weight: 700; font-size: 20px; line-height: 1.3; margin: 0; }
+  h6 { font-family: var(--font-sans); font-weight: 700; font-size: 16px; line-height: 1.4; letter-spacing: 0.02em; margin: 0; }
+
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  /* ---- Scrollbars ------------------------------------------------------------
+   * A recessed dark track under a lighter keycap thumb.
+   *
+   * The two styling systems are MUTUALLY EXCLUSIVE, so they must not both apply: since Chrome 121
+   * shipped the standard `scrollbar-color`/`scrollbar-width`, setting either one makes Blink use the
+   * standard scrollbar renderer and ignore every `::-webkit-scrollbar-*` rule. Declaring both
+   * globally therefore threw away the styling below in Chrome and Edge. The standard properties are
+   * fenced behind a feature query so they only reach engines with no scrollbar pseudo-elements
+   * (Firefox), where they are the only option available. */
+  @supports not selector(::-webkit-scrollbar) {
+    * { scrollbar-color: var(--sb-thumb-bot) var(--sb-track); scrollbar-width: thin; }
+  }
+
+  /* cursor is set on the parts explicitly: without it the bar inherits the cursor of the scrolling
+   * element, so scrolling a list of clickable cards showed a pointer over the bar. */
+  ::-webkit-scrollbar { width: 12px; height: 12px; cursor: default; }
+  ::-webkit-scrollbar-track {
+    background: var(--sb-track);
+    border-radius: var(--radius-full);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
+    cursor: default;
+  }
+  ::-webkit-scrollbar-thumb {
+    /* min-size keeps the thumb grabbable in a long list, where it would otherwise shrink to a sliver. */
+    min-height: 32px;
+    min-width: 32px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--sb-thumb-edge);
+    background: linear-gradient(180deg, var(--sb-thumb-top), var(--sb-thumb-bot));
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    cursor: default;
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+  ::-webkit-scrollbar-thumb:hover { filter: brightness(1.06); }
+  ::-webkit-scrollbar-thumb:active { filter: brightness(0.96); }
+  /* The default stepper arrows do not fit the language and cannot be skinned convincingly. */
+  ::-webkit-scrollbar-button { display: none; }
+  ::-webkit-scrollbar-corner { background: transparent; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Reading copy - editorial serif at reading size. */
+  .story-body { font-family: var(--font-display); font-size: 21px; line-height: 1.55; }
+  /* Mono eyebrow/caption - codes, dossier labels, data. */
+  .caption {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  /* Uppercase field label (input / select / slider). Body font at caption size, not mono. */
+  .field-label {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ---- Surfaces -------------------------------------------------------------- */
+  /* Pressed-smooth raised surface: soft vertical gradient, hairline ink outline,
+   * ambient shadow with a white top inset. The skin for cards and inner panels. */
+  .surface-raised {
+    background: linear-gradient(180deg, var(--raised-top), var(--raised-bot));
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--el-md);
+  }
+  .surface-lift { transition: transform 0.1s ease-out, box-shadow 0.1s ease-out; }
+  .surface-lift:where(:hover) {
+    background: linear-gradient(180deg, var(--raised-top-hover), var(--raised-bot-hover));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(20, 18, 15, 0.2);
+  }
+  .surface-lift:where(:active) { box-shadow: var(--el-sm); }
+
+  /* Outer page panel: flat paper, thick ink border, hard riso offset shadow. */
+  .panel {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--el-panel);
+  }
+
+  /* Keycap - a single lobby-code character cell. Sans (Hanken) bold with a touch of tracking reads
+   * like a physical keyboard key; the fixed cell width handles alignment, so it need not be mono. */
+  .keycap {
+    display: grid;
+    place-items: center;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    background: linear-gradient(180deg, var(--raised-top), var(--raised-bot));
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    box-shadow: 0 1px 2px rgba(20, 18, 15, 0.18), inset 0 1px 0 #ffffff;
+  }
+  .dark .keycap { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+
+  /* Engraved icon: the glyph itself reads as pressed into the surface (dark above, light below),
+   * with no container box. Used for the Message icon. */
+  .icon-sunken { text-shadow: 0 -1px 1px rgba(20, 18, 15, 0.28), 0 1px 0 rgba(255, 255, 255, 0.75); }
+  .dark .icon-sunken { text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5), 0 -1px 0 rgba(255, 255, 255, 0.1); }
+
+  /* A card footer that reads as recessed (inset top shadow). */
+  .card-footer { box-shadow: var(--field-shadow); }
+
+  /* ---- Form fields ----------------------------------------------------------- */
+  /* Flat well: field-bg fill, 35%-ink outline, inner top shadow. Focus keeps the
+   * 3px primary ring (global :focus-visible) and pulls the border to primary. */
+  .field {
+    background: var(--field-bg);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    box-shadow: var(--field-shadow);
+    color: var(--text);
+  }
+  .field::placeholder { color: var(--text-subtle); }
+  .field:where(:focus-visible, :focus) { border-color: var(--primary); }
+  .field:where(:disabled) { opacity: 0.6; cursor: not-allowed; }
+
+  /* Checkbox indicator. Unchecked = a field well; checked = the primary gradient. */
+  .check-box {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    flex: none;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-soft);
+    background: var(--field-bg);
+    box-shadow: var(--field-shadow);
+    color: transparent;
+    transition: background 0.1s ease-out, border-color 0.1s ease-out;
+  }
+  .check-box--on {
+    border-color: #16249a;
+    background: linear-gradient(180deg, #3d52f2, #2438e0);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    color: #f6f3ec;
+  }
+
+  /* ---- Track (progress + slider fill) ---------------------------------------- */
+  .track {
+    background: var(--surface-2);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-full);
+    box-shadow: var(--track-shadow);
+    overflow: hidden;
+  }
+  .track-fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    background: linear-gradient(180deg, #3d52f2, #2438e0);
+  }
+
+  /* Native range styled as a pressed-smooth track with a keycap thumb. The filled
+   * portion is a gradient driven by the --val custom property (set by the component). */
+  .slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 12px;
+    border-radius: var(--radius-full);
+    box-shadow: var(--track-shadow), inset 0 0 0 1px var(--border-soft);
+    cursor: pointer;
+    background: linear-gradient(
+      to right,
+      #2438e0 0%,
+      #2438e0 var(--val, 0%),
+      var(--surface-2) var(--val, 0%),
+      var(--surface-2) 100%
+    );
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    margin-top: -6px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(180deg, var(--raised-top), var(--raised-bot));
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 1px 2px rgba(20, 18, 15, 0.25), inset 0 1px 0 #ffffff;
+    cursor: grab;
+  }
+  .slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(180deg, var(--raised-top), var(--raised-bot));
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 1px 2px rgba(20, 18, 15, 0.25), inset 0 1px 0 #ffffff;
+    cursor: grab;
+  }
+  /* Kill the native track so only the input's own gradient + border show (removes the stray
+   * dark edge some browsers paint on the unfilled end of the bar). */
+  .slider::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 100%;
+    background: transparent;
+    border: none;
+  }
+  .slider::-moz-range-track { height: 100%; background: transparent; border: none; }
+  .slider::-moz-range-progress { background: transparent; }
+  /* Softer top highlight on the thumb in dark mode (a pure-white inset reads too bright). */
+  .dark .slider::-webkit-slider-thumb { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
+  .dark .slider::-moz-range-thumb { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
+
+  /* ---- Drawn scrollbar (Scrollable) ------------------------------------------ */
+  /* The viewport hides its native bar and the track/thumb below are drawn over the content. They
+   * take pointer events so the thumb can be dragged and the track clicked, exactly like the bar
+   * they replace. `touch-action: none` stops a drag on the thumb from scrolling the page instead. */
+  .ooc-scroll-viewport { scrollbar-width: none; }
+  .ooc-scroll-viewport::-webkit-scrollbar { display: none; }
+
+  .ooc-scroll-track {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+    width: 10px;
+    touch-action: none;
+    cursor: default;
+    border-radius: var(--radius-full);
+    background: var(--sb-track);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
+  }
+  .ooc-scroll-thumb {
+    width: 100%;
+    touch-action: none;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--sb-thumb-edge);
+    background: linear-gradient(180deg, var(--sb-thumb-top), var(--sb-thumb-bot));
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  }
+  .ooc-scroll-thumb:hover { filter: brightness(1.06); }
+  .ooc-scroll-thumb:active { filter: brightness(0.96); }
+  .dark .ooc-scroll-thumb {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  /* ---- Stroke-width picker --------------------------------------------------- */
+  /* A sunken well (same treatment as a form field) holding size-graded dots. The active dot wears
+   * the primary BUTTON skin - identical gradient, outline, and white inset top edge - so the chosen
+   * stop reads as a pressed control rather than a plain coloured circle. */
+  .stroke-well {
+    background: var(--field-bg);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    box-shadow: var(--field-shadow);
+  }
+  /* No transition at all: the active state swaps a flat colour for a gradient and a transparent
+   * border for a solid one. Neither pair interpolates cleanly, so any transition here cross-fades
+   * through a blank state - seen as the just-deselected dot flashing its white/border colour. The
+   * swap is instant instead. */
+  .stroke-dot {
+    border: 1px solid transparent;
+    background: color-mix(in srgb, var(--text) 30%, transparent);
+  }
+  .stroke-dot--active {
+    border-color: #16249a;
+    background: linear-gradient(180deg, #3d52f2 0%, #2438e0 55%, #1e2fc4 100%);
+    box-shadow: 0 1px 3px rgba(36, 56, 224, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+
+  /* ---- Table ----------------------------------------------------------------- */
+  .ooc-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--raised-top), var(--raised-bot));
+    box-shadow: var(--el-md);
+    font-size: 15px;
+    color: var(--text);
+  }
+  .ooc-table thead tr {
+    background: linear-gradient(180deg, var(--thead-top), var(--thead-bot));
+    color: var(--text-muted);
+  }
+  .ooc-table th {
+    padding: 9px 12px;
+    text-align: left;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  /* Give the header the same pressed-smooth pop as a button: white inset top edge + a rule. */
+  .ooc-table thead th {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .dark .ooc-table thead th { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06); }
+  .ooc-table td {
+    padding: 10px 12px;
+    border-top: 1px solid var(--row-rule);
+    box-shadow: inset 0 1px 0 var(--row-inset);
+    /* Long player names wrap instead of widening the table (which would push the page sideways). */
+    overflow-wrap: anywhere;
+  }
+  .ooc-table tbody tr:first-child td { border-top: 0; box-shadow: none; }
+  /* Round the corner CELLS, not just the table. `overflow: hidden` on a <table> does not reliably
+   * clip cell backgrounds (row tints, header gradient), which leaves square corners peeking out
+   * from behind the table's rounded corners. */
+  .ooc-table thead tr:first-child th:first-child { border-top-left-radius: var(--radius-md); }
+  .ooc-table thead tr:first-child th:last-child { border-top-right-radius: var(--radius-md); }
+  .ooc-table tbody tr:last-child td:first-child { border-bottom-left-radius: var(--radius-md); }
+  .ooc-table tbody tr:last-child td:last-child { border-bottom-right-radius: var(--radius-md); }
+  .ooc-table tr.row-marked td {
+    background: var(--highlight);
+    border-top: 1px solid var(--row-rule-strong);
+    border-bottom: 1px solid var(--row-rule-strong);
+    font-weight: 700;
+    box-shadow: none;
+  }
+
+  /* ---- Accordion ------------------------------------------------------------- */
+  .accordion {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, var(--raised-top), var(--raised-bot));
+    box-shadow: var(--el-md);
+    overflow: hidden;
+  }
+  .accordion-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 16px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+  }
+  .accordion-glyph { font-family: var(--font-mono); font-size: 18px; line-height: 1; color: var(--text-muted); }
+  .accordion-body {
+    padding: 14px 16px;
+    border-top: 1px solid var(--row-rule-strong);
+    box-shadow: inset 0 2px 2px -1px rgba(20, 18, 15, 0.1), inset 0 -1px 0 rgba(255, 255, 255, 0.7);
+    font-family: var(--font-display);
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--text);
+  }
+  .dark .accordion-body { box-shadow: inset 0 2px 2px -1px rgba(0, 0, 0, 0.3); }
+
+  /* Accordion header hover: RAISE the section (lighter pressed-smooth gradient + ambient shadow,
+   * lifted above its neighbours) instead of a flat background highlight. */
+  .accordion-raise {
+    transition: background 0.1s ease-out, box-shadow 0.1s ease-out;
+  }
+  .accordion-raise:where(:hover) {
+    background: linear-gradient(180deg, var(--raised-top-hover), var(--raised-bot-hover));
+    box-shadow: var(--el-sm);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ---- Dropdown (Select listbox) --------------------------------------------- */
+  /* Options carry pressed-smooth depth: the active option (hover or keyboard) raises
+   * as a primary chip - the same blue gradient + white top inset as the primary button;
+   * the committed option sits in a recessed well (field inset shadow). All color lives
+   * here in the components layer so Tailwind's utilities layer can't override it. */
+  .dropdown-option {
+    color: var(--text);
+    transition: background 0.1s ease-out, box-shadow 0.1s ease-out, color 0.1s ease-out;
+  }
+  .dropdown-option--selected {
+    background: var(--surface-2);
+    box-shadow: var(--field-shadow);
+  }
+  .dropdown-option--active {
+    color: #f6f3ec;
+    background: linear-gradient(180deg, #3d52f2 0%, #2438e0 55%, #1e2fc4 100%);
+    box-shadow: 0 1px 3px rgba(36, 56, 224, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+
+  /* ---- Buttons --------------------------------------------------------------- */
+  /* Pressed-smooth skins. Colored fills keep the SAME hue in both themes; neutral/
+   * ghost flip via tokens. Layout/size/type come from utilities on the element.
+   * Press animates 1px down into an inset shadow. Icons (.btn-ico) are a lighter
+   * debossed tint of the fill. */
+  .btn-skin {
+    border-radius: var(--radius-md);
+    box-shadow: var(--el-sm);
+    cursor: pointer;
+    /* No transform in the transition: the press must snap 1px, not slide (which made the
+     * label look like it drifted). The rest carry the enabled <-> disabled fade. */
+    transition: filter 0.15s ease-out, background 0.15s ease-out, box-shadow 0.15s ease-out,
+      opacity 0.15s ease-out, color 0.15s ease-out, border-color 0.15s ease-out;
+  }
+  /* Disabled sits in a shallow well: the soft inner shadow of a form field, not the hard inset of
+   * the pressed state - it should read as recessed and out of play, not as mid-click.
+   *
+   * Written as `:disabled`, NOT `:where(:disabled)`: `:where()` contributes no specificity, so the
+   * rule tied with `.btn-primary` / `.btn-positive` / etc and lost on source order, leaving every
+   * coloured button fully saturated while disabled. */
+  /* Greyed via `filter`/`opacity` rather than by swapping in a flat fill: a gradient does not
+   * interpolate with a solid colour, so replacing the background made the enabled <-> disabled
+   * change snap instantly. Desaturating the button's own skin animates, and keeps each variant
+   * recognisable while it is out of play. */
+  .btn-skin:disabled {
+    cursor: not-allowed;
+    filter: grayscale(0.9);
+    opacity: 0.7;
+    box-shadow: var(--field-shadow);
+    transform: none;
+  }
+  .btn-skin:disabled .btn-ico { color: var(--text-subtle); text-shadow: none; }
+
+  .btn-ico { text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.25); }
+
+  /* Press: sink the label + icon 1px into the button, but do NOT move the button itself.
+   * Use relative positioning, not transform: a transform composites the Font Awesome glyph
+   * onto its own layer and re-rasterizes it off the pixel grid, which reads as a horizontal
+   * shimmer. `top` shifts it in-flow, purely vertical, and keeps the glyph pixel-aligned. */
+  .btn-skin:where(:active:not(:disabled)) > * { position: relative; top: 1px; }
+
+  /* In-button loading indicator: three pulsing dots (replaces a spinning icon). */
+  .btn-dots { display: inline-flex; align-items: center; gap: 0.28em; }
+  .btn-dots > span {
+    width: 0.34em;
+    height: 0.34em;
+    border-radius: 999px;
+    background: currentColor;
+    animation: ooc-dots 0.9s ease-in-out infinite;
+  }
+  .btn-dots > span:nth-child(2) { animation-delay: 0.15s; }
+  .btn-dots > span:nth-child(3) { animation-delay: 0.3s; }
+
+  .btn-primary {
+    color: #f6f3ec;
+    border-color: #16249a;
+    background: linear-gradient(180deg, #3d52f2 0%, #2438e0 55%, #1e2fc4 100%);
+    box-shadow: 0 2px 6px rgba(36, 56, 224, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+  .btn-primary:where(:hover:not(:disabled)) { background: linear-gradient(180deg, #4b5ff5 0%, #2f44ea 55%, #2436ce 100%); }
+  .btn-primary:where(:active:not(:disabled)) { box-shadow: 0 1px 2px rgba(36, 56, 224, 0.35), inset 0 2px 4px rgba(0, 0, 0, 0.25); }
+  .btn-primary .btn-ico { color: #b3bcfa; }
+
+  .btn-positive {
+    color: #f6f3ec;
+    border-color: #075e40;
+    background: linear-gradient(180deg, #1aa575 0%, #0e8a5f 60%, #0b7550 100%);
+    box-shadow: 0 2px 6px rgba(14, 138, 95, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+  .btn-positive:where(:hover:not(:disabled)) { filter: brightness(1.06); }
+  .btn-positive:where(:active:not(:disabled)) { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25); }
+  .btn-positive .btn-ico { color: #8ce0bd; }
+
+  .btn-negative {
+    color: #f6f3ec;
+    border-color: #9c2113;
+    background: linear-gradient(180deg, #e8503c 0%, #d8321e 60%, #b92818 100%);
+    box-shadow: 0 2px 6px rgba(216, 50, 30, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+  .btn-negative:where(:hover:not(:disabled)) { filter: brightness(1.06); }
+  .btn-negative:where(:active:not(:disabled)) { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25); }
+  .btn-negative .btn-ico { color: #f9b3a7; }
+
+  .btn-warn {
+    color: #14120f;
+    border-color: #b57c04;
+    background: linear-gradient(180deg, #ffbf3a 0%, #e39a05 60%, #c98604 100%);
+    box-shadow: 0 2px 6px rgba(227, 154, 5, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+  .btn-warn:where(:hover:not(:disabled)) { filter: brightness(1.05); }
+  .btn-warn:where(:active:not(:disabled)) { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25); }
+  .btn-warn .btn-ico { color: #14120f; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 -1px 0 rgba(20, 18, 15, 0.2); }
+
+  /* Pink and slate exist for the reactions (brain, skull), which need filled skins in hues the
+   * semantic set does not cover. Same construction as the others so a pressed reaction is visibly
+   * the same KIND of control as a primary button, not a special case. */
+  .btn-pink {
+    color: #f6f3ec;
+    border-color: #9b2168;
+    background: linear-gradient(180deg, #e8579d 0%, #d6317f 60%, #b82a6d 100%);
+    box-shadow: 0 2px 6px rgba(214, 49, 127, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+  .btn-pink:where(:hover:not(:disabled)) { filter: brightness(1.06); }
+  .btn-pink:where(:active:not(:disabled)) { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25); }
+  .btn-pink .btn-ico { color: #f7b0d5; }
+
+  .btn-slate {
+    color: #f6f3ec;
+    border-color: #3f4451;
+    background: linear-gradient(180deg, #737b8c 0%, #5c6373 60%, #4b515e 100%);
+    box-shadow: 0 2px 6px rgba(92, 99, 115, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  }
+  .btn-slate:where(:hover:not(:disabled)) { filter: brightness(1.06); }
+  .btn-slate:where(:active:not(:disabled)) { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25); }
+  .btn-slate .btn-ico { color: #c8cdd8; }
+
+  .btn-neutral {
+    color: var(--text);
+    border-color: var(--border-soft);
+    background: linear-gradient(180deg, var(--raised-top), var(--raised-bot));
+    box-shadow: var(--el-sm);
+  }
+  .btn-neutral:where(:hover:not(:disabled)) { background: linear-gradient(180deg, var(--raised-top-hover), var(--raised-bot-hover)); }
+  .btn-neutral:where(:active:not(:disabled)) { box-shadow: inset 0 2px 4px rgba(20, 18, 15, 0.18); }
+  .btn-neutral .btn-ico { color: #a9a294; text-shadow: 0 1px 0 #ffffff, 0 -1px 0 rgba(20, 18, 15, 0.25); }
+  .dark .btn-neutral .btn-ico { color: #6b6884; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08); }
+
+  .btn-ghost { color: var(--text); border-color: transparent; background: transparent; box-shadow: none; }
+  .btn-ghost:where(:hover:not(:disabled)) { background: color-mix(in srgb, var(--text) 8%, transparent); }
+  .btn-ghost .btn-ico { color: inherit; text-shadow: none; }
+
+
+  /* ---- Reactions ------------------------------------------------------------- */
+  /* Floats up from the reaction bar when anyone in the lobby reacts. Purely decorative and pointer
+   * transparent, so it never blocks the buttons it rises from. */
+  .ooc-reaction-float {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    pointer-events: none;
+    animation: ooc-reaction-float 1.4s ease-out forwards;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ooc-reaction-float { animation-duration: 0.001ms; }
+  }
+
+  /* ---- Signature: the redaction bar ------------------------------------------ */
+  .redacted {
+    background-color: var(--ink);
+    color: var(--ink);
+    border-radius: 3px;
+    padding: 0 0.12em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    transition: background-color 0.14s ease-out, color 0.14s ease-out, box-shadow 0.14s ease-out;
+  }
+  /* A redaction has to survive being selected. Dragging a cursor across one paints the selection
+   * highlight underneath the glyphs, which overrides the matched text/background colour hiding them
+   * and reads the censored words straight out. Revealed redactions are excluded: once the game has
+   * shown the text, selecting and copying it is fine. */
+  .redacted:not([data-revealed="true"]) {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .redacted:where([role="button"], [tabindex]) { cursor: pointer; }
+  /* Only a redaction you can actually press reacts to the pointer. A results line is a thing to
+   * read, not a control, and colouring it on hover suggested it did something. */
+  .redacted:where([role="button"], [tabindex]):where(:hover, :focus-visible) {
+    background-color: var(--primary);
+    color: var(--primary);
+  }
+  /* Revealed: the bar becomes a rule under the words it used to cover. The padding drops that rule
+   * clear of the descenders instead of striking through them - an inline box's padding does not
+   * grow the line box, so the line it sits on has to carry the extra leading itself (RedactedLine),
+   * or the rule lands in the row below. */
+  .redacted[data-revealed="true"] {
+    background-color: transparent;
+    color: inherit;
+    border-radius: 0;
+    padding-bottom: 0.2em;
+    box-shadow: inset 0 -3px 0 var(--ink);
+  }
+}

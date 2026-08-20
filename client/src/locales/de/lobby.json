@@ -1,0 +1,96 @@
+{
+  "join": {
+    "button": "Lobby beitreten"
+  },
+  "invalidLobby": {
+    "title": "Ungültige Lobby",
+    "subtitle": "Diese Lobby gibt es nicht"
+  },
+  "loading": "Wird geladen",
+  "sections": {
+    "lobby": "Lobby",
+    "redirect": "Weiterleitung",
+    "gameInfo": "Spielinfos",
+    "lobbyCode": "Lobby-Code",
+    "gameSettings": "Spieleinstellungen",
+    "gameSetup": "Spielvorbereitung"
+  },
+  "buttons": {
+    "create": "Erstellen",
+    "join": "Beitreten",
+    "home": "Startseite",
+    "bugReport": "Bug melden",
+    "copyCode": "Code kopieren",
+    "shareLink": "Link teilen",
+    "startGame": "Spiel starten"
+  },
+  "badges": {
+    "lobbyCode": "Lobby-Code",
+    "admin": "Du bist der Admin"
+  },
+  "nameEntry": {
+    "title": "Wie heißt du?",
+    "subtitle": "Denk dir was Kreatives aus",
+    "label": "Name",
+    "placeholder": "Jonas",
+    "submit": "Beitreten",
+    "leave": "Verlassen",
+    "error": "Der Name ist schon vergeben"
+  },
+  "noGame": {
+    "title": "Kein Spiel ausgewählt",
+    "subtitle": "Warten auf die Spielauswahl"
+  },
+  "gameSelect": {
+    "label": "Spiel",
+    "placeholder": "Spiel auswählen"
+  },
+  "config": {
+    "enabled": "Aktiviert",
+    "disabled": "Deaktiviert",
+    "yes": "Ja",
+    "no": "Nein",
+    "unknown": "???",
+    "maximum": "Maximum: {{max}}",
+    "minimum": "Minimum: {{min}}",
+    "numPlayers": "Aktuelle Spielerzahl verwenden"
+  },
+  "phonetic": {
+    "a": "Anton",
+    "b": "Berta",
+    "c": "Cäsar",
+    "d": "Dora",
+    "e": "Emil",
+    "f": "Friedrich",
+    "g": "Gustav",
+    "h": "Heinrich",
+    "i": "Ida",
+    "j": "Julius",
+    "k": "Kaufmann",
+    "l": "Ludwig",
+    "m": "Martha",
+    "n": "Nordpol",
+    "o": "Otto",
+    "p": "Paula",
+    "q": "Quelle",
+    "r": "Richard",
+    "s": "Samuel",
+    "t": "Theodor",
+    "u": "Ulrich",
+    "v": "Viktor",
+    "w": "Wilhelm",
+    "x": "Xanthippe",
+    "y": "Ypsilon",
+    "z": "Zacharias",
+    "0": "null",
+    "1": "eins",
+    "2": "zwei",
+    "3": "drei",
+    "4": "vier",
+    "5": "fünf",
+    "6": "sechs",
+    "7": "sieben",
+    "8": "acht",
+    "9": "neun"
+  }
+}

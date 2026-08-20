@@ -1,0 +1,59 @@
+{
+  "app": {
+    "wordmark": "Fuera de <ink>Contexto</ink>",
+    "pageTitle": "Fuera de Contexto!",
+    "tagline": "Juegos de fiesta con tus amigos"
+  },
+  "language": {
+    "native": "Español"
+  },
+  "connection": {
+    "lost": "Se perdió la conexión con el servidor",
+    "reconnect": "Reconectar",
+    "reconnecting": "Reconectando...",
+    "kicked": "Te desconectamos por inactividad. Recarga la página para volver a entrar.",
+    "refresh": "Recargar"
+  },
+  "routes": {
+    "home": "Inicio",
+    "lobby": "Sala",
+    "games": "Juegos",
+    "notFound": "Página no encontrada"
+  },
+  "timer": {
+    "expired": "¡Se acabó el tiempo!",
+    "remaining": "restante",
+    "second_one": "segundo",
+    "second_other": "segundos"
+  },
+  "playerList": {
+    "heading": "Miembros de la sala",
+    "players": "Jugadores",
+    "spectators": "Espectadores",
+    "noPlayers": "No hay jugadores",
+    "noSpectators": "No hay espectadores",
+    "pending": "Pendiente",
+    "spectate": "Observar",
+    "joinPlayers": "Unirse a los jugadores",
+    "leave": "Salir",
+    "join": "Unirse",
+    "remove": "Expulsar",
+    "change": "Cambiar",
+    "endGame": "Terminar la partida",
+    "confirmEndGame": "¿Seguro?",
+    "emotesToggle": "Mostrar u ocultar emotes",
+    "grantToggle": "Hacer anfitrión",
+    "removeToggle": "Expulsar jugadores",
+    "iconAdmin": "Anfitrión",
+    "iconSelf": "Tú",
+    "iconDisconnected": "Desconectado"
+  },
+  "doodle": {
+    "undo": "Deshacer",
+    "done": "Listo",
+    "color": "Color",
+    "strokeWidth": "Grosor del trazo",
+    "author": "Dibujado por {{name}}",
+    "redo": "Rehacer"
+  }
+}

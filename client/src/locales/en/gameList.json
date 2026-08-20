@@ -1,0 +1,16 @@
+{
+  "title": "Game Info",
+  "subtitle": "Learn the ropes",
+  "redirect": "Redirect",
+  "home": "Home",
+  "sections": {
+    "moreInfo": "More Info",
+    "howTo": "How to Play",
+    "configurations": "Configurations"
+  },
+  "labels": {
+    "playTime": "Play time",
+    "players": "Players",
+    "difficulty": "Difficulty"
+  }
+}

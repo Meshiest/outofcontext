@@ -1,0 +1,116 @@
+{
+  "title": "Caviardé",
+  "subtitle": "█████ ███████",
+  "difficulty": "Complexe",
+  "description": "Écrivez, trafiquez et réparez des histoires à plusieurs, une phrase à la fois.",
+  "more": "Caviardé prolonge Racontars. Les joueurs contribuent toujours à une histoire, mais ils peuvent désormais s'attaquer aux phrases écrites par les autres. Mieux vaut y jouer après avoir pris le pli des histoires sans contexte, écrites phrase par phrase.",
+  "howTo": [
+    "Chaque joueur reçoit une phrase d'une histoire",
+    "Le joueur suivant trafique l'histoire : il coupe des mots à la fin ou en censure en plein milieu.",
+    "Un autre joueur répare les dégâts en réinventant ce qui a disparu",
+    "Les joueurs continuent ensuite l'histoire, une phrase à la fois",
+    "À la fin, tout le monde savoure les histoires délirantes écrites ensemble"
+  ],
+  "playTime": "15-20 min",
+  "writeFirstLine": "Écris la première phrase",
+  "continueStory": "Continue l'histoire",
+  "tamperHeader": "Trafique l'histoire",
+  "decensorHeader": "Décensure le texte",
+  "repairHeader": "Répare le texte",
+  "storyGoesLabel": "L'histoire raconte...",
+  "wordsHint_one": "{{count}} mot",
+  "wordsHint_other": "{{count}} mots",
+  "sign": "Signer",
+  "repair": "Réparer",
+  "modeTruncate": "Tronquer",
+  "modeCensor": "Censurer",
+  "censorStory": "Censurer l'histoire",
+  "truncateStory": "Tronquer l'histoire",
+  "redacting": "{{used}}/{{max}} mots caviardés",
+  "wordFieldLabel": "Mot {{number}}",
+  "replacementLabel": "Remplacement",
+  "tooManyWords": "Trop de mots !",
+  "inkRemaining": "{{remaining}}/{{capacity}} caviardages restants",
+  "inkDetail": "encre : {{ink}} ({{cost}} par mot)",
+  "waitingOnPlayers": "En attente des autres joueurs",
+  "evidenceTampered": "Falsification des preuves en cours",
+  "resultsTitle": "Histoires",
+  "censorWordAria": "Censurer le mot : {{word}}",
+  "truncateFromAria": "Tronquer l'histoire à partir de : {{word}}",
+  "gapAria": "Trou {{number}}",
+  "redactedWordAria": "Mot caviardé : {{word}}",
+  "config": {
+    "players": {
+      "name": "Joueurs max",
+      "text": "Joueurs",
+      "info": "Nombre maximum de joueurs dans la partie"
+    },
+    "numStories": {
+      "name": "Nombre d'histoires",
+      "text": "Histoires",
+      "info": "Le nombre d'histoires écrites en même temps"
+    },
+    "numLinks": {
+      "name": "Phrases par histoire",
+      "text": "Phrases",
+      "info": "Le nombre de phrases dans chaque histoire. Il y aura trois fois plus de manches."
+    },
+    "anonymous": {
+      "name": "Masquer les auteurs",
+      "text": "Anonyme",
+      "info": "Affiche ou non les noms des auteurs à la fin."
+    },
+    "edits": {
+      "name": "Afficher les censures",
+      "text": "Censures",
+      "info": "À quel moment de la partie les mots de remplacement sont révélés.",
+      "options": {
+        "end": "Afficher",
+        "always": "Toujours",
+        "hide": "Masquer"
+      },
+      "optionsMore": {
+        "end": "En fin de partie",
+        "always": "Toute la partie",
+        "hide": "Jamais"
+      }
+    },
+    "gamemode": {
+      "name": "Mode de jeu",
+      "text": "Mode",
+      "info": "Le mode de jeu détermine comment les histoires peuvent être trafiquées",
+      "options": {
+        "normal": "Normal",
+        "censor": "Censure",
+        "madlib": "Tache",
+        "finish": "Fin",
+        "shred": "Broyeur",
+        "chaos": "Chaos"
+      },
+      "optionsMore": {
+        "censor": "Censure uniquement",
+        "madlib": "Censure aléatoire",
+        "finish": "Troncature uniquement",
+        "shred": "Troncature aléatoire",
+        "chaos": "Aléatoire"
+      }
+    },
+    "ink": {
+      "name": "Quantité d'encre",
+      "text": "Retouches",
+      "info": "Le nombre de retouches que les joueurs peuvent faire pendant la phase d'édition",
+      "options": {
+        "normal": "Normal",
+        "more": "Plus",
+        "many": "Beaucoup",
+        "overkill": "Abusé"
+      },
+      "optionsMore": {
+        "normal": "Normal - 2 au milieu, 5 à la fin",
+        "more": "Plus - 3 au milieu, 7 à la fin",
+        "many": "Beaucoup - 5 au milieu, 12 à la fin",
+        "overkill": "Abusé - de quoi faire"
+      }
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "app": {
+    "wordmark": "Out of <ink>Context</ink>",
+    "pageTitle": "Out of Context!",
+    "tagline": "Party games with your friends"
+  },
+  "language": {
+    "native": "English"
+  },
+  "connection": {
+    "lost": "Lost connection to server",
+    "reconnect": "Reconnect",
+    "reconnecting": "Reconnecting...",
+    "kicked": "You were disconnected for being away. Refresh to rejoin.",
+    "refresh": "Refresh"
+  },
+  "routes": {
+    "home": "Home",
+    "lobby": "Lobby",
+    "games": "Games",
+    "notFound": "Page not found"
+  },
+  "timer": {
+    "expired": "Time's up",
+    "remaining": "remaining",
+    "second_one": "second",
+    "second_other": "seconds"
+  },
+  "playerList": {
+    "heading": "Lobby members",
+    "players": "Players",
+    "spectators": "Spectators",
+    "noPlayers": "No players",
+    "noSpectators": "No spectators",
+    "pending": "Pending",
+    "spectate": "Spectate",
+    "joinPlayers": "Join players",
+    "leave": "Leave",
+    "join": "Join",
+    "remove": "Remove",
+    "change": "Change",
+    "endGame": "End game",
+    "confirmEndGame": "Are you sure?",
+    "emotesToggle": "Toggle emotes",
+    "grantToggle": "Grant admin",
+    "removeToggle": "Remove players",
+    "iconAdmin": "Admin",
+    "iconSelf": "You",
+    "iconDisconnected": "Disconnected"
+  },
+  "doodle": {
+    "undo": "Undo",
+    "done": "Done",
+    "color": "Color",
+    "strokeWidth": "Stroke width",
+    "author": "Drawn by {{name}}",
+    "redo": "Redo"
+  }
+}

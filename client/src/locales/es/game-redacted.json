@@ -1,0 +1,116 @@
+{
+  "title": "Entre líneas",
+  "subtitle": "█████ ███████",
+  "difficulty": "Compleja",
+  "description": "Colaboren para escribir, manipular y reparar historias línea a línea.",
+  "more": "Entre líneas es una extensión de Cuentagotas. Los jugadores siguen aportando a una historia, pero ahora pueden manipular las líneas que escribieron los demás. Este juego está pensado para cuando ya dominan las historias sin contexto, línea a línea.",
+  "howTo": [
+    "Cada jugador recibirá una línea de una historia",
+    "El siguiente jugador elegirá cómo editar la historia: recortando palabras del final o censurando palabras del medio.",
+    "Otro jugador rellenará la información que se perdió",
+    "Luego los jugadores continuarán la historia, línea a línea",
+    "Al final, podrán disfrutar de las historias disparatadas que escribieron"
+  ],
+  "playTime": "15-20m",
+  "writeFirstLine": "Escribe la primera línea",
+  "continueStory": "Continúa la historia",
+  "tamperHeader": "Manipula la historia",
+  "decensorHeader": "Descensura el texto",
+  "repairHeader": "Repara el texto",
+  "storyGoesLabel": "La historia dice...",
+  "wordsHint_one": "{{count}} palabra",
+  "wordsHint_other": "{{count}} palabras",
+  "sign": "Firmar",
+  "repair": "Reparar",
+  "modeTruncate": "Recortar",
+  "modeCensor": "Censurar",
+  "censorStory": "Censurar la historia",
+  "truncateStory": "Recortar la historia",
+  "redacting": "Suprimiendo {{used}}/{{max}} palabras",
+  "wordFieldLabel": "Palabra {{number}}",
+  "replacementLabel": "Reemplazo",
+  "tooManyWords": "¡Demasiadas palabras!",
+  "inkRemaining": "{{remaining}}/{{capacity}} supresiones restantes",
+  "inkDetail": "{{ink}} de tinta, {{cost}} cada una",
+  "waitingOnPlayers": "Esperando a los demás jugadores",
+  "evidenceTampered": "Se está manipulando la evidencia",
+  "resultsTitle": "Historias",
+  "censorWordAria": "Alternar censura de la palabra: {{word}}",
+  "truncateFromAria": "Recortar la historia desde: {{word}}",
+  "gapAria": "Espacio en blanco {{number}}",
+  "redactedWordAria": "Palabra suprimida: {{word}}",
+  "config": {
+    "players": {
+      "name": "Máximo de jugadores",
+      "text": "Jugadores",
+      "info": "Máximo de jugadores permitidos en la partida"
+    },
+    "numStories": {
+      "name": "Número de historias",
+      "text": "Historias",
+      "info": "El número de historias que se escriben"
+    },
+    "numLinks": {
+      "name": "Líneas por historia",
+      "text": "Líneas",
+      "info": "Cuántas líneas tiene cada historia. Habrá el triple de rondas."
+    },
+    "anonymous": {
+      "name": "Ocultar autores",
+      "text": "Anónimo",
+      "info": "Si se muestran los nombres al final."
+    },
+    "edits": {
+      "name": "Mostrar censuras",
+      "text": "Censuras",
+      "info": "En qué momento de la partida se muestran las palabras de reemplazo.",
+      "options": {
+        "end": "Mostrar",
+        "always": "Siempre",
+        "hide": "Ocultar"
+      },
+      "optionsMore": {
+        "end": "Al final de la partida",
+        "always": "Toda la partida",
+        "hide": "Nunca"
+      }
+    },
+    "gamemode": {
+      "name": "Modo de juego",
+      "text": "Modo",
+      "info": "El modo de juego determina qué herramientas de edición se usan",
+      "options": {
+        "normal": "Normal",
+        "censor": "Censurar",
+        "madlib": "Mancha",
+        "finish": "Rematar",
+        "shred": "Triturar",
+        "chaos": "Caos"
+      },
+      "optionsMore": {
+        "censor": "Solo censurar",
+        "madlib": "Censura aleatoria",
+        "finish": "Solo recortar",
+        "shred": "Recorte aleatorio",
+        "chaos": "Aleatorio"
+      }
+    },
+    "ink": {
+      "name": "Cantidad de tinta",
+      "text": "Cambios",
+      "info": "Cuántos cambios pueden hacer los jugadores durante la fase de edición",
+      "options": {
+        "normal": "Normal",
+        "more": "Más",
+        "many": "Muchos",
+        "overkill": "Una locura"
+      },
+      "optionsMore": {
+        "normal": "Normal - 2 del medio, 5 del final",
+        "more": "Más - 3 del medio, 7 del final",
+        "many": "Muchos - 5 del medio, 12 del final",
+        "overkill": "Una locura - de sobra"
+      }
+    }
+  }
+}

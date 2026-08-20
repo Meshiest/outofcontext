@@ -1,0 +1,96 @@
+{
+  "join": {
+    "button": "Join lobby"
+  },
+  "invalidLobby": {
+    "title": "Invalid Lobby",
+    "subtitle": "This lobby does not exist"
+  },
+  "loading": "Loading",
+  "sections": {
+    "lobby": "Lobby",
+    "redirect": "Redirect",
+    "gameInfo": "Game Info",
+    "lobbyCode": "Lobby Code",
+    "gameSettings": "Game Settings",
+    "gameSetup": "Game Setup"
+  },
+  "buttons": {
+    "create": "Create",
+    "join": "Join",
+    "home": "Home",
+    "bugReport": "Bug Report",
+    "copyCode": "Copy Code",
+    "shareLink": "Share Link",
+    "startGame": "Start Game"
+  },
+  "badges": {
+    "lobbyCode": "Lobby code",
+    "admin": "You are the admin"
+  },
+  "nameEntry": {
+    "title": "Enter a Name",
+    "subtitle": "Try to be creative",
+    "label": "Name",
+    "placeholder": "Ethan",
+    "submit": "Join",
+    "leave": "Leave",
+    "error": "That name is already taken"
+  },
+  "noGame": {
+    "title": "No Game Selected",
+    "subtitle": "Waiting for a game to be selected"
+  },
+  "gameSelect": {
+    "label": "Game",
+    "placeholder": "Select a Game"
+  },
+  "config": {
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "yes": "Yes",
+    "no": "No",
+    "unknown": "???",
+    "maximum": "Maximum: {{max}}",
+    "minimum": "Minimum: {{min}}",
+    "numPlayers": "Use current player count"
+  },
+  "phonetic": {
+    "a": "alpha",
+    "b": "bravo",
+    "c": "charlie",
+    "d": "delta",
+    "e": "echo",
+    "f": "foxtrot",
+    "g": "golf",
+    "h": "hotel",
+    "i": "india",
+    "j": "juliet",
+    "k": "kilo",
+    "l": "lima",
+    "m": "mike",
+    "n": "november",
+    "o": "oscar",
+    "p": "papa",
+    "q": "quebec",
+    "r": "romeo",
+    "s": "sierra",
+    "t": "tango",
+    "u": "uniform",
+    "v": "victor",
+    "w": "whiskey",
+    "x": "xray",
+    "y": "yankee",
+    "z": "zulu",
+    "0": "zero",
+    "1": "one",
+    "2": "two",
+    "3": "three",
+    "4": "four",
+    "5": "five",
+    "6": "six",
+    "7": "seven",
+    "8": "eight",
+    "9": "nine"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "title": "Redacted",
+  "subtitle": "█████ ███████",
+  "difficulty": "Complex",
+  "description": "Collaborate in writing, tampering, and repairing stories one line at a time.",
+  "more": "Redacted is an extension upon Raconteur. Players still contribute to a story, however now players are able to interact with the lines other players have written. This game is meant to be played after a familiarity with no context line-by-line stories is established.",
+  "howTo": [
+    "Every player will be given a line in a story",
+    "The next player will choose to edit the story by either cutting words off the end, or selecting words in the middle.",
+    "Another player will fill in what information was lost",
+    "Players will then continue the story, one line at a time",
+    "At the end, players can enjoy the crazy stories they wrote"
+  ],
+  "playTime": "15-20m",
+  "writeFirstLine": "Write the first line",
+  "continueStory": "Continue the Story",
+  "tamperHeader": "Tamper With the Story",
+  "decensorHeader": "Decensor Text",
+  "repairHeader": "Repair Text",
+  "storyGoesLabel": "The Story Goes...",
+  "wordsHint_one": "{{count}} word",
+  "wordsHint_other": "{{count}} words",
+  "sign": "Sign",
+  "repair": "Repair",
+  "modeTruncate": "Truncate",
+  "modeCensor": "Censor",
+  "censorStory": "Censor Story",
+  "truncateStory": "Truncate Story",
+  "redacting": "Redacting {{used}}/{{max}} words",
+  "wordFieldLabel": "Word {{number}}",
+  "replacementLabel": "Replacement",
+  "tooManyWords": "Too many words!",
+  "inkRemaining": "{{remaining}}/{{capacity}} redactions left",
+  "inkDetail": "{{ink}} ink, {{cost}} each",
+  "waitingOnPlayers": "Waiting on Other Players",
+  "evidenceTampered": "Evidence is being tampered with",
+  "resultsTitle": "Stories",
+  "censorWordAria": "Toggle censor on word: {{word}}",
+  "truncateFromAria": "Truncate the story from: {{word}}",
+  "gapAria": "Blank {{number}}",
+  "redactedWordAria": "Redacted word: {{word}}",
+  "config": {
+    "players": {
+      "name": "Max Players",
+      "text": "Players",
+      "info": "Maximum allowed players in the game"
+    },
+    "numStories": {
+      "name": "Story Count",
+      "text": "Stories",
+      "info": "The number of stories being written"
+    },
+    "numLinks": {
+      "name": "Lines per Story",
+      "text": "Lines",
+      "info": "How many lines are in a story. There will be three times as many rounds."
+    },
+    "anonymous": {
+      "name": "Hide Authors",
+      "text": "Anonymous",
+      "info": "Whether names are shown at the end."
+    },
+    "edits": {
+      "name": "Show Censors",
+      "text": "Censors",
+      "info": "At what point in the game replacement words are displayed.",
+      "options": {
+        "end": "Show",
+        "always": "Always",
+        "hide": "Hide"
+      },
+      "optionsMore": {
+        "end": "End of Game",
+        "always": "All Game",
+        "hide": "Never"
+      }
+    },
+    "gamemode": {
+      "name": "Game Mode",
+      "text": "Mode",
+      "info": "Game Mode determines what editing components are used",
+      "options": {
+        "normal": "Normal",
+        "censor": "Censor",
+        "madlib": "Spill",
+        "finish": "Finish",
+        "shred": "Shred",
+        "chaos": "Chaos"
+      },
+      "optionsMore": {
+        "censor": "Censor Only",
+        "madlib": "Random Censor",
+        "finish": "Truncate Only",
+        "shred": "Random Truncate",
+        "chaos": "Random"
+      }
+    },
+    "ink": {
+      "name": "Ink Amount",
+      "text": "Changes",
+      "info": "How many changes players can make during edit phase",
+      "options": {
+        "normal": "Normal",
+        "more": "More",
+        "many": "Many",
+        "overkill": "Overkill"
+      },
+      "optionsMore": {
+        "normal": "Normal - 2 middle, 5 end",
+        "more": "More - 3 middle, 7 end",
+        "many": "Many - 5 middle, 12 end",
+        "overkill": "Overkill - enough"
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "title": "Telégrafo",
+  "subtitle": "Dibujando conclusiones",
+  "difficulty": "Sencilla",
+  "description": "Los jugadores alternan entre dibujar y describir en un híbrido de teléfono descompuesto y Pictionary.",
+  "more": "Telégrafo se inspira en juegos como Drawphone de Tanner Krewson, Telestrations y Pictionary. Los jugadores ponen el cerebro a toda máquina para descifrar qué rayos intentan transmitir los demás con el poquísimo espacio que tienen. Al final de la partida, los dibujos y las descripciones se encadenan para visualizar qué rayos está pensando cada uno.",
+  "howTo": [
+    "Se juega alternando entre dibujar imágenes y describirlas",
+    "Cuando reciben una consigna, los jugadores la dibujan lo mejor que pueden",
+    "Cuando reciben una imagen, los jugadores la describen lo mejor que pueden",
+    "Al final de la partida, los jugadores pueden disfrutar de la cadena de dibujos y descripciones"
+  ],
+  "playTime": "10-15m",
+  "waiting": "Esperando a los demás jugadores",
+  "creating": "Se está creando y describiendo arte",
+  "resultsTitle": "Cadenas",
+  "journey": "Recorrido",
+  "describe": {
+    "initialHeader": "¿Qué hay que dibujar?",
+    "describeHeader": "El último jugador dibujó...",
+    "initialLabel": "Algo para dibujar",
+    "describeLabel": "Esto es...",
+    "submit": "Describir"
+  },
+  "draw": {
+    "instruction": "Tienes que dibujar esto:"
+  },
+  "config": {
+    "players": {
+      "name": "Máximo de jugadores",
+      "text": "Jugadores",
+      "info": "Máximo de jugadores permitidos en la partida"
+    },
+    "numLinks": {
+      "name": "Número de rondas",
+      "text": "Rondas",
+      "info": "Cuántas veces se alarga cada cadena. Si no es impar, se redondeará hacia abajo a un número impar."
+    },
+    "colors": {
+      "name": "Dibujos a color",
+      "text": "Colores",
+      "info": "Permite dibujar en rojo, verde, azul y amarillo. También activa el grosor del pincel."
+    },
+    "timeLimit": {
+      "name": "Límite de tiempo",
+      "text": "Límite de tiempo",
+      "info": "Tiempo que tienen los jugadores para dibujar",
+      "options": {
+        "none": "Ninguno",
+        "sec5": "5 seg",
+        "sec15": "15 seg",
+        "sec30": "30 seg",
+        "min1": "1 min",
+        "min2": "2 min",
+        "min5": "5 min"
+      },
+      "optionsMore": {
+        "none": "Sin límite",
+        "sec5": "5 segundos",
+        "sec15": "15 segundos",
+        "sec30": "30 segundos",
+        "min1": "1 minuto",
+        "min2": "2 minutos",
+        "min5": "5 minutos"
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "hero": {
+    "title": "Juega a juegos de fiesta con tus amigos"
+  },
+  "subtitle": "¡Juegos de fiesta que se alimentan de tu locura!",
+  "sections": {
+    "lobby": "Sala",
+    "info": "Info"
+  },
+  "buttons": {
+    "create": "Crear sala",
+    "join": "Unirse a una sala",
+    "gameInfo": "Guía de juegos",
+    "readCode": "Leer el código",
+    "requestGame": "Pedir un juego"
+  },
+  "join": {
+    "title": "Unirse a una sala",
+    "close": "Cerrar",
+    "codeLabel": "Código de sala",
+    "placeholder": "c0d3",
+    "submit": "Unirse",
+    "cancel": "Cancelar",
+    "invalid": "Código de sala no válido"
+  }
+}

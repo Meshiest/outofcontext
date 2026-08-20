@@ -1,0 +1,31 @@
+{
+  "title": "Preferencias",
+  "language": {
+    "label": "Idioma"
+  },
+  "darkMode": {
+    "label": "Modo oscuro",
+    "toggle": "Activado"
+  },
+  "turnSound": {
+    "label": "Sonido de aviso de turno",
+    "placeholder": "Elige un sonido",
+    "preview": "Escuchar el sonido",
+    "none": "Ninguno",
+    "options": {
+      "bit": "Bit",
+      "chime": "Campanilla",
+      "chord": "Acorde",
+      "ding": "Ding",
+      "retro": "Retro"
+    }
+  },
+  "soundVolume": {
+    "label": "Volumen de los avisos",
+    "muted": "Silenciado"
+  },
+  "streamerMode": {
+    "label": "Ocultar código de sala",
+    "toggle": "Oculto"
+  }
+}

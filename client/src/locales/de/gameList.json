@@ -1,0 +1,16 @@
+{
+  "title": "Spielinfos",
+  "subtitle": "So funktioniert's",
+  "redirect": "Weiterleitung",
+  "home": "Startseite",
+  "sections": {
+    "moreInfo": "Mehr Infos",
+    "howTo": "So wird gespielt",
+    "configurations": "Spieleinstellungen"
+  },
+  "labels": {
+    "playTime": "Spieldauer",
+    "players": "Spieler",
+    "difficulty": "Schwierigkeit"
+  }
+}

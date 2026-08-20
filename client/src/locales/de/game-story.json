@@ -1,0 +1,57 @@
+{
+  "title": "Lügenbaron",
+  "subtitle": "Schreibgeister",
+  "difficulty": "Einfach",
+  "description": "Schreibt gemeinsam Geschichten - Zeile für Zeile, mit minimalem Kontext.",
+  "more": "Lügenbaron ist von Impro-Spielen inspiriert, bei denen die Spieler eine Geschichte Satz für Satz oder Wort für Wort weitererzählen. Die Idee: einzigartige Geschichten aus einem Gedankenstrom, der wer weiß wohin führt. Den roten Faden hält nur die letzte Zeile der Geschichte - wer mehrdeutig schreibt, macht die Geschichten also umso interessanter. Ähnlich dem alten Gesellschaftsspiel „Consequences“.",
+  "howTo": [
+    "Jeder Spieler bekommt eine Zeile einer Geschichte",
+    "Die Spieler schreiben die Geschichte Zeile für Zeile weiter",
+    "Am Ende könnt ihr die verrückten Geschichten genießen, die ihr zusammen geschrieben habt"
+  ],
+  "playTime": "15-20 min",
+  "writeFirstLine": "Schreib die erste Zeile",
+  "finishPrefix": "Beende die Geschichte!",
+  "lastAuthorsWrote_one": "Der letzte Autor schrieb...",
+  "lastAuthorsWrote_other": "Die letzten Autoren schrieben...",
+  "then": "Dann",
+  "storyGoes": "So geht die Geschichte...",
+  "sign": "Unterschreiben",
+  "finish": "Abschließen",
+  "waitingOnAuthors": "Warten auf die anderen Autoren",
+  "storiesBeingWritten": "Geschichten werden geschrieben",
+  "storiesTitle": "Geschichten",
+  "config": {
+    "players": {
+      "name": "Max. Spieler",
+      "text": "Spieler",
+      "info": "Wie viele Spieler maximal mitspielen können"
+    },
+    "numStories": {
+      "name": "Anzahl Geschichten",
+      "text": "Geschichten",
+      "info": "Wie viele Geschichten geschrieben werden"
+    },
+    "numLinks": {
+      "name": "Zeilen pro Geschichte",
+      "text": "Zeilen",
+      "info": "Wie viele Zeilen eine Geschichte hat"
+    },
+    "anonymous": {
+      "name": "Autoren verbergen",
+      "text": "Anonym",
+      "info": "Ob am Ende die Namen angezeigt werden."
+    },
+    "contextLen": {
+      "name": "Kontext",
+      "text": "Kontext",
+      "info": "Zusätzliche Kontextzeilen sorgen für flüssigere Geschichten",
+      "options": {
+        "regular": "1 Zeile",
+        "two": "2 Zeilen",
+        "three": "3 Zeilen",
+        "four": "4 Zeilen"
+      }
+    }
+  }
+}

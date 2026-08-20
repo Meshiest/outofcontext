@@ -1,0 +1,68 @@
+{
+  "title": "Kritzelpost",
+  "subtitle": "Malen nach Worten",
+  "difficulty": "Einfach",
+  "description": "Die Spieler wechseln sich mit Zeichnen und Beschreiben ab - Stille Post trifft Montagsmaler.",
+  "more": "Kritzelpost ist inspiriert von Spielen wie Tanner Krewsons Drawphone, Telestrations und Pictionary. Die Spieler bringen ihr Hirn auf Hochtouren, um zu entschlüsseln, was um alles in der Welt die anderen ihnen mit dem bisschen Platz sagen wollen. Am Ende fügen sich Bilder und Beschreibungen zu einer Kette zusammen, die zeigt, was in den Köpfen aller wirklich vorgeht.",
+  "howTo": [
+    "Gezeichnet und beschrieben wird immer im Wechsel",
+    "Bekommst du eine Vorgabe, zeichnest du sie, so gut du kannst",
+    "Bekommst du ein Bild, beschreibst du es, so gut du kannst",
+    "Am Ende könnt ihr die Kette aus Bildern und Beschreibungen bestaunen"
+  ],
+  "playTime": "10-15 min",
+  "waiting": "Warten auf die anderen Spieler",
+  "creating": "Kunst wird erschaffen und beschrieben",
+  "resultsTitle": "Ketten",
+  "journey": "Die Reise",
+  "describe": {
+    "initialHeader": "Was soll gezeichnet werden?",
+    "describeHeader": "Der letzte Spieler hat das hier gezeichnet...",
+    "initialLabel": "Zeichenvorgabe",
+    "describeLabel": "Das ist...",
+    "submit": "Beschreiben"
+  },
+  "draw": {
+    "instruction": "Zeichne das:"
+  },
+  "config": {
+    "players": {
+      "name": "Max. Spieler",
+      "text": "Spieler",
+      "info": "Wie viele Spieler maximal mitspielen können"
+    },
+    "numLinks": {
+      "name": "Anzahl Runden",
+      "text": "Runden",
+      "info": "Wie oft eine Kette verlängert wird. Gerade Zahlen werden auf eine ungerade Zahl abgerundet."
+    },
+    "colors": {
+      "name": "Bunte Zeichnungen",
+      "text": "Farben",
+      "info": "Erlaubt Zeichnen in Rot, Grün, Blau und Gelb. Schaltet außerdem die Pinselstärke frei."
+    },
+    "timeLimit": {
+      "name": "Zeitlimit",
+      "text": "Zeitlimit",
+      "info": "Wie viel Zeit die Spieler zum Zeichnen haben",
+      "options": {
+        "none": "Keins",
+        "sec5": "5 Sek.",
+        "sec15": "15 Sek.",
+        "sec30": "30 Sek.",
+        "min1": "1 Min.",
+        "min2": "2 Min.",
+        "min5": "5 Min."
+      },
+      "optionsMore": {
+        "none": "Kein Limit",
+        "sec5": "5 Sekunden",
+        "sec15": "15 Sekunden",
+        "sec30": "30 Sekunden",
+        "min1": "1 Minute",
+        "min2": "2 Minuten",
+        "min5": "5 Minuten"
+      }
+    }
+  }
+}

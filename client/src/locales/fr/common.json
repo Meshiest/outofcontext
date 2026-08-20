@@ -1,0 +1,59 @@
+{
+  "app": {
+    "wordmark": "Hors <ink>Contexte</ink>",
+    "pageTitle": "Hors Contexte !",
+    "tagline": "Des jeux de soirée entre amis"
+  },
+  "language": {
+    "native": "Français"
+  },
+  "connection": {
+    "lost": "Connexion au serveur perdue",
+    "reconnect": "Se reconnecter",
+    "reconnecting": "Reconnexion...",
+    "kicked": "Tu as été déconnecté pour cause d'inactivité. Actualise la page pour revenir.",
+    "refresh": "Actualiser"
+  },
+  "routes": {
+    "home": "Accueil",
+    "lobby": "Salon",
+    "games": "Jeux",
+    "notFound": "Page introuvable"
+  },
+  "timer": {
+    "expired": "Temps écoulé",
+    "remaining": "restant",
+    "second_one": "seconde",
+    "second_other": "secondes"
+  },
+  "playerList": {
+    "heading": "Membres du salon",
+    "players": "Joueurs",
+    "spectators": "Spectateurs",
+    "noPlayers": "Aucun joueur",
+    "noSpectators": "Aucun spectateur",
+    "pending": "En attente",
+    "spectate": "Passer spectateur",
+    "joinPlayers": "Rejoindre les joueurs",
+    "leave": "Quitter",
+    "join": "Remplacer",
+    "remove": "Retirer",
+    "change": "Nommer hôte",
+    "endGame": "Terminer la partie",
+    "confirmEndGame": "Vraiment ?",
+    "emotesToggle": "Afficher ou masquer les émotes",
+    "grantToggle": "Nommer hôte",
+    "removeToggle": "Retirer des joueurs",
+    "iconAdmin": "Hôte",
+    "iconSelf": "Toi",
+    "iconDisconnected": "Déconnecté"
+  },
+  "doodle": {
+    "undo": "Annuler",
+    "done": "Terminé",
+    "color": "Couleur",
+    "strokeWidth": "Épaisseur du trait",
+    "author": "Dessiné par {{name}}",
+    "redo": "Rétablir"
+  }
+}
