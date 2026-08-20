@@ -1,0 +1,34 @@
+# Keep the Docker build context lean. Everything listed here is excluded from `docker build`.
+
+# Dependencies (reinstalled in the image via npm ci)
+node_modules
+client/node_modules
+
+# Build output (client is rebuilt by `vite build`; public/ is regenerated inside the image)
+public
+dist
+client/dist
+client/storybook-static
+
+# Test / coverage artifacts
+coverage
+client/coverage
+*.log
+
+# VCS + local tooling
+.git
+.gitignore
+.github
+.claude
+.vscode
+.idea
+
+# Secrets / local env (never bake these into an image)
+.env
+.env.local
+ssl
+
+# OS cruft
+.DS_Store
+Thumbs.db
+nul

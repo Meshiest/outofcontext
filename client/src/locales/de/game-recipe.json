@@ -1,0 +1,63 @@
+{
+  "title": "Allerlei",
+  "subtitle": "Viele Köche verderben den Brei",
+  "difficulty": "Mittel",
+  "description": "Schustert gemeinsam Rezepte für alles Mögliche zusammen.",
+  "more": "Allerlei ist ein bisschen verzwickt: Es gibt keinen festen Ablauf, den alle gleichzeitig durchlaufen. Die Spieler reichen Rezeptschritte zu einem Thema ein, dazu Zutaten ohne jeden Kontext und mögliche Gefahren - ebenfalls ohne Kontext. Diese Mischung aus Zufall und Kontext schmeckt am Ende meistens furchtbar lecker.",
+  "howTo": [
+    "Jeder Spieler gibt ein Thema für das „Gericht“ vor",
+    "Alle Spieler schreiben einen Schritt des Rezepts, in dem eine noch unbekannte, erst später festgelegte Zutat vorkommt - ohne die anderen Schritte zu sehen.",
+    "Außerdem steuern alle Zutaten bei - oder ehrlich gesagt irgendwas - und sehen dabei nur die anderen Zutaten.",
+    "Wer mag, würzt die unbekannten Rezepte noch mit Gefahrenhinweisen und Kommentaren - für eine extra Prise Chaos.",
+    "Am Ende könnt ihr die verrückten Rezepte genießen, die ihr geschrieben habt"
+  ],
+  "playTime": "5-10 min",
+  "sign": "Unterschreiben",
+  "finish": "Abschließen",
+  "and": "und",
+  "themeHeader": "Wähl ein Thema",
+  "themeSubheader": "Dieses Thema inspiriert die Rezeptschritte",
+  "themeLabel": "Rezeptthema",
+  "stepHeader": "Schreib einen Schritt für: {{theme}}",
+  "stepNumber": "Schritt {{index}} von {{total}}",
+  "stepLabel": "Anleitung für Schritt {{index}}",
+  "stepItemRequired": "Der Text 'ITEM' muss in der Anleitung vorkommen",
+  "stepItemHelper": "'ITEM' wird am Ende durch eine zufällige Zutat ersetzt.",
+  "ingredientHeader": "Füge eine Zutat hinzu",
+  "ingredientLabel": "Ein Gegenstand oder Ding",
+  "ingredientExisting": "Andere Zutaten:",
+  "ingredientHelper": "Das ersetzt das Wort 'ITEM' in einem zufälligen Schritt.",
+  "ingredientItemWarning": "Bist du sicher, dass hier wirklich 'ITEM' stehen soll?",
+  "commentHeader": "Kommentiere ein Rezept",
+  "commentLabel": "Kommentar zum Rezept",
+  "commentExisting": "Andere Kritiker schrieben:",
+  "waiting": "Warten auf die anderen Köche",
+  "developing": "Die Rezepte köcheln noch vor sich hin",
+  "resultsTitle": "Rezepte",
+  "by": "von {{name}}",
+  "cardStepNumber": "Schritt {{number}}",
+  "cardStepAuthors": "{{writer}} & {{helper}}",
+  "anonymous": "Anonym",
+  "config": {
+    "players": {
+      "name": "Max. Spieler",
+      "text": "Spieler",
+      "info": "Wie viele Spieler maximal mitspielen können"
+    },
+    "numRecipes": {
+      "name": "Anzahl Rezepte",
+      "text": "Rezepte",
+      "info": "Wie viele Rezepte geschrieben werden"
+    },
+    "numSteps": {
+      "name": "Schritte pro Rezept",
+      "text": "Schritte",
+      "info": "Wie viele Schritte und Zutaten jedes Rezept hat."
+    },
+    "anonymous": {
+      "name": "Autoren verbergen",
+      "text": "Anonym",
+      "info": "Ob am Ende die Namen angezeigt werden."
+    }
+  }
+}

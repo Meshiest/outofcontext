@@ -1,0 +1,96 @@
+{
+  "join": {
+    "button": "Unirse a la sala"
+  },
+  "invalidLobby": {
+    "title": "Sala no válida",
+    "subtitle": "Esta sala no existe"
+  },
+  "loading": "Cargando",
+  "sections": {
+    "lobby": "Sala",
+    "redirect": "Redirección",
+    "gameInfo": "Información del juego",
+    "lobbyCode": "Código de sala",
+    "gameSettings": "Ajustes del juego",
+    "gameSetup": "Preparación de la partida"
+  },
+  "buttons": {
+    "create": "Crear",
+    "join": "Unirse",
+    "home": "Inicio",
+    "bugReport": "Reportar un error",
+    "copyCode": "Copiar código",
+    "shareLink": "Compartir enlace",
+    "startGame": "Empezar partida"
+  },
+  "badges": {
+    "lobbyCode": "Código de sala",
+    "admin": "Eres el anfitrión"
+  },
+  "nameEntry": {
+    "title": "Elige un nombre",
+    "subtitle": "Ponte creativo",
+    "label": "Nombre",
+    "placeholder": "Mateo",
+    "submit": "Unirse",
+    "leave": "Salir",
+    "error": "Ese nombre ya está en uso"
+  },
+  "noGame": {
+    "title": "Ningún juego elegido",
+    "subtitle": "Esperando a que se elija un juego"
+  },
+  "gameSelect": {
+    "label": "Juego",
+    "placeholder": "Elige un juego"
+  },
+  "config": {
+    "enabled": "Activado",
+    "disabled": "Desactivado",
+    "yes": "Sí",
+    "no": "No",
+    "unknown": "???",
+    "maximum": "Máximo: {{max}}",
+    "minimum": "Mínimo: {{min}}",
+    "numPlayers": "Usar el número actual de jugadores"
+  },
+  "phonetic": {
+    "a": "Antonio",
+    "b": "Barcelona",
+    "c": "Carmen",
+    "d": "Dolores",
+    "e": "Enrique",
+    "f": "Francia",
+    "g": "Gerona",
+    "h": "Historia",
+    "i": "Inés",
+    "j": "José",
+    "k": "Kilo",
+    "l": "Lorenzo",
+    "m": "Madrid",
+    "n": "Navarra",
+    "o": "Oviedo",
+    "p": "París",
+    "q": "Querido",
+    "r": "Ramón",
+    "s": "Sábado",
+    "t": "Tarragona",
+    "u": "Ulises",
+    "v": "Valencia",
+    "w": "Washington",
+    "x": "Xiquena",
+    "y": "Yegua",
+    "z": "Zaragoza",
+    "0": "cero",
+    "1": "uno",
+    "2": "dos",
+    "3": "tres",
+    "4": "cuatro",
+    "5": "cinco",
+    "6": "seis",
+    "7": "siete",
+    "8": "ocho",
+    "9": "nueve"
+  }
+}

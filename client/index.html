@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" prefix="og: https://ogp.me/ns#">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <meta
+      name="description"
+      content="Free online social party games for 2+ players. Similar to Jackbox games, Drawphone and Telestrations, and more!"
+    />
+    <meta
+      name="keywords"
+      content="game,games,party games,partygames,telestrations,spyfall,drawphone,out of context,ooc,outofcontext,party,social,assassin,word assassin,wurderer,raconteur,underground,scribble,crabhat,crab hat,multiplayer,doodle,telephone,rocketcrab,foldingstory,folding story,exquisite corpse,consequences,picture consequences,online parlor game,parlor game"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta name="audience" content="all" />
+    <meta name="page-topic" content="Online Party Games" />
+
+    <meta property="og:title" content="Out Of Context Party Games" />
+    <meta property="og:site_name" content="Out Of Context" />
+    <meta
+      property="og:description"
+      content="Free online social party games for 2+ players. Similar to Jackbox, Drawphone, and Telestrations."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.outofcontext.party" />
+    <meta property="og:image" content="https://www.outofcontext.party/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="400" />
+    <meta property="og:image:height" content="300" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Out Of Context Party Games" />
+    <meta
+      name="twitter:description"
+      content="Free online social party games for 2+ players. Similar to Jackbox, Drawphone, and Telestrations."
+    />
+    <meta name="twitter:image" content="https://www.outofcontext.party/og-image.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      if (localStorage.getItem('occDarkMode') === 'true') {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
+
+    <style>
+      html {
+        background: #e9e5dc;
+        color-scheme: light;
+      }
+      html.dark {
+        background: #14131a;
+        color-scheme: dark;
+      }
+    </style>
+
+    <title>Out of Context!</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

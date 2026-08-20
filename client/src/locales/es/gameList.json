@@ -1,0 +1,16 @@
+{
+  "title": "Guía de juegos",
+  "subtitle": "Aprende cómo se juega",
+  "redirect": "Redirección",
+  "home": "Inicio",
+  "sections": {
+    "moreInfo": "Más información",
+    "howTo": "Cómo jugar",
+    "configurations": "Ajustes"
+  },
+  "labels": {
+    "playTime": "Duración",
+    "players": "Jugadores",
+    "difficulty": "Dificultad"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "title": "Brocha gorda",
+  "subtitle": "Maestros de nada",
+  "difficulty": "Sencilla",
+  "description": "Colaboren para dibujar historias o lo que sea, una imagen a la vez y con el mínimo contexto.",
+  "more": "Brocha gorda se inspira en el \"cadáver exquisito\", un juego donde los jugadores añaden a una composición un dibujo a la vez viendo solo la última imagen. Según Wikipedia, esta técnica la inventaron los surrealistas. Brocha gorda es Cuentagotas con dibujos y Telégrafo sin palabras. Con la opción de modo de juego puede convertirse en Cuentagotas con dibujos, en un Telégrafo donde todos dibujan o en una fábrica de cómics.",
+  "howTo": [
+    "Cada jugador recibirá un dibujo hecho por otro jugador",
+    "Los jugadores continúan la composición un dibujo a la vez",
+    "Al final, podrán disfrutar del arte estrafalario que dibujaron juntos"
+  ],
+  "playTime": "10-15m",
+  "drawBeginning": "¡Dibuja el comienzo!",
+  "continueStory": "Continúa la historia...",
+  "connectBottom": "Conecta tu dibujo con la parte inferior del lienzo",
+  "finishPrefix": "¡Termina la secuencia! ",
+  "continuePrefix": "¡Continúa el dibujo! ",
+  "verbDrew": "dibujado",
+  "verbWrote": "escrito",
+  "lastArtists_one": "{{prefix}}El último artista ha {{verb}}....",
+  "lastArtists_other": "{{prefix}}Los últimos artistas han {{verb}}....",
+  "then": "Luego",
+  "captionLabel": "Leyenda",
+  "waitingOnArtists": "Esperando a los demás artistas",
+  "sequencesBeingDrawn": "Se están dibujando las secuencias",
+  "sequencesTitle": "Secuencias",
+  "config": {
+    "players": {
+      "name": "Máximo de jugadores",
+      "text": "Jugadores",
+      "info": "Máximo de jugadores permitidos en la partida"
+    },
+    "numPieces": {
+      "name": "Número de cadenas",
+      "text": "Cadenas",
+      "info": "El número de secuencias que se crean"
+    },
+    "numLinks": {
+      "name": "Dibujos por cadena",
+      "text": "Dibujos",
+      "info": "Cuántos dibujos tiene cada secuencia"
+    },
+    "anonymous": {
+      "name": "Ocultar autores",
+      "text": "Anónimo",
+      "info": "Si se muestran los nombres al final."
+    },
+    "colors": {
+      "name": "Dibujos a color",
+      "text": "Colores",
+      "info": "Permite dibujar a color. También activa el grosor del pincel."
+    },
+    "gamemode": {
+      "name": "Modo de juego",
+      "text": "Modo",
+      "info": "Qué reciben los jugadores como contexto para sus dibujos (leyendas, dibujos o ambos).",
+      "options": {
+        "regular": "Normal",
+        "collab": "Colab",
+        "both": "Cómic",
+        "captions": "Leyendas",
+        "drawings": "Caos"
+      },
+      "optionsMore": {
+        "regular": "Juego clásico (solo dibujos)",
+        "collab": "Un único dibujo largo y continuo",
+        "both": "Se ven dibujos y leyendas",
+        "captions": "Solo se ven leyendas",
+        "drawings": "Solo se ven dibujos (las leyendas se siguen escribiendo)"
+      }
+    }
+  }
+}

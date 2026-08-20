@@ -1,0 +1,14 @@
+{
+  "attribution": "— {{name}}",
+  "loading": "Cargando...",
+  "loadingResults": "Cargando resultados...",
+  "doneReading": "Terminé de leer",
+  "stillReading": "Sigo leyendo",
+  "reactions": {
+    "heart": "Me encanta",
+    "laugh": "Qué risa",
+    "thumbsUp": "Genial",
+    "skull": "Glup",
+    "brain": "Cerebrote"
+  }
+}

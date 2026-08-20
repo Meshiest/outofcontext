@@ -1,0 +1,73 @@
+{
+  "title": "Sonntagsmaler",
+  "subtitle": "Stümpern mit Stil",
+  "difficulty": "Einfach",
+  "description": "Zeichnet gemeinsam Geschichten oder einfach irgendwas - Bild für Bild, mit minimalem Kontext.",
+  "more": "Sonntagsmaler ist inspiriert vom Spiel „Cadavre Exquis“, bei dem die Spieler ein Gemeinschaftswerk Zeichnung für Zeichnung ergänzen und dabei nur das letzte Bild sehen. Laut Wikipedia haben die Surrealisten diese Technik erfunden. Sonntagsmaler ist Lügenbaron mit Bildern und Kritzelpost ohne Worte. Je nach Spielmodus wird daraus Lügenbaron mit Bildern, Kritzelpost, bei dem alle zeichnen, oder ein Comic-Baukasten.",
+  "howTo": [
+    "Jeder Spieler bekommt ein Bild, das ein anderer Spieler gezeichnet hat",
+    "Die Spieler setzen das Werk Zeichnung für Zeichnung fort",
+    "Am Ende könnt ihr die schräge Kunst bestaunen, die ihr zusammen gezeichnet habt"
+  ],
+  "playTime": "10-15 min",
+  "drawBeginning": "Zeichne den Anfang!",
+  "continueStory": "Zeichne die Geschichte weiter...",
+  "connectBottom": "Zeichne bis zum unteren Rand der Zeichenfläche",
+  "finishPrefix": "Beende die Kette! ",
+  "continuePrefix": "Zeichne weiter! ",
+  "verbDrew": "gezeichnet",
+  "verbWrote": "geschrieben",
+  "lastArtists_one": "{{prefix}}Der letzte Künstler hat {{verb}}....",
+  "lastArtists_other": "{{prefix}}Die letzten Künstler haben {{verb}}....",
+  "then": "Dann",
+  "captionLabel": "Bildtext",
+  "waitingOnArtists": "Warten auf die anderen Künstler",
+  "sequencesBeingDrawn": "Ketten werden gezeichnet",
+  "sequencesTitle": "Ketten",
+  "config": {
+    "players": {
+      "name": "Max. Spieler",
+      "text": "Spieler",
+      "info": "Wie viele Spieler maximal mitspielen können"
+    },
+    "numPieces": {
+      "name": "Anzahl Ketten",
+      "text": "Ketten",
+      "info": "Wie viele Ketten entstehen"
+    },
+    "numLinks": {
+      "name": "Zeichnungen pro Kette",
+      "text": "Zeichnungen",
+      "info": "Wie viele Zeichnungen eine Kette hat"
+    },
+    "anonymous": {
+      "name": "Autoren verbergen",
+      "text": "Anonym",
+      "info": "Ob am Ende die Namen angezeigt werden."
+    },
+    "colors": {
+      "name": "Bunte Zeichnungen",
+      "text": "Farben",
+      "info": "Erlaubt Zeichnen in Farbe. Schaltet außerdem die Pinselstärke frei."
+    },
+    "gamemode": {
+      "name": "Spielmodus",
+      "text": "Modus",
+      "info": "Was die Spieler als Kontext für ihre Zeichnungen bekommen (Bildtexte, Zeichnungen oder beides).",
+      "options": {
+        "regular": "Normal",
+        "collab": "Teamwork",
+        "both": "Comic",
+        "captions": "Bildtext",
+        "drawings": "Chaos"
+      },
+      "optionsMore": {
+        "regular": "Normales Spiel (nur Zeichnungen)",
+        "collab": "Eine lange, durchgehende Zeichnung",
+        "both": "Zeichnungen und Bildtexte sehen",
+        "captions": "Nur Bildtexte sehen",
+        "drawings": "Nur Zeichnungen sehen (Bildtexte trotzdem schreiben)"
+      }
+    }
+  }
+}

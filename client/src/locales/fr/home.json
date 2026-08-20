@@ -1,0 +1,26 @@
+{
+  "hero": {
+    "title": "Joue à des jeux de soirée avec tes amis"
+  },
+  "subtitle": "Des jeux de soirée qui carburent à ta folie !",
+  "sections": {
+    "lobby": "Salon",
+    "info": "Infos"
+  },
+  "buttons": {
+    "create": "Créer un salon",
+    "join": "Rejoindre un salon",
+    "gameInfo": "Infos des jeux",
+    "readCode": "Voir le code source",
+    "requestGame": "Proposer un jeu"
+  },
+  "join": {
+    "title": "Rejoindre un salon",
+    "close": "Fermer",
+    "codeLabel": "Code du salon",
+    "placeholder": "c0d3",
+    "submit": "Rejoindre",
+    "cancel": "Annuler",
+    "invalid": "Code du salon invalide"
+  }
+}

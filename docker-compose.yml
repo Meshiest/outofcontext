@@ -1,11 +1,42 @@
-version: '2'
+# Out Of Context - production compose.
+#
+# The `game` image builds the client and runs the TypeScript backend via tsx (see Dockerfile).
+# Compose v2 ignores the old top-level `version:` key, so it is intentionally absent.
+#
+# No source bind-mount: the whole-tree mount the old file used (`.:/usr/src/app`) shadowed the
+# built image and nullified the build. Only the persistence save-store is mounted. For local dev
+# with live reload use `npm run dev` on the host, not this file.
 services:
   game:
-    build: .
+    build:
+      context: .
+      args:
+        # VITE_ vars are inlined by `vite build` at IMAGE BUILD time, not read at runtime - so the
+        # GA4 id must be passed here to reach the client bundle. The project `.env` (if present)
+        # feeds this default via compose interpolation.
+        VITE_GA_MEASUREMENT_ID: ${VITE_GA_MEASUREMENT_ID:-}
     restart: always
-    command: "npm start"
     ports:
-    - "8080:8080"
+      # host:container. PORT controls the app's listen port end to end (default 8080).
+      - '${PORT:-8080}:${PORT:-8080}'
+    environment:
+      # Runtime server config (these ARE read at runtime, unlike VITE_ vars above).
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: ${PORT:-8080}
     volumes:
-      - .:/usr/src/app
-
+      # JSON + pako lobby saves. This is the only state that must survive restarts.
+      # The host dir must be writable by uid 1000 (the container's `node` user).
+      - ./persistence:/usr/src/app/persistence
+    healthcheck:
+      # Hits the REST info shim. Uses Node's global fetch (Node 22) so no curl/wget dependency.
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "const p=process.env.PORT||8080;fetch('http://localhost:'+p+'/api/v1/info').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s

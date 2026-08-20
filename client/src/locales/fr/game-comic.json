@@ -1,0 +1,73 @@
+{
+  "title": "Dilettante",
+  "subtitle": "Artistes du dimanche",
+  "difficulty": "Simple",
+  "description": "Dessinez des histoires (ou n'importe quoi) à plusieurs, une image à la fois, avec un minimum de contexte.",
+  "more": "Dilettante s'inspire du « cadavre exquis », un jeu où les joueurs complètent une composition un dessin à la fois en ne voyant que la dernière image. D'après Wikipédia, la technique a été inventée par les surréalistes. Dilettante, c'est Racontars en images et Gribouille sans les mots. Selon le mode de jeu, il devient un Racontars illustré, un Gribouille où tout le monde dessine, ou une fabrique à BD.",
+  "howTo": [
+    "Chaque joueur reçoit un dessin fait par un autre joueur",
+    "Les joueurs continuent la composition un dessin à la fois",
+    "À la fin, tout le monde admire les œuvres loufoques dessinées ensemble"
+  ],
+  "playTime": "10-15 min",
+  "drawBeginning": "Dessine le début !",
+  "continueStory": "Continue l'histoire...",
+  "connectBottom": "Prolonge ton dessin jusqu'en bas de la zone de dessin",
+  "finishPrefix": "Termine la chaîne ! ",
+  "continuePrefix": "Continue le dessin ! ",
+  "verbDrew": "dessiné",
+  "verbWrote": "écrit",
+  "lastArtists_one": "{{prefix}}Le dernier artiste a {{verb}}...",
+  "lastArtists_other": "{{prefix}}Les derniers artistes ont {{verb}}...",
+  "then": "Puis",
+  "captionLabel": "Légende",
+  "waitingOnArtists": "En attente des autres artistes",
+  "sequencesBeingDrawn": "Les chaînes se dessinent...",
+  "sequencesTitle": "Chaînes",
+  "config": {
+    "players": {
+      "name": "Joueurs max",
+      "text": "Joueurs",
+      "info": "Nombre maximum de joueurs dans la partie"
+    },
+    "numPieces": {
+      "name": "Nombre de chaînes",
+      "text": "Chaînes",
+      "info": "Le nombre de chaînes dessinées en même temps"
+    },
+    "numLinks": {
+      "name": "Dessins par chaîne",
+      "text": "Dessins",
+      "info": "Le nombre de dessins dans chaque chaîne"
+    },
+    "anonymous": {
+      "name": "Masquer les auteurs",
+      "text": "Anonyme",
+      "info": "Affiche ou non les noms des auteurs à la fin."
+    },
+    "colors": {
+      "name": "Dessins en couleur",
+      "text": "Couleurs",
+      "info": "Active le dessin en couleur. Permet aussi de régler l'épaisseur du trait."
+    },
+    "gamemode": {
+      "name": "Mode de jeu",
+      "text": "Mode",
+      "info": "Ce que les joueurs voient comme contexte pour leurs dessins (légendes, dessins ou les deux).",
+      "options": {
+        "regular": "Normal",
+        "collab": "Collab",
+        "both": "BD",
+        "captions": "Légende",
+        "drawings": "Chaos"
+      },
+      "optionsMore": {
+        "regular": "Mode classique (dessins uniquement)",
+        "collab": "Un seul long dessin continu",
+        "both": "Voir les dessins et les légendes",
+        "captions": "Voir uniquement les légendes",
+        "drawings": "Voir uniquement les dessins (mais écrire quand même des légendes)"
+      }
+    }
+  }
+}

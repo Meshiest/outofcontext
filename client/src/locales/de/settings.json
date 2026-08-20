@@ -1,0 +1,31 @@
+{
+  "title": "Einstellungen",
+  "language": {
+    "label": "Sprache"
+  },
+  "darkMode": {
+    "label": "Dunkelmodus",
+    "toggle": "Aktiviert"
+  },
+  "turnSound": {
+    "label": "Sound, wenn du dran bist",
+    "placeholder": "Sound auswählen",
+    "preview": "Sound anhören",
+    "none": "Keiner",
+    "options": {
+      "bit": "Bit",
+      "chime": "Glöckchen",
+      "chord": "Akkord",
+      "ding": "Ding",
+      "retro": "Retro"
+    }
+  },
+  "soundVolume": {
+    "label": "Lautstärke",
+    "muted": "Stumm"
+  },
+  "streamerMode": {
+    "label": "Lobby-Code verbergen",
+    "toggle": "Verborgen"
+  }
+}

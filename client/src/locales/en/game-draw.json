@@ -1,0 +1,68 @@
+{
+  "title": "Scribble",
+  "subtitle": "Drawing Conclusions",
+  "difficulty": "Simple",
+  "description": "Players alternate between drawing and describing in a telephone-pictionary hybrid game.",
+  "more": "Scribble is inspired by games like Tanner Krewson's Drawphone, Telestrations, and Pictionary. Players put their minds in maximum overdrive to decipher what on earth the other players are trying to convey with what little space they have. At the end of the game, the pictures and descriptions link together to visualize what on earth everyone is thinking.",
+  "howTo": [
+    "The game is played by alternating between drawing pictures and describing pictures",
+    "When given a prompt, players draw it to the best of their abilities",
+    "When given an image, players describe it to the best of their abilities",
+    "At the end of the game, players can enjoy the chain of pictures and descriptions"
+  ],
+  "playTime": "10-15m",
+  "waiting": "Waiting on Other Players",
+  "creating": "Art is being created and described",
+  "resultsTitle": "Chains",
+  "journey": "Journey",
+  "describe": {
+    "initialHeader": "What Should be Drawn?",
+    "describeHeader": "The last player drew...",
+    "initialLabel": "Thing to Draw",
+    "describeLabel": "This is...",
+    "submit": "Describe"
+  },
+  "draw": {
+    "instruction": "You must draw this:"
+  },
+  "config": {
+    "players": {
+      "name": "Max Players",
+      "text": "Players",
+      "info": "Maximum allowed players in the game"
+    },
+    "numLinks": {
+      "name": "Round Count",
+      "text": "Rounds",
+      "info": "Number of times a chain is added to. If not odd, will be rounded down to an odd number."
+    },
+    "colors": {
+      "name": "Colored Drawings",
+      "text": "Colors",
+      "info": "Enable drawing in red, green, blue, and yellow. Also enables brush thickness."
+    },
+    "timeLimit": {
+      "name": "Time Limit",
+      "text": "Time Limit",
+      "info": "Amount of players have to draw",
+      "options": {
+        "none": "None",
+        "sec5": "5 sec",
+        "sec15": "15 sec",
+        "sec30": "30 sec",
+        "min1": "1 min",
+        "min2": "2 min",
+        "min5": "5 min"
+      },
+      "optionsMore": {
+        "none": "No Limit",
+        "sec5": "5 seconds",
+        "sec15": "15 seconds",
+        "sec30": "30 seconds",
+        "min1": "1 minute",
+        "min2": "2 minutes",
+        "min5": "5 minutes"
+      }
+    }
+  }
+}

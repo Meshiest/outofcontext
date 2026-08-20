@@ -1,0 +1,57 @@
+{
+  "title": "Matalabras",
+  "subtitle": "Asesinado a palabras",
+  "difficulty": "Intermedia",
+  "description": "Cada jugador recibe un objetivo y una palabra que tiene que hacerle decir. Este sitio web solo sirve para preparar la partida: el juego en sí se juega en persona.",
+  "more": "Matalabras se inspira en el clásico juego del asesino, con la idea de crear una partida que pueda durar varios días. Este sitio solo se encarga de la preparación: le da a cada jugador las palabras que tiene que hacerle decir a su objetivo. Pasarle tus palabras a quien te haya asesinado ya corre por tu cuenta.",
+  "howTo": [
+    "Este sitio no sirve para jugar la partida en sí, solo para organizarla",
+    "El juego se juega en persona, a base de conversaciones",
+    "Cada jugador recibe palabras que intenta hacerle decir a su objetivo",
+    "Cuando el objetivo de un jugador dice una de esas palabras, ese jugador hereda el objetivo del eliminado",
+    "¡Gana el último jugador con vida!"
+  ],
+  "playTime": "4+h",
+  "dossierTitle": "Expediente del objetivo",
+  "dossierTitlePlural": "Expedientes de los objetivos",
+  "dossierSubtitle": "Haz una captura de pantalla, por si acaso",
+  "operation": "Operación",
+  "targetHeader": "Objetivo",
+  "targetMeta": "Debes matalabrear a este jugador y luego quedarte con su objetivo y sus palabras",
+  "weaponsHeader": "Armas",
+  "weaponsMeta": "Engaña a tu objetivo para que diga una de estas",
+  "tablePlayer": "Jugador",
+  "tableKillWords": "Palabras letales",
+  "done": "Listo",
+  "showDossier": "Ver expediente",
+  "freeToWurder": "Ya puedes matalabrear a tus anchas",
+  "waiting": "Los matalabras recopilando inteligencia",
+  "config": {
+    "players": {
+      "name": "Máximo de jugadores",
+      "text": "Jugadores",
+      "info": "Máximo de jugadores permitidos en la partida"
+    },
+    "numWords": {
+      "name": "Número de palabras",
+      "text": "Palabras",
+      "info": "Cuántas palabras recibe cada jugador para asesinar"
+    },
+    "battleRoyale": {
+      "name": "Modo battle royale",
+      "text": "Royale",
+      "info": "Si está activado, cada jugador recibe palabras letales para todos los demás jugadores."
+    },
+    "wordList": {
+      "name": "Lista de palabras",
+      "text": "Palabras",
+      "info": "De qué idioma se sacan las palabras letales",
+      "options": {
+        "en-common": "Inglés, comunes",
+        "de-common": "Alemán, comunes",
+        "es-common": "Español, comunes",
+        "fr-common": "Francés, comunes"
+      }
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "title": "Dilettante",
+  "subtitle": "Dabble in the Arts",
+  "difficulty": "Simple",
+  "description": "Collaborate in drawing stories or things one picture at a time with minimal context.",
+  "more": "Dilettante is inspired by the game \"Exquisite corpse,\" where players add to a composition one drawing at a time only seeing the last image. According to Wikipedia, this technique was invented by surrealists. Dilettante is Raconteur with pictures and Scribble without words. The gamemode option can make it into Raconteur with pictures, Scribble where everyone draws, or a comic builder.",
+  "howTo": [
+    "Every player will be given a picture drawn by another player",
+    "Players continue the composition one drawing at a time",
+    "At the end, players can enjoy the funky art they drew together"
+  ],
+  "playTime": "10-15m",
+  "drawBeginning": "Draw the beginning!",
+  "continueStory": "Continue the story...",
+  "connectBottom": "Connect your drawing to the bottom of the canvas",
+  "finishPrefix": "Finish the sequence! ",
+  "continuePrefix": "Continue the drawing! ",
+  "verbDrew": "drew",
+  "verbWrote": "wrote",
+  "lastArtists_one": "{{prefix}}The last artist {{verb}}....",
+  "lastArtists_other": "{{prefix}}The last artists {{verb}}....",
+  "then": "Then",
+  "captionLabel": "Caption",
+  "waitingOnArtists": "Waiting on Other Artists",
+  "sequencesBeingDrawn": "Sequences are Being Drawn",
+  "sequencesTitle": "Sequences",
+  "config": {
+    "players": {
+      "name": "Max Players",
+      "text": "Players",
+      "info": "Maximum allowed players in the game"
+    },
+    "numPieces": {
+      "name": "Chain Count",
+      "text": "Chains",
+      "info": "The number of sequences being written"
+    },
+    "numLinks": {
+      "name": "Drawings per Chain",
+      "text": "Drawings",
+      "info": "How many drawings are in a sequence"
+    },
+    "anonymous": {
+      "name": "Hide Authors",
+      "text": "Anonymous",
+      "info": "Whether names are shown at the end."
+    },
+    "colors": {
+      "name": "Colored Drawings",
+      "text": "Colors",
+      "info": "Enable drawing in color. Also enables brush thickness."
+    },
+    "gamemode": {
+      "name": "Game Mode",
+      "text": "Mode",
+      "info": "What players are given as context for their drawings (Captions, Drawings, or Both).",
+      "options": {
+        "regular": "Normal",
+        "collab": "Collab",
+        "both": "Comic",
+        "captions": "Caption",
+        "drawings": "Chaos"
+      },
+      "optionsMore": {
+        "regular": "Regular Gameplay (Drawings Only)",
+        "collab": "One Long Continuous Drawing",
+        "both": "See Drawings and Captions",
+        "captions": "See Captions Only",
+        "drawings": "See Drawings Only (Still Write Captions)"
+      }
+    }
+  }
+}

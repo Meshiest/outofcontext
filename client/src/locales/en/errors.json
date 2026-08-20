@@ -1,0 +1,9 @@
+{
+  "LOBBY_NOT_FOUND": "That lobby does not exist.",
+  "LOBBY_FULL": "That lobby is full.",
+  "NAME_TAKEN": "That name is already taken.",
+  "NOT_ADMIN": "Only the lobby admin can do that.",
+  "GAME_ALREADY_STARTED": "The game has already started.",
+  "RATE_LIMITED": "Slow down a moment, then try again.",
+  "UNKNOWN": "Something went wrong. Please try again."
+}

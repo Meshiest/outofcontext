@@ -1,0 +1,59 @@
+{
+  "app": {
+    "wordmark": "Ohne <ink>Kontext</ink>",
+    "pageTitle": "Ohne Kontext!",
+    "tagline": "Partyspiele mit deinen Freunden"
+  },
+  "language": {
+    "native": "Deutsch"
+  },
+  "connection": {
+    "lost": "Verbindung zum Server verloren",
+    "reconnect": "Neu verbinden",
+    "reconnecting": "Verbinde neu...",
+    "kicked": "Du warst zu lange weg und wurdest getrennt. Lade die Seite neu, um wieder beizutreten.",
+    "refresh": "Neu laden"
+  },
+  "routes": {
+    "home": "Startseite",
+    "lobby": "Lobby",
+    "games": "Spiele",
+    "notFound": "Seite nicht gefunden"
+  },
+  "timer": {
+    "expired": "Zeit ist um",
+    "remaining": "übrig",
+    "second_one": "Sekunde",
+    "second_other": "Sekunden"
+  },
+  "playerList": {
+    "heading": "Mitglieder",
+    "players": "Spieler",
+    "spectators": "Zuschauer",
+    "noPlayers": "Keine Spieler",
+    "noSpectators": "Keine Zuschauer",
+    "pending": "Noch ohne Namen",
+    "spectate": "Zuschauen",
+    "joinPlayers": "Mitspielen",
+    "leave": "Verlassen",
+    "join": "Übernehmen",
+    "remove": "Entfernen",
+    "change": "Ernennen",
+    "endGame": "Spiel beenden",
+    "confirmEndGame": "Bist du sicher?",
+    "emotesToggle": "Emotes an/aus",
+    "grantToggle": "Zum Admin machen",
+    "removeToggle": "Spieler entfernen",
+    "iconAdmin": "Admin",
+    "iconSelf": "Du",
+    "iconDisconnected": "Offline"
+  },
+  "doodle": {
+    "undo": "Rückgängig",
+    "done": "Fertig",
+    "color": "Farbe",
+    "strokeWidth": "Strichstärke",
+    "author": "Gezeichnet von {{name}}",
+    "redo": "Wiederholen"
+  }
+}

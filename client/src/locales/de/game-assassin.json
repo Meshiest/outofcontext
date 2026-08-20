@@ -1,0 +1,57 @@
+{
+  "title": "Wörder",
+  "subtitle": "Wortwörtlich ermordet",
+  "difficulty": "Mittel",
+  "description": "Jeder Spieler bekommt eine Zielperson und ein Wort, das er ihr entlocken muss. Diese Website dient nur der Vorbereitung: Gespielt wird persönlich.",
+  "more": "Wörder ist vom klassischen Assassin-Spiel inspiriert und darauf ausgelegt, über mehrere Tage hinweg gespielt zu werden. Diese Website kümmert sich nur um die Vorbereitung: Sie verteilt die Wörter, die jeder Spieler seiner Zielperson entlocken muss. Wer gewördert wird, muss seine Wörter selbst an seinen Mörder weitergeben.",
+  "howTo": [
+    "Diese Website hilft nicht beim eigentlichen Spielen, sie übernimmt nur die Organisation",
+    "Gespielt wird persönlich, ganz beiläufig im Gespräch",
+    "Du bekommst Wörter, die du deiner Zielperson entlocken musst",
+    "Sagt deine Zielperson eines dieser Wörter, übernimmst du ihre Zielperson",
+    "Wer zuletzt noch lebt, gewinnt!"
+  ],
+  "playTime": "4+ Std.",
+  "dossierTitle": "Zielpersonen-Dossier",
+  "dossierTitlePlural": "Zielpersonen-Dossiers",
+  "dossierSubtitle": "Mach zur Sicherheit einen Screenshot",
+  "operation": "Operation",
+  "targetHeader": "Zielperson",
+  "targetMeta": "Du musst diesen Spieler wördern, dann übernimmst du seine Zielperson und seine Wörter",
+  "weaponsHeader": "Waffen",
+  "weaponsMeta": "Bring deine Zielperson dazu, eines davon zu sagen",
+  "tablePlayer": "Spieler",
+  "tableKillWords": "Mordwörter",
+  "done": "Fertig",
+  "showDossier": "Dossier anzeigen",
+  "freeToWurder": "Du darfst jetzt nach Herzenslust wördern",
+  "waiting": "Wörder sammeln Informationen",
+  "config": {
+    "players": {
+      "name": "Max. Spieler",
+      "text": "Spieler",
+      "info": "Wie viele Spieler maximal mitspielen können"
+    },
+    "numWords": {
+      "name": "Anzahl Wörter",
+      "text": "Wörter",
+      "info": "Wie viele Wörter jeder Spieler zum Morden bekommt"
+    },
+    "battleRoyale": {
+      "name": "Battle-Royale-Modus",
+      "text": "Royale",
+      "info": "Wenn aktiviert, bekommt jeder Spieler Mordwörter für alle anderen Spieler."
+    },
+    "wordList": {
+      "name": "Wortliste",
+      "text": "Wortliste",
+      "info": "Aus welcher Sprache die Mordwörter stammen",
+      "options": {
+        "en-common": "Englisch, geläufig",
+        "de-common": "Deutsch, geläufig",
+        "es-common": "Spanisch, geläufig",
+        "fr-common": "Französisch, geläufig"
+      }
+    }
+  }
+}

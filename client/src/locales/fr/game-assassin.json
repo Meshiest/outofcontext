@@ -1,0 +1,57 @@
+{
+  "title": "Motueur",
+  "subtitle": "Assassiné à coups de mots",
+  "difficulty": "Modéré",
+  "description": "Chaque joueur reçoit une cible et un mot à lui faire dire. Ce site ne sert qu'à préparer la partie : le jeu, lui, se joue en personne.",
+  "more": "Motueur s'inspire du jeu de l'assassin, avec l'idée d'une partie qui peut s'étaler sur plusieurs jours. Ce site se contente d'orchestrer la mise en place : il donne à chaque joueur les mots à faire dire à sa cible. C'est ensuite aux joueurs de transmettre eux-mêmes leurs mots à leur assassin.",
+  "howTo": [
+    "Ce site ne sert pas à jouer la partie elle-même, seulement à l'organiser",
+    "Le jeu se joue en personne, au fil des conversations",
+    "Chaque joueur reçoit des mots qu'il doit faire dire à sa cible",
+    "Quand la cible d'un joueur dit un de ces mots, le joueur hérite de la cible de sa victime",
+    "Le dernier joueur en vie l'emporte !"
+  ],
+  "playTime": "4 h et +",
+  "dossierTitle": "Dossier de cible",
+  "dossierTitlePlural": "Dossiers de cibles",
+  "dossierSubtitle": "Fais une capture d'écran, au cas où",
+  "operation": "Opération",
+  "targetHeader": "Cible",
+  "targetMeta": "Tu dois motuer ce joueur, puis récupérer sa cible et ses mots",
+  "weaponsHeader": "Armes",
+  "weaponsMeta": "Piège ta cible pour lui faire dire un de ces mots",
+  "tablePlayer": "Joueur",
+  "tableKillWords": "Mots fatals",
+  "done": "Terminé",
+  "showDossier": "Revoir le dossier",
+  "freeToWurder": "Tu peux maintenant motuer à cœur joie",
+  "waiting": "Les Motueurs collectent des renseignements...",
+  "config": {
+    "players": {
+      "name": "Joueurs max",
+      "text": "Joueurs",
+      "info": "Nombre maximum de joueurs dans la partie"
+    },
+    "numWords": {
+      "name": "Nombre de mots",
+      "text": "Mots",
+      "info": "Le nombre de mots fatals remis à chaque joueur"
+    },
+    "battleRoyale": {
+      "name": "Mode battle royale",
+      "text": "Royale",
+      "info": "Si activé, chaque joueur reçoit des mots fatals pour tous les autres joueurs."
+    },
+    "wordList": {
+      "name": "Liste de mots",
+      "text": "Mots",
+      "info": "La langue d'où sont tirés les mots fatals",
+      "options": {
+        "en-common": "Anglais, courant",
+        "de-common": "Allemand, courant",
+        "es-common": "Espagnol, courant",
+        "fr-common": "Français, courant"
+      }
+    }
+  }
+}

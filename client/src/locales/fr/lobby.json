@@ -1,0 +1,96 @@
+{
+  "join": {
+    "button": "Rejoindre le salon"
+  },
+  "invalidLobby": {
+    "title": "Salon introuvable",
+    "subtitle": "Ce salon n'existe pas"
+  },
+  "loading": "Chargement",
+  "sections": {
+    "lobby": "Salon",
+    "redirect": "Redirection",
+    "gameInfo": "Infos du jeu",
+    "lobbyCode": "Code du salon",
+    "gameSettings": "Paramètres du jeu",
+    "gameSetup": "Configuration du jeu"
+  },
+  "buttons": {
+    "create": "Créer",
+    "join": "Rejoindre",
+    "home": "Accueil",
+    "bugReport": "Signaler un bug",
+    "copyCode": "Copier le code",
+    "shareLink": "Partager le lien",
+    "startGame": "Lancer la partie"
+  },
+  "badges": {
+    "lobbyCode": "Code du salon",
+    "admin": "Tu es l'hôte"
+  },
+  "nameEntry": {
+    "title": "Choisis un nom",
+    "subtitle": "Un peu de créativité !",
+    "label": "Nom",
+    "placeholder": "Ethan",
+    "submit": "Rejoindre",
+    "leave": "Quitter",
+    "error": "Ce nom est déjà pris"
+  },
+  "noGame": {
+    "title": "Aucun jeu sélectionné",
+    "subtitle": "En attente du choix d'un jeu"
+  },
+  "gameSelect": {
+    "label": "Jeu",
+    "placeholder": "Choisir un jeu"
+  },
+  "config": {
+    "enabled": "Activé",
+    "disabled": "Désactivé",
+    "yes": "Oui",
+    "no": "Non",
+    "unknown": "???",
+    "maximum": "Maximum : {{max}}",
+    "minimum": "Minimum : {{min}}",
+    "numPlayers": "Utiliser le nombre actuel de joueurs"
+  },
+  "phonetic": {
+    "a": "Anatole",
+    "b": "Berthe",
+    "c": "Célestin",
+    "d": "Désiré",
+    "e": "Eugène",
+    "f": "François",
+    "g": "Gaston",
+    "h": "Henri",
+    "i": "Irma",
+    "j": "Joseph",
+    "k": "Kléber",
+    "l": "Louis",
+    "m": "Marcel",
+    "n": "Nicolas",
+    "o": "Oscar",
+    "p": "Pierre",
+    "q": "Quintal",
+    "r": "Raoul",
+    "s": "Suzanne",
+    "t": "Thérèse",
+    "u": "Ursule",
+    "v": "Victor",
+    "w": "William",
+    "x": "Xavier",
+    "y": "Yvonne",
+    "z": "Zoé",
+    "0": "zéro",
+    "1": "un",
+    "2": "deux",
+    "3": "trois",
+    "4": "quatre",
+    "5": "cinq",
+    "6": "six",
+    "7": "sept",
+    "8": "huit",
+    "9": "neuf"
+  }
+}

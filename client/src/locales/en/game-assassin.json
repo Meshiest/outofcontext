@@ -1,0 +1,57 @@
+{
+  "title": "Wurderer",
+  "subtitle": "Murdered by Words",
+  "difficulty": "Moderate",
+  "description": "Players are each given a target and a word they need to get their targets to say. This website is only a setup for playing the game in person.",
+  "more": "Wurderer is inspired the assassin game in hopes to create a game that can be played over the course of multiple days. This website only orchestrates setting up the game by giving players the words they need to get their target to say. Players will have to handle passing their words off to whoever killed them on their own.",
+  "howTo": [
+    "This website does not aid in actually playing the game, only moderation",
+    "The game is played in person over conversations",
+    "Players are given words they try to get their targets to say",
+    "Once a player's target says one of those words, the player gets that player's target",
+    "The last player alive wins!"
+  ],
+  "playTime": "4+hr",
+  "dossierTitle": "Target Dossier",
+  "dossierTitlePlural": "Target Dossiers",
+  "dossierSubtitle": "Screenshot this just in case",
+  "operation": "Operation",
+  "targetHeader": "Target",
+  "targetMeta": "You must wurder this player, then obtain their target and words",
+  "weaponsHeader": "Weapons",
+  "weaponsMeta": "Trick your target into saying one of these",
+  "tablePlayer": "Player",
+  "tableKillWords": "Kill Words",
+  "done": "Done",
+  "showDossier": "Show Dossier",
+  "freeToWurder": "You are now free to Wurder to your heart's content",
+  "waiting": "Wurderers Collecting Intel",
+  "config": {
+    "players": {
+      "name": "Max Players",
+      "text": "Players",
+      "info": "Maximum allowed players in the game"
+    },
+    "numWords": {
+      "name": "Word Count",
+      "text": "Words",
+      "info": "Number of words players receive to kill with"
+    },
+    "battleRoyale": {
+      "name": "Battle Royale Mode",
+      "text": "Royale",
+      "info": "When enabled, players are given kill words for every player."
+    },
+    "wordList": {
+      "name": "Word List",
+      "text": "Words",
+      "info": "Which language the kill words are drawn from",
+      "options": {
+        "en-common": "English, Common",
+        "de-common": "German, Common",
+        "es-common": "Spanish, Common",
+        "fr-common": "French, Common"
+      }
+    }
+  }
+}

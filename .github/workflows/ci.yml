@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+# A new push to the same branch cancels the previous run - a superseded commit's result is noise.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The repo is LF (.gitattributes); do not let the runner rewrite line endings on checkout.
+  GIT_CONFIG_PARAMETERS: "'core.autocrlf=false'"
+
+jobs:
+  check:
+    name: Typecheck, lint, test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            client/package-lock.json
+
+      # `npm ci` in both roots: the client is a separate package with its own lockfile.
+      - name: Install
+        run: |
+          npm ci
+          npm ci --prefix client
+
+      # Typechecks first: they are the fastest way to fail, and a type error makes the rest noise.
+      - name: Typecheck server
+        run: npm run typecheck:server
+      - name: Typecheck client
+        run: npm run typecheck:client
+      - name: Typecheck e2e
+        run: npm run e2e:typecheck
+
+      - name: Lint
+        run: npm run lint:client
+
+      - name: Format
+        run: npm --prefix client run format:check
+
+      # Compares key SETS, not file bytes - the extractor sorts alphabetically while the committed
+      # files are grouped by meaning, so a file diff would fail on ordering alone.
+      - name: i18n key coverage
+        run: node scripts/check-i18n-keys.mjs
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      # Production dependencies only: a dev-only advisory should not block a merge, and this job is
+      # advisory anyway (continue-on-error) so a newly-published CVE cannot wedge the branch.
+      - name: Audit (root)
+        run: npm audit --omit=dev --audit-level=high
+        continue-on-error: true
+      - name: Audit (client)
+        run: npm audit --omit=dev --audit-level=high --prefix client
+        continue-on-error: true

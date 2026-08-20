@@ -1,0 +1,68 @@
+{
+  "title": "Gribouille",
+  "subtitle": "Dessine-moi une conclusion",
+  "difficulty": "Simple",
+  "description": "Les joueurs alternent entre dessin et description dans un mélange de téléphone arabe et de Pictionary.",
+  "more": "Gribouille s'inspire de jeux comme Drawphone de Tanner Krewson, Telestrations et Pictionary. Les joueurs se creusent la tête pour déchiffrer ce que les autres peuvent bien vouloir dire avec le peu de place dont ils disposent. À la fin de la partie, dessins et descriptions s'enchaînent pour révéler ce qui se passe vraiment dans la tête de tout le monde.",
+  "howTo": [
+    "On joue en alternant entre dessiner des images et décrire celles des autres",
+    "Face à une consigne, chacun la dessine du mieux qu'il peut",
+    "Face à une image, chacun la décrit du mieux qu'il peut",
+    "À la fin de la partie, tout le monde savoure la chaîne de dessins et de descriptions"
+  ],
+  "playTime": "10-15 min",
+  "waiting": "En attente des autres joueurs",
+  "creating": "Les chefs-d'œuvre se dessinent et se décrivent...",
+  "resultsTitle": "Chaînes",
+  "journey": "Parcours",
+  "describe": {
+    "initialHeader": "Qu'est-ce qu'on dessine ?",
+    "describeHeader": "Le dernier joueur a dessiné...",
+    "initialLabel": "Un truc à dessiner",
+    "describeLabel": "C'est...",
+    "submit": "Décrire"
+  },
+  "draw": {
+    "instruction": "Dessine ceci :"
+  },
+  "config": {
+    "players": {
+      "name": "Joueurs max",
+      "text": "Joueurs",
+      "info": "Nombre maximum de joueurs dans la partie"
+    },
+    "numLinks": {
+      "name": "Nombre de manches",
+      "text": "Manches",
+      "info": "Nombre d'ajouts à chaque chaîne. Un nombre pair sera arrondi au nombre impair inférieur."
+    },
+    "colors": {
+      "name": "Dessins en couleur",
+      "text": "Couleurs",
+      "info": "Permet de dessiner en rouge, vert, bleu et jaune. Active aussi le réglage de l'épaisseur du trait."
+    },
+    "timeLimit": {
+      "name": "Limite de temps",
+      "text": "Limite de temps",
+      "info": "Le temps dont les joueurs disposent pour dessiner",
+      "options": {
+        "none": "Aucune",
+        "sec5": "5 s",
+        "sec15": "15 s",
+        "sec30": "30 s",
+        "min1": "1 min",
+        "min2": "2 min",
+        "min5": "5 min"
+      },
+      "optionsMore": {
+        "none": "Sans limite",
+        "sec5": "5 secondes",
+        "sec15": "15 secondes",
+        "sec30": "30 secondes",
+        "min1": "1 minute",
+        "min2": "2 minutes",
+        "min5": "5 minutes"
+      }
+    }
+  }
+}

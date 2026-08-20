@@ -1,0 +1,9 @@
+{
+  "LOBBY_NOT_FOUND": "Ce salon n'existe pas.",
+  "LOBBY_FULL": "Ce salon est complet.",
+  "NAME_TAKEN": "Ce nom est déjà pris.",
+  "NOT_ADMIN": "Seul l'hôte du salon peut faire ça.",
+  "GAME_ALREADY_STARTED": "La partie a déjà commencé.",
+  "RATE_LIMITED": "Doucement ! Réessaie dans un instant.",
+  "UNKNOWN": "Oups, quelque chose a cloché. Réessaie."
+}

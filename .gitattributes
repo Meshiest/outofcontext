@@ -1,0 +1,9 @@
+# The repo is LF. Without this, files written on Windows drifted in as CRLF (84 of them by the time
+# this was added) and every diff/format check had to guess which convention a file followed.
+# `text=auto` lets git detect text and store it LF-normalized; the checkout is LF on all platforms.
+* text=auto eol=lf
+
+# Assets git should never touch.
+*.png binary
+*.ico binary
+*.wav binary

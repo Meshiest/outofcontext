@@ -1,0 +1,9 @@
+{
+  "LOBBY_NOT_FOUND": "Diese Lobby gibt es nicht.",
+  "LOBBY_FULL": "Diese Lobby ist voll.",
+  "NAME_TAKEN": "Der Name ist schon vergeben.",
+  "NOT_ADMIN": "Das darf nur der Lobby-Admin.",
+  "GAME_ALREADY_STARTED": "Das Spiel läuft schon.",
+  "RATE_LIMITED": "Nicht so schnell! Versuch es gleich nochmal.",
+  "UNKNOWN": "Da ist was schiefgelaufen. Versuch es nochmal."
+}

@@ -1,0 +1,57 @@
+{
+  "title": "Cuentagotas",
+  "subtitle": "Escritores fantasma",
+  "difficulty": "Sencilla",
+  "description": "Colaboren para escribir historias línea a línea con el mínimo contexto.",
+  "more": "Cuentagotas se inspira en los juegos de improvisación donde los jugadores aportan a una historia una frase o una palabra a la vez. La idea es crear historias únicas a partir de un hilo de ideas que va quién sabe adónde. La continuidad depende solo de la última línea de la historia, así que escribir con ambigüedad da pie a historias más interesantes. Es parecido a Consequences, un viejo juego de salón.",
+  "howTo": [
+    "Cada jugador recibirá una línea de una historia",
+    "Los jugadores continuarán la historia línea a línea",
+    "Al final, podrán disfrutar de las historias disparatadas que escribieron juntos"
+  ],
+  "playTime": "15-20m",
+  "writeFirstLine": "Escribe la primera línea",
+  "finishPrefix": "¡Termina la historia!",
+  "lastAuthorsWrote_one": "El último autor escribió...",
+  "lastAuthorsWrote_other": "Los últimos autores escribieron...",
+  "then": "Luego",
+  "storyGoes": "La historia dice...",
+  "sign": "Firmar",
+  "finish": "Terminar",
+  "waitingOnAuthors": "Esperando a los demás autores",
+  "storiesBeingWritten": "Se están escribiendo las historias",
+  "storiesTitle": "Historias",
+  "config": {
+    "players": {
+      "name": "Máximo de jugadores",
+      "text": "Jugadores",
+      "info": "Máximo de jugadores permitidos en la partida"
+    },
+    "numStories": {
+      "name": "Número de historias",
+      "text": "Historias",
+      "info": "El número de historias que se escriben"
+    },
+    "numLinks": {
+      "name": "Líneas por historia",
+      "text": "Líneas",
+      "info": "Cuántas líneas tiene cada historia"
+    },
+    "anonymous": {
+      "name": "Ocultar autores",
+      "text": "Anónimo",
+      "info": "Si se muestran los nombres al final."
+    },
+    "contextLen": {
+      "name": "Contexto",
+      "text": "Contexto",
+      "info": "Añadir líneas de contexto adicionales ayuda a que las historias fluyan mejor",
+      "options": {
+        "regular": "1 línea",
+        "two": "2 líneas",
+        "three": "3 líneas",
+        "four": "4 líneas"
+      }
+    }
+  }
+}

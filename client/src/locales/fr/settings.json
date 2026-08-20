@@ -1,0 +1,31 @@
+{
+  "title": "Préférences",
+  "language": {
+    "label": "Langue"
+  },
+  "darkMode": {
+    "label": "Mode sombre",
+    "toggle": "Activé"
+  },
+  "turnSound": {
+    "label": "Son quand c'est ton tour",
+    "placeholder": "Choisir un son",
+    "preview": "Écouter le son",
+    "none": "Aucun",
+    "options": {
+      "bit": "Bit",
+      "chime": "Carillon",
+      "chord": "Accord",
+      "ding": "Ding",
+      "retro": "Rétro"
+    }
+  },
+  "soundVolume": {
+    "label": "Volume des notifications",
+    "muted": "Muet"
+  },
+  "streamerMode": {
+    "label": "Masquer le code du salon",
+    "toggle": "Masqué"
+  }
+}

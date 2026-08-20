@@ -1,0 +1,9 @@
+# Hand-tuned stylesheet. Short rules are deliberately kept on one line so related declarations line
+# up and can be compared at a glance - the h1-h6 type scale and the button skins read as tables that
+# way. Prettier expands every one of them, which grew the file by 40% and lost that. Formatted by
+# hand instead; the rest of src/ is prettier's.
+src/index.css
+
+# Generated.
+dist
+storybook-static
