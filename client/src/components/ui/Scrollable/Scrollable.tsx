@@ -62,8 +62,14 @@ export function Scrollable({
       setThumb((prev) => (prev === null ? prev : null));
       return;
     }
+    // The thumb travels inside the track, which is inset 2px top and bottom (.ooc-scroll-track), so
+    // its reach is the track height, not the viewport's: against clientHeight it overshoots the track
+    // bottom at max scroll, and since every ancestor has visible overflow that adds a stray page
+    // scrollbar. The `- 4` fallback matches the 2px+2px inset for the first paint, before the track
+    // element exists.
+    const trackHeight = trackRef.current?.clientHeight ?? clientHeight - 4;
     const height = Math.max(MIN_THUMB, (clientHeight / scrollHeight) * clientHeight);
-    const top = (scrollTop / (scrollHeight - clientHeight)) * (clientHeight - height);
+    const top = (scrollTop / (scrollHeight - clientHeight)) * (trackHeight - height);
     setThumb((prev) =>
       prev && Math.abs(prev.top - top) < 0.5 && Math.abs(prev.height - height) < 0.5
         ? prev
