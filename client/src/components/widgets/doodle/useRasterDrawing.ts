@@ -3,7 +3,14 @@ import { DRAWING_CANVAS_SIZE, STROKE_MIN } from '@shared/drawing';
 import { DRAWING_PALETTE } from '@/data/theme';
 import { encodeCanvas } from '@/data/drawings';
 
-/** Total points retained across all strokes; oldest strokes are evicted once exceeded. */
+/**
+ * Points replayed on every redraw, across all retained strokes.
+ *
+ * This bounds the cost of a frame, NOT how much a player may draw. Once exceeded, the oldest strokes
+ * are baked into the flattened layer: their pixels stay on the canvas, they merely stop being
+ * individually undoable. Dropping them outright is what used to make a long drawing lose its
+ * earliest marks - typically the background - one per new stroke.
+ */
 export const MAX_STROKE_POINTS = 4000;
 
 export interface Stroke {
@@ -13,10 +20,11 @@ export interface Stroke {
   points: { x: number; y: number }[];
 }
 
-/** Live counts driving toolbar enablement: Undo/Done need `strokes`, Redo needs `redo`. */
+/** Live counts driving toolbar enablement: Undo needs `strokes`, Redo needs `redo`. */
 export interface StrokeCounts {
   strokes: number;
   redo: number;
+  baked: number;
 }
 
 /**
@@ -44,7 +52,7 @@ export interface UseRasterDrawing {
   counts: StrokeCounts;
   setStrokeColor: (color: string) => void;
   setStrokeWidth: (width: number) => void;
-  /** Remove the newest stroke onto the redo stack. Returns whether any strokes remain. */
+  /** Remove the newest stroke onto the redo stack. Returns whether anything drawn remains. */
   undo: () => boolean;
   /** Put the most recently undone stroke back. Returns whether any remain to redo. */
   redo: () => boolean;
@@ -82,12 +90,17 @@ export function useRasterDrawing({
   // A seeded image (Doodle's `image` prop in edit mode) sits under the strokes. Held separately so
   // redraw() can repaint it on every stroke instead of wiping it.
   const backgroundRef = useRef<HTMLImageElement | null>(null);
+  // Everything permanent that is no longer replayed stroke by stroke: the seeded image plus every
+  // stroke evicted by the point budget, flattened into one bitmap. Null until the first eviction,
+  // and it supersedes backgroundRef once it exists (the image is baked into it).
+  const flattenedRef = useRef<HTMLCanvasElement | null>(null);
+  const bakedRef = useRef(0);
   const colorRef = useRef<string>(DRAWING_PALETTE[0]);
   const widthRef = useRef<number>(STROKE_MIN);
   const readOnlyRef = useRef(isReadOnly);
   const onDrawStartRef = useRef(onDrawStart);
   const onCountsChangeRef = useRef(onCountsChange);
-  const [counts, setCounts] = useState<StrokeCounts>({ strokes: 0, redo: 0 });
+  const [counts, setCounts] = useState<StrokeCounts>({ strokes: 0, redo: 0, baked: 0 });
 
   useEffect(() => {
     readOnlyRef.current = isReadOnly;
@@ -129,6 +142,30 @@ export function useRasterDrawing({
     ctx.stroke();
   };
 
+  /**
+   * Move a stroke off the replay list and onto the flattened layer, keeping its pixels.
+   *
+   * The layer is seeded with the background image on first use, which is why redraw() paints one or
+   * the other and never both.
+   */
+  const bake = (stroke: Stroke) => {
+    let layer = flattenedRef.current;
+    if (!layer) {
+      layer = document.createElement('canvas');
+      layer.width = DRAWING_CANVAS_SIZE;
+      layer.height = DRAWING_CANVAS_SIZE;
+      const seed = layer.getContext('2d');
+      if (!seed) return;
+      if (backgroundRef.current) {
+        seed.drawImage(backgroundRef.current, 0, 0, DRAWING_CANVAS_SIZE, DRAWING_CANVAS_SIZE);
+      }
+      flattenedRef.current = layer;
+    }
+    const ctx = layer.getContext('2d');
+    if (ctx) drawStroke(ctx, stroke);
+    bakedRef.current += 1;
+  };
+
   const redraw = useCallback(() => {
     const ctx = context();
     if (!ctx) return;
@@ -136,9 +173,8 @@ export function useRasterDrawing({
     // LOOKS like paper while drawing, but the exported bitmap keeps its alpha - which is what lets a
     // drawing be layered over something other than white.
     ctx.clearRect(0, 0, DRAWING_CANVAS_SIZE, DRAWING_CANVAS_SIZE);
-    if (backgroundRef.current) {
-      ctx.drawImage(backgroundRef.current, 0, 0, DRAWING_CANVAS_SIZE, DRAWING_CANVAS_SIZE);
-    }
+    const base = flattenedRef.current ?? backgroundRef.current;
+    if (base) ctx.drawImage(base, 0, 0, DRAWING_CANVAS_SIZE, DRAWING_CANVAS_SIZE);
     for (const stroke of strokesRef.current) drawStroke(ctx, stroke);
     if (currentRef.current) drawStroke(ctx, currentRef.current);
   }, [context]);
@@ -149,8 +185,16 @@ export function useRasterDrawing({
   }, [redraw]);
 
   const publishCounts = useCallback(() => {
-    const next = { strokes: strokesRef.current.length, redo: redoRef.current.length };
-    setCounts((prev) => (prev.strokes === next.strokes && prev.redo === next.redo ? prev : next));
+    const next = {
+      strokes: strokesRef.current.length,
+      redo: redoRef.current.length,
+      baked: bakedRef.current,
+    };
+    setCounts((prev) =>
+      prev.strokes === next.strokes && prev.redo === next.redo && prev.baked === next.baked
+        ? prev
+        : next,
+    );
     onCountsChangeRef.current?.(next);
   }, []);
 
@@ -207,13 +251,17 @@ export function useRasterDrawing({
     strokesRef.current.push(stroke);
     // A fresh stroke forks the history, so anything undone is no longer reachable.
     redoRef.current = [];
+    // Trim the replay list back into budget. The evicted strokes are baked, not discarded, so the
+    // only thing the player loses is the ability to undo that far back.
     let total = strokesRef.current.reduce((sum, s) => sum + s.points.length, 0);
     while (total > MAX_STROKE_POINTS && strokesRef.current.length > 1) {
-      const [dropped] = strokesRef.current.splice(0, 1);
-      total -= dropped.points.length;
+      const [evicted] = strokesRef.current.splice(0, 1);
+      bake(evicted);
+      total -= evicted.points.length;
     }
     publishCounts();
     redraw();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- bake reads only refs.
   }, [publishCounts, redraw]);
 
   const onPointerUp = useCallback(
@@ -233,7 +281,8 @@ export function useRasterDrawing({
     if (stroke) redoRef.current.push(stroke);
     publishCounts();
     redraw();
-    return strokesRef.current.length > 0;
+    // Baked strokes count: undoing every undoable stroke does not empty a canvas that has some.
+    return strokesRef.current.length > 0 || bakedRef.current > 0;
   }, [publishCounts, redraw]);
 
   const redo = useCallback(() => {
@@ -249,6 +298,8 @@ export function useRasterDrawing({
     redoRef.current = [];
     currentRef.current = null;
     backgroundRef.current = null;
+    flattenedRef.current = null;
+    bakedRef.current = 0;
     publishCounts();
     redraw();
   }, [publishCounts, redraw]);
@@ -265,6 +316,8 @@ export function useRasterDrawing({
       redoRef.current = [];
       currentRef.current = null;
       backgroundRef.current = null;
+      flattenedRef.current = null;
+      bakedRef.current = 0;
       publishCounts();
       redraw();
       if (!src) return;

@@ -27,6 +27,14 @@ describe('DrawingToolbar', () => {
     expect(screen.getByRole('button', { name: 'Done' })).toBeDisabled();
   });
 
+  it('keeps Done available when every undoable stroke is undone but baked ones remain', () => {
+    // Past the point budget the earliest strokes are flattened into the canvas. They are still
+    // drawn, so a canvas with nothing left to undo is not an empty one.
+    renderToolbar({ strokeCount: 0, bakedCount: 12 });
+    expect(screen.getByRole('button', { name: 'Undo' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Done' })).toBeEnabled();
+  });
+
   it('fires callbacks when Undo and Done are clicked', async () => {
     const user = userEvent.setup();
     const props = renderToolbar({ strokeCount: 2 });

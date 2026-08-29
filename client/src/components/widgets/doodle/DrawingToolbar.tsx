@@ -2,8 +2,13 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button/Button';
 
 export interface DrawingToolbarProps {
-  /** Live stroke count; drives Undo/Done enablement. */
+  /** Live count of undoable strokes; drives Undo enablement, and Done with `bakedCount`. */
   strokeCount: number;
+  /**
+   * Strokes flattened into the canvas by the point budget: still drawn, no longer undoable. Keeps
+   * Done available on a long drawing whose whole undo history has been undone away.
+   */
+  bakedCount?: number;
   /** Canvas is locked (timed-draw expiry): Undo is disabled but Done stays available. */
   isReadOnly?: boolean;
   /** Force the Done button disabled (e.g. submission in flight / not this player's turn). */
@@ -24,6 +29,7 @@ export interface DrawingToolbarProps {
  */
 export function DrawingToolbar({
   strokeCount,
+  bakedCount = 0,
   isReadOnly = false,
   disabled = false,
   redoCount = 0,
@@ -34,7 +40,8 @@ export function DrawingToolbar({
 }: DrawingToolbarProps) {
   const { t } = useTranslation('common');
   const undoDisabled = strokeCount === 0 || isReadOnly || submitting;
-  const doneDisabled = (strokeCount === 0 && !isReadOnly) || disabled;
+  const isEmpty = strokeCount === 0 && bakedCount === 0;
+  const doneDisabled = (isEmpty && !isReadOnly) || disabled;
 
   return (
     <div className="flex items-center p-2">

@@ -59,7 +59,7 @@ export function Doodle({
 }: DoodleProps) {
   const [color, setColor] = useState<string>(DRAWING_PALETTE[0]);
   const [strokeWidth, setStrokeWidth] = useState(STROKE_MIN);
-  const [counts, setCounts] = useState<StrokeCounts>({ strokes: 0, redo: 0 });
+  const [counts, setCounts] = useState<StrokeCounts>({ strokes: 0, redo: 0, baked: 0 });
   // Done does network work, so it has an in-flight state. Without this a slow upload looks like a
   // dead button and invites a second press.
   const [submitting, setSubmitting] = useState(false);
@@ -160,6 +160,7 @@ export function Doodle({
         />
         <DrawingToolbar
           strokeCount={counts.strokes}
+          bakedCount={counts.baked}
           isReadOnly={locked}
           disabled={disabled}
           submitting={submitting}
