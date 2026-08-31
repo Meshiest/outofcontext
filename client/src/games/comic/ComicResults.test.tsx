@@ -30,14 +30,14 @@ describe('ComicResults', () => {
     expect(screen.getByText('Sequences')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Done Reading' })).toBeInTheDocument();
     // One reaction bar per chain.
-    expect(screen.getAllByRole('button', { name: 'Love it' })).toHaveLength(2);
+    expect(screen.getAllByRole('button', { name: /^Love it/ })).toHaveLength(2);
   });
 
   it('reports the chain index and the reaction pressed', async () => {
     const onReact = vi.fn();
     const user = userEvent.setup();
     render(<ComicResults {...baseProps} playerState="READING" onReact={onReact} />);
-    await user.click(screen.getAllByRole('button', { name: 'Love it' })[0]);
+    await user.click(screen.getAllByRole('button', { name: /^Love it/ })[0]);
     expect(onReact).toHaveBeenCalledWith(0, 'heart');
   });
 
@@ -45,7 +45,7 @@ describe('ComicResults', () => {
     render(<ComicResults {...baseProps} playerState={null} onReact={vi.fn()} />);
     expect(screen.queryByRole('button', { name: 'Done Reading' })).toBeNull();
     // A spectator's reactions render as static labels, not buttons.
-    expect(screen.queryByRole('button', { name: 'Love it' })).toBeNull();
+    expect(screen.queryByRole('button', { name: /^Love it/ })).toBeNull();
     expect(screen.getAllByLabelText(/Love it: /).length).toBeGreaterThan(0);
   });
 });

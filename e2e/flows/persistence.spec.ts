@@ -9,7 +9,7 @@
  * cull, which is time-based on the server. A real run must either wait out that window or expose a test
  * hook. Document the exact trigger before de-fixme-ing.
  */
-import { test, expect, openLobby } from '../fixtures/multiClient';
+import { test, expect, openLobby, memberList } from '../fixtures/multiClient';
 
 test.fixme('Lobby state persists when everyone leaves and is restored on rejoin [SKELETON]', async ({
   makeClients,
@@ -22,7 +22,7 @@ test.fixme('Lobby state persists when everyone leaves and is restored on rejoin 
   await host.selectGame('Raconteur');
   await host.setConfig('Lines per Story', 3);
   await host.start();
-  await expect(host.page.getByText('Lobby members')).toBeVisible();
+  await expect(memberList(host.page)).toBeVisible();
 
   // TODO(ci): advance the game a few turns (reuse the story driver) so there is non-trivial state to
   //   persist, then capture a fingerprint of that state (e.g. progress value, some visible line).
@@ -42,6 +42,6 @@ test.fixme('Lobby state persists when everyone leaves and is restored on rejoin 
   await page.getByLabel('Name', { exact: true }).fill('Restorer');
   await page.getByRole('button', { name: 'Join', exact: true }).click();
   // TODO(ci): assert the restored game view (running game / restored progress), not a fresh WAITING room.
-  await expect(page.getByText('Lobby members')).toBeVisible();
+  await expect(memberList(page)).toBeVisible();
   await rejoiner.close();
 });

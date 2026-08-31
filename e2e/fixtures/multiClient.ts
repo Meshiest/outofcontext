@@ -90,8 +90,8 @@ export class Client {
     await field.fill(name);
     // NameEntry's submit button reads "Join" (lobby:nameEntry.submit).
     await this.page.getByRole('button', { name: 'Join', exact: true }).click();
-    // We have left name entry once the member list ("Lobby members" divider) renders.
-    await expect(this.page.getByText('Lobby members')).toBeVisible({ timeout: 20_000 });
+    // We have left name entry once the member list renders.
+    await expect(memberList(this.page)).toBeVisible({ timeout: 20_000 });
   }
 
   /** Toggle this client from active player to spectator (or, for a spectator, back to players). */
@@ -173,9 +173,9 @@ export class Client {
 
   /** True if this client currently sees the lobby waiting room (game selector / start controls). */
   async inWaitingRoom(): Promise<boolean> {
-    // "Lobby members" always shows; the waiting room additionally shows a "Redirect"/game setup or,
+    // The member list always shows; the waiting room additionally shows a "Redirect"/game setup or,
     // for the admin, the Start Game button. So this is a loose check, not an exact one.
-    return this.page.getByText('Lobby members').isVisible();
+    return memberList(this.page).isVisible();
   }
 }
 
@@ -237,17 +237,26 @@ export async function submitAndAwaitProgress(
 ): Promise<void> {
   const before = await readProgress(page);
   await submit();
+  let last: number | null = before;
   await expect
     .poll(
       async () => {
         const now = await readProgress(page);
+        last = now;
         if (now === null) return true; // bar gone => progress reached 100% (or moved to results)
         if (before === null) return true;
         return now !== before;
       },
-      { timeout: timeoutMs, message: 'expected game progress to advance after submit' },
+      { timeout: timeoutMs },
     )
-    .toBe(true);
+    .toBe(true)
+    // Report the values: "did not advance" is unactionable without knowing what it was stuck on.
+    .catch((cause: unknown) => {
+      throw new Error(
+        `expected game progress to advance after submit (before=${before}, last seen=${last})`,
+        { cause },
+      );
+    });
 }
 
 /**
@@ -370,6 +379,17 @@ export const NAMES = ['Alice', 'Bob', 'Carol', 'Dave', 'Erin', 'Frank'] as const
  * Convenience: create N clients, have client 0 create the lobby, and have everyone (including the
  * host) join it by name. Returns the clients and the lobby code. Client 0 is the admin.
  */
+/**
+ * The lobby member list - the signal that a client is past name entry and into the lobby.
+ *
+ * Deliberately NOT the "Lobby members" divider: that carries `lg:hidden` (PlayerList.tsx), because
+ * on desktop the list is its own titled side rail. So it never renders at the 1280px desktop
+ * viewport, and anything waiting for it to be visible times out there no matter what the app does.
+ * The Players table header is rendered at every breakpoint.
+ */
+export const memberList = (page: Page) =>
+  page.getByRole('columnheader', { name: /^Players/ });
+
 export async function openLobby(
   makeClients: MultiClientFixtures['makeClients'],
   count: number,

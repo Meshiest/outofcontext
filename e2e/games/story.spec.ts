@@ -65,6 +65,9 @@ const storyDriver: GameDriver = {
   },
 };
 
+/** `reactions.heart` in client/src/locales/en/game-common.json. */
+const HEART = 'Love it';
+
 test('Raconteur: 3 players write 3 stories of 3 lines each, then like + finish reading', async ({
   makeClients,
 }) => {
@@ -99,8 +102,9 @@ test('Raconteur: 3 players write 3 stories of 3 lines each, then like + finish r
 
   for (const client of clients) {
     const page = client.page;
-    // 3 stories -> 3 like controls (one heart per ChainCard).
-    await expect(page.getByRole('button', { name: /like/ })).toHaveCount(3);
+    // 3 stories -> 3 heart controls (one per ChainCard). The accessible name is the reaction's
+    // label from game-common.json (`reactions.heart`), the same string ChainCard's unit tests use.
+    await expect(page.getByRole('button', { name: HEART })).toHaveCount(3);
     // 3 stories x 3 lines = 9 rendered story lines.
     await expect(page.locator('p.story-body')).toHaveCount(9);
     // Author attribution: every player's name appears in the results (each wrote >=1 line).
@@ -109,11 +113,13 @@ test('Raconteur: 3 players write 3 stories of 3 lines each, then like + finish r
     }
   }
 
-  // Like a story on the host: the first heart goes 0 -> 1.
-  const firstHeart = host.page.getByRole('button', { name: /like/ }).first();
-  await expect(firstHeart).toHaveAccessibleName(/0 like/);
+  // React to a story on the host: the first heart's tally goes 0 -> 1.
+  // The tally is the button's TEXT, not part of its accessible name - ReactionBar sets an
+  // aria-label of the bare label, and aria-label overrides content for the accessible name.
+  const firstHeart = host.page.getByRole('button', { name: HEART }).first();
+  await expect(firstHeart).toHaveText('0');
   await firstHeart.click();
-  await expect(firstHeart).toHaveAccessibleName(/1 like/);
+  await expect(firstHeart).toHaveText('1');
 
   // Everyone marks Done Reading; when the last player does, the server ends the game -> WAITING.
   for (const client of clients) {

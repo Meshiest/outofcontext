@@ -42,7 +42,7 @@ describe('ChainCard', () => {
         <p>body</p>
       </ChainCard>,
     );
-    await user.click(screen.getByRole('button', { name: 'Big brain' }));
+    await user.click(screen.getByRole('button', { name: /^Big brain/ }));
     expect(onReact).toHaveBeenCalledWith('brain');
   });
 
@@ -58,8 +58,11 @@ describe('ChainCard', () => {
         <p>body</p>
       </ChainCard>,
     );
-    expect(screen.getByRole('button', { name: 'Love it' })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('button', { name: 'Big brain' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: /^Love it/ })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    expect(screen.getByRole('button', { name: /^Big brain/ })).toHaveAttribute(
       'aria-pressed',
       'false',
     );
@@ -81,6 +84,27 @@ describe('ChainCard', () => {
     expect(screen.getByLabelText('Love it: 4')).toBeInTheDocument();
   });
 
+  /** aria-label overrides content, so a bare label would announce the reaction with no count. */
+  it('announces the tally, matching the read-only variant', async () => {
+    const user = userEvent.setup();
+    render(
+      <ChainCard
+        index={0}
+        counts={{ ...NO_COUNTS, heart: 4 }}
+        mine={NONE_MINE}
+        canReact
+        onReact={vi.fn()}
+      >
+        <p>body</p>
+      </ChainCard>,
+    );
+    expect(screen.getByRole('button', { name: 'Love it: 4' })).toBeInTheDocument();
+
+    // The optimistic count is announced too, not just rendered.
+    await user.click(screen.getByRole('button', { name: 'Love it: 4' }));
+    expect(screen.getByRole('button', { name: 'Love it: 5' })).toBeInTheDocument();
+  });
+
   it('responds to a press immediately, before the server confirms', async () => {
     const user = userEvent.setup();
     // onReact does nothing here: the props never change, standing in for a server yet to reply.
@@ -89,7 +113,7 @@ describe('ChainCard', () => {
         <p>body</p>
       </ChainCard>,
     );
-    const heart = screen.getByRole('button', { name: 'Love it' });
+    const heart = screen.getByRole('button', { name: /^Love it/ });
     expect(heart).toHaveAttribute('aria-pressed', 'false');
 
     await user.click(heart);
@@ -98,7 +122,7 @@ describe('ChainCard', () => {
     expect(heart).toHaveAttribute('aria-pressed', 'true');
     expect(heart).toHaveTextContent('1');
     // Only the pressed reaction changes.
-    expect(screen.getByRole('button', { name: 'Big brain' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: /^Big brain/ })).toHaveAttribute(
       'aria-pressed',
       'false',
     );
@@ -111,7 +135,7 @@ describe('ChainCard', () => {
         <p>body</p>
       </ChainCard>,
     );
-    await user.click(screen.getByRole('button', { name: 'Love it' }));
+    await user.click(screen.getByRole('button', { name: /^Love it/ }));
 
     // The server confirms with the real count, which must not be double-counted on top of the guess.
     rerender(
@@ -125,7 +149,7 @@ describe('ChainCard', () => {
         <p>body</p>
       </ChainCard>,
     );
-    const heart = screen.getByRole('button', { name: 'Love it' });
+    const heart = screen.getByRole('button', { name: /^Love it/ });
     expect(heart).toHaveAttribute('aria-pressed', 'true');
     expect(heart).toHaveTextContent('1');
   });
@@ -137,7 +161,7 @@ describe('ChainCard', () => {
         <p>body</p>
       </ChainCard>,
     );
-    const heart = screen.getByRole('button', { name: 'Love it' });
+    const heart = screen.getByRole('button', { name: /^Love it/ });
     expect(heart.className).toContain('btn-neutral');
     expect(heart.className).not.toContain('btn-negative');
 

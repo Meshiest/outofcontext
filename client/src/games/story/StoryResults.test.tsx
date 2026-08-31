@@ -38,7 +38,7 @@ describe('StoryResults', () => {
     const user = userEvent.setup();
     const { onReact } = renderResults();
     // Every card carries the same set of reactions, so position picks the story.
-    await user.click(screen.getAllByRole('button', { name: 'Love it' })[1]);
+    await user.click(screen.getAllByRole('button', { name: /^Love it/ })[1]);
     expect(onReact).toHaveBeenCalledWith(1, 'heart');
   });
 
@@ -51,7 +51,7 @@ describe('StoryResults', () => {
 
   it('renders a static tally and no Done Reading button for spectators', () => {
     renderResults({ playerState: null });
-    expect(screen.queryByRole('button', { name: 'Love it' })).toBeNull();
+    expect(screen.queryByRole('button', { name: /^Love it/ })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Done Reading' })).toBeNull();
     // The counts are still readable, just not pressable.
     expect(screen.getAllByLabelText(/Love it: /).length).toBeGreaterThan(0);

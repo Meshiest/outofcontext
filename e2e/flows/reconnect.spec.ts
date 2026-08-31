@@ -12,7 +12,7 @@
  *
  * Marked fixme until the "state intact" assertions are finalized.
  */
-import { test, expect, openLobby } from '../fixtures/multiClient';
+import { test, expect, openLobby, memberList } from '../fixtures/multiClient';
 
 test.fixme('Player reconnects mid-game with state intact [SKELETON]', async ({ makeClients }) => {
   const { clients, code } = await openLobby(makeClients, 3);
@@ -21,7 +21,7 @@ test.fixme('Player reconnects mid-game with state intact [SKELETON]', async ({ m
   await host.selectGame('Raconteur');
   await host.setConfig('Lines per Story', 3);
   await host.start();
-  await expect(carol.page.getByText('Lobby members')).toBeVisible();
+  await expect(memberList(carol.page)).toBeVisible();
 
   // TODO(ci): capture Carol's current phase (editor visible? waiting?) before the drop.
 

@@ -12,7 +12,7 @@
  *
  * Marked fixme until assertions are finalized.
  */
-import { test, expect, openLobby } from '../fixtures/multiClient';
+import { test, expect, openLobby, memberList } from '../fixtures/multiClient';
 
 test.fixme('Direct URL entry: name-entry when new, reconnect when already in [SKELETON]', async ({
   makeClients,
@@ -29,12 +29,12 @@ test.fixme('Direct URL entry: name-entry when new, reconnect when already in [SK
   // Enter a name -> waiting room.
   await page.getByLabel('Name', { exact: true }).fill('Zed');
   await page.getByRole('button', { name: 'Join', exact: true }).click();
-  await expect(page.getByText('Lobby members')).toBeVisible();
+  await expect(memberList(page)).toBeVisible();
 
   // --- Reload keeps them in the lobby (reconnect by persisted member id), no name re-entry ---
   await page.reload();
   // TODO(ci): assert the member list is shown WITHOUT the name-entry field reappearing.
-  await expect(page.getByText('Lobby members')).toBeVisible();
+  await expect(memberList(page)).toBeVisible();
   await expect(page.getByLabel('Name', { exact: true })).toBeHidden();
 
   await fresh.close();

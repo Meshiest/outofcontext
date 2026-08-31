@@ -33,13 +33,13 @@ describe('RedactedResults', () => {
     expect(screen.getByRole('button', { name: /Done Reading/i })).toBeInTheDocument();
 
     // Every card carries the same reactions, so position picks the chain.
-    await user.click(screen.getAllByRole('button', { name: 'Love it' })[1]);
+    await user.click(screen.getAllByRole('button', { name: /^Love it/ })[1]);
     expect(onReact).toHaveBeenCalledWith(1, 'heart');
   });
 
   it('renders static like counts (no buttons) and no Done button for spectators', () => {
     render(<RedactedResults {...baseProps} playerState={null} />);
     expect(screen.queryByRole('button', { name: /Done Reading/i })).toBeNull();
-    expect(screen.queryByRole('button', { name: 'Love it' })).toBeNull();
+    expect(screen.queryByRole('button', { name: /^Love it/ })).toBeNull();
   });
 });

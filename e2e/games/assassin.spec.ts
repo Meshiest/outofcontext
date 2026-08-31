@@ -18,7 +18,10 @@ const NUM_WORDS = 2;
 async function readTarget(client: Client): Promise<string> {
   const target = client.page.getByTestId('assassin-target');
   await expect(target).toBeVisible({ timeout: 20_000 });
-  return (await target.innerText()).trim();
+  // textContent, NOT innerText: the name renders in a <Label>, which is CSS `uppercase`, and
+  // innerText reflects text-transform. That returns "CAROL" for the player named "Carol", so every
+  // lookup keyed by a player's name misses and the cycle check reports a missing target.
+  return ((await target.textContent()) ?? '').trim();
 }
 
 test('Wurderer: 3 players each get one target + 2 kill words forming a single cycle', async ({

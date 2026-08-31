@@ -6,7 +6,7 @@
  * (adminProcedure), fixing the legacy no-parens `player.isAdmin` bypass. Marked fixme until the
  * propagation assertions are finalized.
  */
-import { test, expect, openLobby } from '../fixtures/multiClient';
+import { test, expect, openLobby, memberList } from '../fixtures/multiClient';
 
 test.fixme('Admin can grant admin, remove a player, and end the game [SKELETON]', async ({
   makeClients,
@@ -29,7 +29,7 @@ test.fixme('Admin can grant admin, remove a player, and end the game [SKELETON]'
   await bob.selectGame('Raconteur');
   await bob.setConfig('Lines per Story', 3);
   await bob.start();
-  await expect(bob.page.getByText('Lobby members')).toBeVisible();
+  await expect(memberList(bob.page)).toBeVisible();
 
   await bob.endGame();
   // TODO(ci): assert every remaining client returns to the WAITING room (Start Game visible to the

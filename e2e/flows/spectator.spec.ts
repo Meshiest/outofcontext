@@ -6,7 +6,7 @@
  * Label (not a button). They should still see the results view and receive live updates as players
  * act. Marked fixme until the read-only assertions are finalized.
  */
-import { test, expect, openLobby } from '../fixtures/multiClient';
+import { test, expect, openLobby, memberList } from '../fixtures/multiClient';
 
 test.fixme('Spectator sees a read-only game view with live updates [SKELETON]', async ({
   makeClients,
@@ -29,5 +29,5 @@ test.fixme('Spectator sees a read-only game view with live updates [SKELETON]', 
   //     - never shows a "Done Reading" / "Still Reading" button,
   //     - eventually shows the results ("Stories") with like controls rendered as static Labels
   //       (role !== button; LikeButton disabled path).
-  await expect(watcher.page.getByText('Lobby members')).toBeVisible();
+  await expect(memberList(watcher.page)).toBeVisible();
 });

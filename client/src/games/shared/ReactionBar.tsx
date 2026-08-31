@@ -110,7 +110,9 @@ export function ReactionBar({ counts, mine, canReact, onReact, floats = [] }: Re
               color={active ? style.color : undefined}
               icon={style.icon}
               aria-pressed={active}
-              aria-label={label}
+              // aria-label overrides content, so the count has to be in here or it is never
+              // announced. Same `label: count` shape as the read-only variant above.
+              aria-label={`${label}: ${Math.max(0, shown)}`}
               className="tabular-nums"
               onClick={() => press(id, active)}
             >
