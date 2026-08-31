@@ -27,6 +27,12 @@ const DURATION_BUCKETS = [1, 2.5, 5, 10, 20, 30, 60, 120, 300, 600];
 /** Game durations in SECONDS: a chain game runs minutes to the better part of an hour. */
 const GAME_DURATION_BUCKETS = [30, 60, 120, 300, 600, 1200, 1800, 3600];
 
+/**
+ * Numeric game settings - chain lengths, story counts. gameInfo bounds them at 256, so the buckets
+ * cover a hobby-sized board closely and the long tail coarsely.
+ */
+const CONFIG_VALUE_BUCKETS = [1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 50, 100, 256];
+
 /** tRPC handler time in SECONDS. Everything is in-memory, so anything past 100ms is notable. */
 const REQUEST_BUCKETS = [0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 1, 5];
 
@@ -116,6 +122,28 @@ export function createPrometheusMetrics(): PrometheusMetrics {
     name: 'ooc_emotes_sent_total',
     help: 'Emotes that passed the rate gate and were broadcast.',
     labelNames: ['emote', 'game', 'country', 'rocketcrab'],
+    registers: [registry],
+  });
+
+  const reactions = new Counter({
+    name: 'ooc_reactions_total',
+    help: 'Reactions added to a finished chain. Adds only, not toggles off.',
+    labelNames: ['reaction', 'game', 'rocketcrab'],
+    registers: [registry],
+  });
+
+  const gameConfig = new Counter({
+    name: 'ooc_game_config_total',
+    help: 'Games started with each bool/list setting. Sums to games TIMES settings, not to games.',
+    labelNames: ['game', 'setting', 'value'],
+    registers: [registry],
+  });
+
+  const gameConfigValue = new Histogram({
+    name: 'ooc_game_config_value',
+    help: 'Numeric game settings at start, by setting.',
+    labelNames: ['game', 'setting'],
+    buckets: CONFIG_VALUE_BUCKETS,
     registers: [registry],
   });
 
@@ -252,11 +280,19 @@ export function createPrometheusMetrics(): PrometheusMetrics {
     sessionStarted({ country }) {
       sessions.inc({ country: country ?? UNKNOWN_COUNTRY });
     },
-    gameStarted({ game, players, country, participants: countries, rocketcrab }) {
+    gameStarted({ game, players, country, participants: countries, rocketcrab, config }) {
       const rc = flag(rocketcrab);
       gamesStarted.inc({ game, country: country ?? UNKNOWN_COUNTRY, rocketcrab: rc });
       gamePlayers.observe({ game, rocketcrab: rc }, players);
       for (const c of countries) participants.inc({ game, country: c, rocketcrab: rc });
+      // No rocketcrab label, unlike the rest of the game-scoped set: a RocketCrab lobby's settings
+      // are the external caller's presets, not a player's choice, and the split doubles all of this.
+      for (const { setting, value } of config.choices) {
+        gameConfig.inc({ game, setting, value });
+      }
+      for (const { setting, value } of config.numbers) {
+        gameConfigValue.observe({ game, setting }, value);
+      }
     },
     gameEnded({ game, reason, country, durationMs, rocketcrab }) {
       const rc = flag(rocketcrab);
@@ -273,6 +309,9 @@ export function createPrometheusMetrics(): PrometheusMetrics {
         country: country ?? UNKNOWN_COUNTRY,
         rocketcrab: flag(rocketcrab),
       });
+    },
+    reactionAdded({ reaction, game, rocketcrab }) {
+      reactions.inc({ reaction, game, rocketcrab: flag(rocketcrab) });
     },
     emoteRateLimited({ game, rocketcrab }) {
       emotesRateLimited.inc({ game: game ?? NO_GAME, rocketcrab: flag(rocketcrab) });

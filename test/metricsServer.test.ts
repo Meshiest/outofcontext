@@ -81,9 +81,11 @@ describe('the metrics endpoint', () => {
       country: 'DE',
       participants: ['DE', 'FR'],
       rocketcrab: false,
+      config: { choices: [], numbers: [] },
     });
     sink.emoteSent({ emote: 'heart', game: 'story', country: 'FR', rocketcrab: false });
     sink.emoteSent({ emote: 'heart', rocketcrab: true });
+    sink.reactionAdded({ reaction: 'heart', game: 'story', rocketcrab: false });
     sink.sessionStarted({ country: 'DE' });
     sink.sessionStarted({});
 
@@ -98,6 +100,9 @@ describe('the metrics endpoint', () => {
     // An absent game and country become explicit labels rather than dropping the sample.
     expect(body).toContain(
       'ooc_emotes_sent_total{emote="heart",game="none",country="unknown",rocketcrab="true"} 1',
+    );
+    expect(body).toContain(
+      'ooc_reactions_total{reaction="heart",game="story",rocketcrab="false"} 1',
     );
     expect(body).toContain('ooc_sessions_total{country="DE"} 1');
     expect(body).toContain('ooc_sessions_total{country="unknown"} 1');
@@ -124,6 +129,33 @@ describe('the metrics endpoint', () => {
     ]) {
       expect(body, series).toContain(series);
     }
+  });
+
+  /** Choices become labels; numbers become histogram observations - see GameConfigSettings. */
+  it('labels choice settings and observes numeric ones', async () => {
+    const { sink, registry } = createPrometheusMetrics();
+    sink.gameStarted({
+      game: 'story',
+      players: 3,
+      participants: [],
+      rocketcrab: false,
+      config: {
+        choices: [{ setting: 'contextLen', value: 'three' }],
+        numbers: [{ setting: 'numLinks', value: 4 }],
+      },
+    });
+
+    const body = await registry.metrics();
+    expect(body).toContain(
+      'ooc_game_config_total{game="story",setting="contextLen",value="three"} 1',
+    );
+    expect(body).toContain('ooc_game_config_value_count{game="story",setting="numLinks"} 1');
+    expect(body).toContain('ooc_game_config_value_sum{game="story",setting="numLinks"} 4');
+    expect(body, 'config metrics carry no rocketcrab label').not.toContain(
+      'setting="numLinks",rocketcrab=',
+    );
+    // No raw numeric label anywhere - that is the cardinality trap this split exists to avoid.
+    expect(body).not.toContain('setting="numLinks",value=');
   });
 
   /**

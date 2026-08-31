@@ -11,7 +11,7 @@ import { Redacted } from './games/redacted.js';
 import { Recipe } from './games/recipe.js';
 import type { Member } from './Member.js';
 import { metrics, parseGameId } from './Metrics.js';
-import type { Country, GameEndReason } from './Metrics.js';
+import type { Country, GameEndReason, GameConfigSettings } from './Metrics.js';
 import type {
   GameMeta,
   LobbyInfo,
@@ -335,9 +335,38 @@ export class Lobby {
             p.member?.country ? [p.member.country] : [],
           ),
           rocketcrab: this.rocketcrab ?? false,
+          config: this.configSettings(newConfig),
         });
       }
     }
+  }
+
+  /**
+   * The settings this game is starting with. Choices come from the RAW gameConfig and numbers from
+   * the RESOLVED one - see GameConfigSettings for why each side is the only one that works.
+   *
+   * `players` is skipped: ooc_game_players already reports the same number.
+   */
+  configSettings(resolved: ResolvedGameConfig): GameConfigSettings {
+    const settings: GameConfigSettings = { choices: [], numbers: [] };
+    const meta = gameMeta(this.selectedGame);
+    if (!meta) return settings;
+
+    for (const setting in this.gameConfig) {
+      if (setting === 'players') continue;
+      const info = meta.config[setting];
+      if (!info) continue;
+
+      if (info.type === 'int') {
+        const value = (resolved as unknown as Record<string, unknown>)[setting];
+        if (typeof value === 'number' && Number.isFinite(value)) {
+          settings.numbers.push({ setting, value });
+        }
+      } else {
+        settings.choices.push({ setting, value: String(this.gameConfig[setting]) });
+      }
+    }
+    return settings;
   }
 
   /** The lobby admin's country - one per game, so a game counter labelled with it still sums. */

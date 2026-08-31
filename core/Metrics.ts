@@ -42,6 +42,19 @@ export function parseGameId(raw: string): GameId | undefined {
   return GAME_IDS.has(raw) ? (raw as GameId) : undefined;
 }
 
+/**
+ * The settings a game was started with, split by how each can be reported.
+ *
+ * `choices` are the bool and list fields carrying their RAW selection - a list field stores its
+ * option name (`collab`, `sec15`), a small closed set that makes a good label. `numbers` are the int
+ * fields, resolved (so `#numPlayers` is the real count); those run to 256 under gameInfo's bounds,
+ * so they are histogram observations rather than label values.
+ */
+export interface GameConfigSettings {
+  choices: Array<{ setting: string; value: string }>;
+  numbers: Array<{ setting: string; value: number }>;
+}
+
 export interface GameStartedEvent {
   game: GameId;
   players: number;
@@ -55,6 +68,8 @@ export interface GameStartedEvent {
   country?: Country;
   /** One entry per player with a resolvable country. May be shorter than `players`. */
   participants: Country[];
+  /** What the game was configured with. Carried on the start event so the two cannot diverge. */
+  config: GameConfigSettings;
   /**
    * Whether the lobby came from the RocketCrab handoff. A boolean, so it only doubles a series
    * count, and it separates two populations that behave nothing alike: a RocketCrab lobby is
@@ -119,6 +134,16 @@ export interface EmoteEvent {
   rocketcrab: boolean;
 }
 
+/**
+ * A player added a reaction to a finished chain. Only ADDS are reported: toggling one off is not a
+ * reaction being used, and counting both would make the total mean "reaction presses".
+ */
+export interface ReactionAddedEvent {
+  reaction: string;
+  game: GameId;
+  rocketcrab: boolean;
+}
+
 export interface EmoteRateLimitedEvent {
   game?: GameId;
   /** See GameStartedEvent.rocketcrab. */
@@ -168,6 +193,7 @@ export interface MetricsSink {
   gameEnded(event: GameEndedEvent): void;
   playerStateEnded(event: PlayerStateEndedEvent): void;
   emoteSent(event: EmoteEvent): void;
+  reactionAdded(event: ReactionAddedEvent): void;
   emoteRateLimited(event: EmoteRateLimitedEvent): void;
   trpcRequest(event: TrpcRequestEvent): void;
   appError(event: AppErrorEvent): void;
@@ -180,6 +206,7 @@ export const NOOP_METRICS: MetricsSink = {
   gameEnded() {},
   playerStateEnded() {},
   emoteSent() {},
+  reactionAdded() {},
   emoteRateLimited() {},
   trpcRequest() {},
   appError() {},
@@ -208,6 +235,7 @@ export const metrics: MetricsSink = {
   gameEnded: (event) => sink.gameEnded(event),
   playerStateEnded: (event) => sink.playerStateEnded(event),
   emoteSent: (event) => sink.emoteSent(event),
+  reactionAdded: (event) => sink.reactionAdded(event),
   emoteRateLimited: (event) => sink.emoteRateLimited(event),
   trpcRequest: (event) => sink.trpcRequest(event),
   appError: (event) => sink.appError(event),

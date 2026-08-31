@@ -6,6 +6,7 @@ import type { Lobby } from '../Lobby.js';
 import type { ResolvedGameConfig } from './game.js';
 import type { GameState, PlayerState } from '@shared/types';
 import type { GameMessageType } from '@shared/events';
+import { metrics, parseGameId } from '../Metrics.js';
 import { applyReaction, countReactions, reactionFlags } from './util/reactions.js';
 
 // A story's chain link is a plain line string; subclasses override `chains` content shapes as needed
@@ -210,6 +211,14 @@ export class Story extends Game {
     // Only an ADD is announced: a removal has nothing to animate, and echoing it would fire a
     // float on every client for a reaction that is going away.
     if (result.added) {
+      const game = parseGameId(this.lobby.selectedGame);
+      if (game) {
+        metrics.reactionAdded({
+          reaction: result.reaction,
+          game,
+          rocketcrab: this.lobby.rocketcrab ?? false,
+        });
+      }
       // pid rides along so the player who pressed can ignore their own echo - they already
       // animated optimistically, and playing it twice reads as a double-press.
       this.lobby.emitAll('game:reaction', {

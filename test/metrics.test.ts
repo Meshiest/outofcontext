@@ -21,6 +21,7 @@ function recordingSink() {
     gameEnded: vi.fn(),
     playerStateEnded: vi.fn(),
     emoteSent: vi.fn(),
+    reactionAdded: vi.fn(),
     emoteRateLimited: vi.fn(),
     trpcRequest: vi.fn(),
     appError: vi.fn(),
@@ -129,6 +130,27 @@ describe('metrics wiring', () => {
     // Admin country is singular, so a counter labelled with it still sums to a game count.
     expect(event.country).toBe('DE');
     expect(event.participants.sort()).toEqual(['DE', 'FR']);
+  });
+
+  /** Pins the raw-vs-resolved split that GameConfigSettings describes. */
+  it('reports the settings a game was started with, split by choices and numbers', async () => {
+    const { callers } = await startedLobby(3);
+    // An int field takes a NUMBER; setConfig drops a numeric string for anything but #numPlayers.
+    await callers[0].lobby.setConfig({ name: 'numLinks', value: 4 });
+    await callers[0].lobby.setConfig({ name: 'anonymous', value: 'true' });
+    await callers[0].lobby.setConfig({ name: 'contextLen', value: 'three' });
+
+    await callers[0].game.start();
+
+    const { config } = sink.gameStarted.mock.calls[0][0];
+    expect(config.choices).toContainEqual({ setting: 'anonymous', value: 'true' });
+    expect(config.choices).toContainEqual({ setting: 'contextLen', value: 'three' });
+    expect(config.numbers).toContainEqual({ setting: 'numLinks', value: 4 });
+    // numStories defaults to '#numPlayers'; the resolved count is reported, not the sentinel.
+    expect(config.numbers).toContainEqual({ setting: 'numStories', value: 3 });
+    // players is skipped - ooc_game_players already reports exactly this number.
+    expect(config.numbers.map((n) => n.setting)).not.toContain('players');
+    expect(config.choices.map((c) => c.setting)).not.toContain('players');
   });
 
   it('reports the end reason and duration, exactly once per game', async () => {
@@ -296,6 +318,52 @@ describe('metrics wiring', () => {
     expect(calls.some((c) => c.state === 'editing')).toBe(true);
     // Countries come from the seated member, so at least one event carries the one we set.
     expect(calls.some((c) => c.country === 'DE')).toBe(true);
+  });
+
+  /**
+   * Reactions are only meaningful once every chain is finished, and only an ADD counts - a toggle
+   * off is not a reaction being used. Both rules live in the shared reactToChain, so every chain
+   * game inherits them.
+   */
+  it('counts a reaction added to a finished chain, but not one toggled off', async () => {
+    const { callers, code } = await startedLobby(3);
+    await callers[0].game.start();
+
+    const lobby = Lobby.lobbies[code];
+    const game = lobby.game as Story;
+
+    // Reactions before the game finishes are ignored outright.
+    await callers[0].game.message({
+      type: 'chain:react',
+      data: { index: 0, reaction: 'heart' },
+    });
+    expect(sink.reactionAdded).not.toHaveBeenCalled();
+
+    // Play the game out so the chains are on screen.
+    for (let round = 0; round < 40 && game.getGameProgress() < 1; round++) {
+      for (const chain of game.chains.filter((c) => c.editor)) {
+        const seat = lobby.players.findIndex((p) => p.playerId === chain.editor);
+        await callers[seat].game.message({ type: 'story:line', data: 'a line' });
+      }
+    }
+    expect(game.getGameProgress()).toBe(1);
+
+    await callers[0].game.message({
+      type: 'chain:react',
+      data: { index: 0, reaction: 'heart' },
+    });
+    expect(sink.reactionAdded).toHaveBeenCalledExactlyOnceWith({
+      reaction: 'heart',
+      game: 'story',
+      rocketcrab: false,
+    });
+
+    // Same player, same reaction again: that is a toggle OFF, not a new reaction.
+    await callers[0].game.message({
+      type: 'chain:react',
+      data: { index: 0, reaction: 'heart' },
+    });
+    expect(sink.reactionAdded).toHaveBeenCalledTimes(1);
   });
 
   /** States come from getPlayerState(), a plain string, so an odd one must not mint a new label. */
