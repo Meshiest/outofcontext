@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { EventEmitter } from 'node:events';
 import type { Lobby } from './Lobby.js';
 import type { ServerEventName } from '@shared/events';
+import type { Country } from './Metrics.js';
 
 // 1 hour of inactivity and not in a game -> kick
 const INACTIVE_DURATION = 60 * 60 * 1000;
@@ -28,6 +29,8 @@ export class Member {
   activity: number;
   removed: boolean;
   connected: boolean;
+  /** Cloudflare-resolved country, for labelling metrics. Never an IP - see core/Metrics.ts. */
+  country: Country | undefined;
   // Number of open SSE streams (onInfo + onState). A stable-id member survives while any stream is
   // open; when the last one ends it is reaped only after a grace period (see reapGraceMs), so a
   // transient EventSource reconnect resumes the SAME member with its lobby intact instead of being
@@ -65,17 +68,19 @@ export class Member {
         (member.activity + INACTIVE_DURATION < now && !member.inActiveLobby()) ||
         member.activity + REALLY_INACTIVE_DURATION < now
       ) {
-        member.removed = true;
-        byId.delete(member.id);
         console.log(new Date(), '-- [afk] disconnected inactive user');
-        members[i] = members[members.length - 1];
-        members.pop();
         if (member.connected) {
           // Order matters: send() is unbuffered, so this has to go out while the stream is still
           // attached. After disconnect() there is no subscriber and the event is dropped.
           member.send('member:kicked');
           member.disconnect();
         }
+        // Reap through the same path the grace-window reap uses: the member has to leave their
+        // LOBBY, not just the registry. Do NOT remove inline or set `removed` here - either one
+        // strands a kicked member on lobby.members, so the lobby never reports empty, cullEmpty
+        // never collects it, and the idle counts only ever climb.
+        if (Member.reaper) Member.reaper(member);
+        else Member.removePlayer(member);
       }
     }
   }
@@ -117,6 +122,7 @@ export class Member {
     this.activity = Date.now();
     this.removed = false;
     this.connected = true;
+    this.country = undefined;
     this.activeStreams = 0;
     this.reapTimer = undefined;
     members.push(this);

@@ -4,10 +4,18 @@
  * gesture - the redaction bar - reused for every hidden thing. Controls are "pressed
  * smooth": soft vertical gradients, keycap presses, debossed Font Awesome icons. The
  * redaction bar is the ONE element that stays dead flat. Whiteout in dark mode.
- * Fonts load via <link> in index.html and .storybook/preview-head.html
- * (Newsreader / Hanken Grotesk / Space Mono). Icons: Font Awesome (webfont).
+ * Fonts are self-hosted via Fontsource, imported below.
+ * Newsreader roman + italic (opsz axis),
+ * Hanken Grotesk roman only (its italic has always been browser-synthesized), Space Mono
+ * 400/700. Each file carries unicode-range subsets, so a browser downloads only the ranges
+ * a page actually renders. Icons: Font Awesome (webfont).
  */
 @import "tailwindcss";
+@import "@fontsource-variable/newsreader/opsz.css";
+@import "@fontsource-variable/newsreader/opsz-italic.css";
+@import "@fontsource-variable/hanken-grotesk/wght.css";
+@import "@fontsource/space-mono/400.css";
+@import "@fontsource/space-mono/700.css";
 
 /* Class-based dark mode. Opt into html.dark instead of prefers-color-scheme. */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -103,8 +111,8 @@
 }
 
 @theme inline {
-  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Newsreader", ui-serif, Georgia, serif;
+  --font-sans: "Hanken Grotesk Variable", "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Newsreader Variable", "Newsreader", ui-serif, Georgia, serif;
   --font-mono: "Space Mono", ui-monospace, monospace;
 
   --color-bg: var(--bg);

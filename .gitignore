@@ -18,6 +18,7 @@ ssl
 docker-compose.yml
 nginx.conf
 .claude/settings.local.json
+.mcp.json
 
 # Environment
 .env

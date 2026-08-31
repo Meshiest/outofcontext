@@ -8,7 +8,6 @@ import { LobbyProvider } from '@/contexts/LobbyContext';
 import { GameStateProvider } from '@/contexts/GameStateContext';
 import { AppRoutes } from '@/router';
 import { ConnectionOverlay } from '@/components/ConnectionOverlay';
-import { Analytics } from '@/components/Analytics';
 
 /**
  * Provider hierarchy (outer -> inner):
@@ -28,7 +27,6 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <PreferencesProvider>
           <BrowserRouter>
-            <Analytics />
             <LobbyProvider>
               <GameStateProvider>
                 <AppRoutes />

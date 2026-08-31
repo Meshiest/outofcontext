@@ -10,11 +10,6 @@ services:
   game:
     build:
       context: .
-      args:
-        # VITE_ vars are inlined by `vite build` at IMAGE BUILD time, not read at runtime - so the
-        # GA4 id must be passed here to reach the client bundle. The project `.env` (if present)
-        # feeds this default via compose interpolation.
-        VITE_GA_MEASUREMENT_ID: ${VITE_GA_MEASUREMENT_ID:-}
     restart: always
     ports:
       # host:container. PORT controls the app's listen port end to end (default 8080).
@@ -28,13 +23,13 @@ services:
       # The host dir must be writable by uid 1000 (the container's `node` user).
       - ./persistence:/usr/src/app/persistence
     healthcheck:
-      # Hits the REST info shim. Uses Node's global fetch (Node 22) so no curl/wget dependency.
+      # Uses Node's global fetch (Node 22) so there is no curl/wget dependency in the image.
       test:
         [
           'CMD',
           'node',
           '-e',
-          "const p=process.env.PORT||8080;fetch('http://localhost:'+p+'/api/v1/info').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+          "const p=process.env.PORT||8080;fetch('http://localhost:'+p+'/api/v1/ok').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
         ]
       interval: 30s
       timeout: 5s

@@ -10,6 +10,8 @@ import { Assassin } from './games/assassin.js';
 import { Redacted } from './games/redacted.js';
 import { Recipe } from './games/recipe.js';
 import type { Member } from './Member.js';
+import { metrics, parseGameId } from './Metrics.js';
+import type { Country, GameEndReason } from './Metrics.js';
 import type {
   GameMeta,
   LobbyInfo,
@@ -90,6 +92,8 @@ export class Lobby {
   admin!: string;
   lobbyState!: LobbyState;
   game!: Game | null;
+  /** When the running game started, for its duration metric. 0 when no game is running. */
+  gameStartedAt = 0;
   persist = false;
   rocketcrab?: boolean;
   _saved?: boolean;
@@ -104,6 +108,10 @@ export class Lobby {
   }
 
   static cull(code: string): void {
+    const lobby = Lobby.lobbies[code];
+    // A game still running when its lobby is culled was abandoned - everyone left mid-game. This
+    // only reports it; endGame() is deliberately not called, because the lobby is going away.
+    if (lobby?.game) lobby.reportGameEnded('abandoned');
     delete Lobby.lobbies[code];
   }
 
@@ -283,7 +291,7 @@ export class Lobby {
       return fn();
     } catch (err) {
       console.log('Lobby Error', err);
-      this.endGame();
+      this.endGame('error');
       return undefined;
     }
   }
@@ -316,12 +324,49 @@ export class Lobby {
       this.updateMembers();
       this.sendLobbyInfo();
       this.game.start();
+      this.gameStartedAt = Date.now();
+      const gameId = parseGameId(this.selectedGame);
+      if (gameId) {
+        metrics.gameStarted({
+          game: gameId,
+          players: this.players.length,
+          country: this.adminCountry(),
+          participants: this.players.flatMap((p) =>
+            p.member?.country ? [p.member.country] : [],
+          ),
+          rocketcrab: this.rocketcrab ?? false,
+        });
+      }
     }
   }
 
-  endGame(): void {
+  /** The lobby admin's country - one per game, so a game counter labelled with it still sums. */
+  adminCountry(): Country | undefined {
+    return this.members.find((m) => m.id === this.admin)?.country;
+  }
+
+  /** Report a game ending exactly once, and clear the start time so it cannot be double-counted. */
+  reportGameEnded(reason: GameEndReason): void {
+    if (!this.gameStartedAt) return;
+    const gameId = parseGameId(this.selectedGame);
+    const durationMs = Date.now() - this.gameStartedAt;
+    this.gameStartedAt = 0;
+    if (gameId) {
+      metrics.gameEnded({
+        game: gameId,
+        reason,
+        country: this.adminCountry(),
+        durationMs,
+        rocketcrab: this.rocketcrab ?? false,
+      });
+    }
+  }
+
+  endGame(reason: GameEndReason = 'completed'): void {
     if (!this.selectedGame) return;
     if (this.lobbyState !== 'PLAYING') return;
+
+    this.reportGameEnded(reason);
 
     if (this.game) {
       this.game.stop();
@@ -496,6 +541,11 @@ export class Lobby {
     }
     const member = this.members.find((p) => p.id === id);
     if (member) member.send(event, ...args);
+  }
+
+  /** The Cloudflare-resolved country of a seated player, for metric labelling. */
+  countryOfPlayer(playerId: string): Country | undefined {
+    return this.players.find((p) => p.playerId === playerId)?.member?.country;
   }
 
   // emit a message to a specific member (by member id)

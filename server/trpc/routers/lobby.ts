@@ -3,6 +3,7 @@ import { appError } from '../../errors.js';
 import { Lobby } from '../../../core/Lobby.js';
 import type { ServerEvent } from '../../../core/Member.js';
 import * as Persistence from '../../../core/Persistence.js';
+import { metrics, parseGameId } from '../../../core/Metrics.js';
 import { VERSION } from '../../version.js';
 import { LOBBY_EVENTS } from '../events.js';
 import {
@@ -74,10 +75,16 @@ export const lobbyRouter = router({
     const member = ctx.member;
     if (!member.lobby) throw appError('LOBBY_NOT_FOUND');
     const now = Date.now();
-    if (now - member.lastEmote < 400) throw appError('RATE_LIMITED');
+    const game = parseGameId(member.lobby.selectedGame);
+    const rocketcrab = member.lobby.rocketcrab ?? false;
+    if (now - member.lastEmote < 400) {
+      metrics.emoteRateLimited({ game, rocketcrab });
+      throw appError('RATE_LIMITED');
+    }
     member.activity = now;
     member.lastEmote = now;
     member.lobby.emitAll('lobby:emote', member.id, input);
+    metrics.emoteSent({ emote: input, game, country: member.country, rocketcrab });
   }),
 
   setGame: adminProcedure.input(gameIdSchema).mutation(({ ctx, input }) => {

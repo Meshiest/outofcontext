@@ -1,6 +1,5 @@
 import { useCallback, useRef } from 'react';
 import { trpc } from '@/trpc/trpc';
-import { logEvent } from '@/lib/analytics';
 import { useEmoteEvents, type EmoteEvent } from '@/contexts/LobbyContext';
 
 // Server enforces a 400ms emote rate limit and silently drops violators (and unknown emote names).
@@ -28,8 +27,6 @@ export function useEmotes(): UseEmotes {
       if (now - lastSent.current < EMOTE_RATE_MS) return;
       lastSent.current = now;
       emoteMutation.mutate(emote);
-      // Logged after the rate-limit check, so the metric counts emotes that were actually sent.
-      logEvent('emote_event', { emote });
     },
     [emoteMutation],
   );

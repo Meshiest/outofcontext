@@ -21,7 +21,7 @@ export const gameRouter = router({
       new Date(),
       `-- [lobby ${ctx.lobby.code}] ended game ${ctx.lobby.selectedGame}`,
     );
-    ctx.lobby.endGame();
+    ctx.lobby.endGame('ended');
   }),
 
   message: publicProcedure

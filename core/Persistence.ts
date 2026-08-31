@@ -6,7 +6,10 @@ import type { Lobby, LobbySaveState } from './Lobby.js';
 // ~1 month expire time
 const EXPIRE_TIME = 1000 * 60 * 60 * 24 * 30;
 
-const saveName = (code: string): string => `persistence/${code}.json.zip`;
+const SAVE_DIR = 'persistence';
+const SAVE_SUFFIX = '.json.zip';
+
+const saveName = (code: string): string => `${SAVE_DIR}/${code}${SAVE_SUFFIX}`;
 
 export function saveExists(code: string): boolean {
   return fs.existsSync(saveName(code));
@@ -34,6 +37,26 @@ export function cullSaves(): number {
     if (cullSave(f)) ++count;
   }
   if (count > 0) console.log(new Date(), '!- culled', count, 'old saves');
+  return count;
+}
+
+/**
+ * How many lobby saves are on disk. Read fresh rather than tracked in a counter: shutdown handlers
+ * and cron write here too, so a counter would drift.
+ *
+ * No filesystem reports a file count, so enumeration is unavoidable; readdirSync measured fastest,
+ * ahead of an opendirSync walk and glob. Suffix alone is the filter - isFile() can cost a stat per
+ * entry.
+ */
+export function countSaves(): number {
+  let count = 0;
+  try {
+    for (const name of fs.readdirSync(SAVE_DIR)) {
+      if (name.endsWith(SAVE_SUFFIX)) ++count;
+    }
+  } catch {
+    return 0; // no store yet, or unreadable
+  }
   return count;
 }
 

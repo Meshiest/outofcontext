@@ -17,7 +17,7 @@ import type { ReactionId } from '@/games/shared/reactions';
  * Draw (Scribble) top-level state machine. Alternates between describing (text) and drawing
  * (canvas): the editor shown during EDITING is chosen by the current link type -- no link or an
  * `image` link means "describe it", a `desc` link means "draw it". Draw is a chain game, so it runs
- * the shared turn side-effects (haptics / sound / analytics).
+ * the shared turn side-effects (haptics / sound).
  */
 export default function DrawGame() {
   const { t } = useTranslation('game-draw');

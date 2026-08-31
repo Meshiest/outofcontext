@@ -1,6 +1,7 @@
 import { initTRPC } from '@trpc/server';
 import type { Context } from './context.js';
 import { AppError, appError } from '../errors.js';
+import { metrics } from '../../core/Metrics.js';
 
 const t = initTRPC.context<Context>().create({
   // tRPC ships ping.enabled false, so without this an idle lobby sends nothing between events and
@@ -24,11 +25,38 @@ const t = initTRPC.context<Context>().create({
 });
 
 export const router = t.router;
-export const publicProcedure = t.procedure;
+
+/**
+ * Counts every call and its outcome. Applied to the base procedure so BOTH publicProcedure and
+ * adminProcedure are covered, including calls adminProcedure rejects before the resolver runs -
+ * a spike in NOT_ADMIN is exactly the kind of thing worth seeing.
+ *
+ * `path` is a procedure name from the router, a closed set, so it is safe as a Prometheus label.
+ */
+const withMetrics = t.middleware(async ({ path, type, next }) => {
+  const started = Date.now();
+  const result = await next();
+
+  metrics.trpcRequest({
+    procedure: path,
+    outcome: result.ok ? 'ok' : 'error',
+    type,
+    durationMs: Date.now() - started,
+  });
+
+  if (!result.ok) {
+    const cause = result.error.cause;
+    metrics.appError({ code: cause instanceof AppError ? cause.appCode : 'UNKNOWN' });
+  }
+
+  return result;
+});
+
+export const publicProcedure = t.procedure.use(withMetrics);
 
 // Admin-gated procedure: verifies the caller is the lobby admin before the resolver runs, and
 // narrows ctx.lobby to non-null.
-export const adminProcedure = t.procedure.use(({ ctx, next }) => {
+export const adminProcedure = publicProcedure.use(({ ctx, next }) => {
   const lobby = ctx.member.lobby;
   if (!lobby) throw appError('LOBBY_NOT_FOUND');
   if (lobby.admin !== ctx.member.id) throw appError('NOT_ADMIN');

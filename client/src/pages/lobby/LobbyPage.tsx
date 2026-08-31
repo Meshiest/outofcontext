@@ -13,7 +13,6 @@ import { useLobbyAdmin } from '@/hooks/useLobbyAdmin';
 import { useConnection, useLobbyInfo } from '@/contexts/LobbyContext';
 import { usePreferences } from '@/contexts/PreferencesContext';
 import { useRocketCrab } from '@/hooks/useRocketCrab';
-import { useGameStartAnalytics } from '@/hooks/useGameStartAnalytics';
 import { JoinLobbyModal } from '@/pages/JoinLobbyModal';
 import { NameEntry } from './NameEntry';
 import { LobbyWaiting } from './LobbyWaiting';
@@ -48,8 +47,6 @@ export function LobbyPage() {
   const { connected, disconnected } = useConnection();
   const { streamerMode } = usePreferences();
   const rocketcrab = useRocketCrab();
-
-  useGameStartAnalytics(lobbyInfo, routeCode ?? null);
 
   // Validation result keyed by the code it applies to, so a route change reads as "still checking"
   // (LOADING) until the new code resolves - without a synchronous reset in the effect body.

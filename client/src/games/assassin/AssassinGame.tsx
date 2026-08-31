@@ -11,7 +11,7 @@ import type { AssassinGameState, AssassinPlayerState, ResolvedTarget } from './t
 /**
  * Wurderer - the most minimal game: no editing, no results, no like system, no progress bar. Players
  * read a dossier (target + kill words), mark themselves done, and may re-open it. Assassin has NO turn
- * vibration/sound/analytics, so this deliberately uses the plain useGame()/useLobbyInfo() hooks and
+ * vibration/sound, so this deliberately uses the plain useGame()/useLobbyInfo() hooks and
  * NOT the chain-game useGameState/useTurnEffects machinery.
  */
 export default function AssassinGame() {

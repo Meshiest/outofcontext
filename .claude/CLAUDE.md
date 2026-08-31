@@ -128,7 +128,7 @@ e2e/                     # Playwright flows + per-game specs
 **lobby:** `exists`, `create`, `join`, `leave`, `spectate`, `replace`, `emote` (rate-limited),
 `setGame`*, `setConfig`*, `toggleAdmin`*, `grantAdmin`*, `onInfo` (subscription)
 **game:** `start`*, `end`*, `message`, `onState` (subscription)
-**member:** `setName` | **rocketcrab:** `create` | **serverInfo:** `info`, `version`
+**member:** `setName` | **rocketcrab:** `create` | **server:** `info`, `version`
 
 `*` = `adminProcedure`, which enforces the admin check in one place.
 
@@ -139,8 +139,8 @@ story/comic/draw/redacted/recipe (assassin has no results phase).
 
 ## REST API
 
+- `GET /api/v1/ok` - liveness probe; reports nothing but that the process answers
 - `GET /api/v1/lobby/:code` - does this lobby exist
-- `GET /api/v1/info` - server stats
 - `GET /api/v1/drawing/:id` - drawing bytes (immutable, long-cached)
 - `POST /api/v1/drawing` - upload a drawing, returns its id (member must be in a lobby)
 - `POST /api/v1/rocketcrab` - RocketCrab integration
@@ -193,7 +193,13 @@ English is hardcoded copy to fix and anything clipped is a layout bug.
 - **Vibration API** on turn notifications
 - **RocketCrab integration** via query params
 - **Version mismatch:** the client auto-reloads when the server reports a different version
-- **Analytics:** GA4 via `VITE_GA_MEASUREMENT_ID`
-- **localStorage keys** - preserve verbatim, note `occDarkMode` uses the `occ` prefix while the rest
-  use `ooc`: `occDarkMode`, `oocHideLobby`, `oocTurnSound`, `oocSoundVolume`, `oocName`, `oocLang`,
-  `oocMemberId`
+- **Analytics:** no third-party analytics and no third-party scripts;
+  Traffic metrics come from Cloudflare Web Analytics (cookieless, outside the repo); game metrics are
+  server-side (see `core/Metrics.ts`). Prometheus lives in `server/metrics/` and is opt-in two ways:
+  `METRICS_PORT` for its own listener (localhost unless `METRICS_HOST`), `METRICS_TOKEN` for
+  bearer-gated `GET /metrics` on the app port. With neither set NO endpoint is registered.
+  NEVER label a metric with a lobby code or member id - both are unbounded, and a member id is an
+  identifier
+- **Storage keys** - preserve verbatim, note `occDarkMode` uses the `occ` prefix while the rest use
+  `ooc`. localStorage: `occDarkMode`, `oocHideLobby`, `oocTurnSound`, `oocSoundVolume`, `oocName`,
+  `oocLang`. sessionStorage: `oocMemberId`

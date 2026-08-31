@@ -93,9 +93,18 @@ Copy `.env.example` and set values as needed. All are optional with sensible def
 
 - `PORT` - backend port (default 8080)
 - `NODE_ENV` - `development` | `production`
-- `VITE_GA_MEASUREMENT_ID` - GA4 measurement id. Baked into the client at `vite build` time (Vite only
-  exposes `VITE_`-prefixed vars); analytics no-op when unset.
 - `REDIS_URL` - reserved for the Stage-B horizontal-scale registry (see below); unused today.
+
+The client takes no build-time configuration: there are no `VITE_`-prefixed vars, and fonts are
+self-hosted from npm rather than fetched from Google.
+
+## Metrics
+
+No third-party analytics, no cookies, no client-side beacon. Game metrics are server-side and
+Prometheus is opt-in via `METRICS_PORT` or `METRICS_TOKEN`; with neither set, no endpoint exists.
+
+See [docs/metrics.md](docs/metrics.md) for the full picture: what is collected, the two ways to
+expose it, and the label rules.
 
 ## Deploy
 

@@ -36,13 +36,9 @@ COPY . .
 # client half.) Remove this line if you prefer builds not to fail on server type errors.
 RUN npm run typecheck:server
 
-# VITE_-prefixed vars are INLINED by `vite build` at build time - they are NOT read at runtime.
-# Declare it as a build ARG so the GA4 id can be baked into the client bundle (pass it via
-# docker build --build-arg or docker-compose build.args). Empty default = analytics disabled.
-ARG VITE_GA_MEASUREMENT_ID=""
-
-# Produce the production client into ../public (i.e. /usr/src/app/public).
-RUN cd client && VITE_GA_MEASUREMENT_ID="$VITE_GA_MEASUREMENT_ID" npm run build
+# Produce the production client into ../public (i.e. /usr/src/app/public). The client takes no
+# build-time config: there are no VITE_-prefixed vars left, and fonts are self-hosted from npm.
+RUN cd client && npm run build
 
 # ---------------------------------------------------------------------------------------------
 # Stage 2: runtime

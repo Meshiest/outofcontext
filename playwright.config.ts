@@ -49,7 +49,7 @@ export default defineConfig({
 
   webServer: {
     command: webServerCommand,
-    url: 'http://localhost:8080/api/v1/info',
+    url: 'http://localhost:8080/api/v1/ok',
     reuseExistingServer: !process.env.CI,
     timeout: 240_000,
     stdout: 'pipe',

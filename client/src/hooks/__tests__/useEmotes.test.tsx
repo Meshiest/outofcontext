@@ -1,19 +1,17 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 
-const h = vi.hoisted(() => ({ mutate: vi.fn(), logEvent: vi.fn() }));
+const h = vi.hoisted(() => ({ mutate: vi.fn() }));
 
 vi.mock('@/trpc/trpc', () => ({
   trpc: { lobby: { emote: { useMutation: () => ({ mutate: h.mutate }) } } },
 }));
 vi.mock('@/contexts/LobbyContext', () => ({ useEmoteEvents: () => [] }));
-vi.mock('@/lib/analytics', () => ({ logEvent: h.logEvent }));
 
 import { useEmotes } from '../useEmotes';
 
 beforeEach(() => {
   h.mutate.mockClear();
-  h.logEvent.mockClear();
   vi.useFakeTimers();
 });
 
@@ -56,25 +54,5 @@ describe('useEmotes rate limiting', () => {
     act(() => result.current.sendEmote('laugh'));
 
     expect(h.mutate).toHaveBeenCalledTimes(1);
-  });
-});
-
-/** The analytics call sits behind the rate gate, so it must count sends, not button presses. */
-describe('useEmotes analytics', () => {
-  it('logs emote_event for a sent emote', () => {
-    const { result } = renderHook(() => useEmotes());
-
-    act(() => result.current.sendEmote('heart'));
-
-    expect(h.logEvent).toHaveBeenCalledWith('emote_event', { emote: 'heart' });
-  });
-
-  it('does not log an emote the rate gate dropped', () => {
-    const { result } = renderHook(() => useEmotes());
-
-    act(() => result.current.sendEmote('heart'));
-    act(() => result.current.sendEmote('laugh'));
-
-    expect(h.logEvent).toHaveBeenCalledTimes(1);
   });
 });

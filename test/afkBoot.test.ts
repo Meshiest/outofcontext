@@ -3,6 +3,7 @@ import { appRouter } from '../server/trpc/router';
 import { Member } from '../core/Member';
 import { Lobby } from '../core/Lobby';
 import type { Story } from '../core/games/story';
+import { computeServerInfo } from '../server/stats';
 
 /**
  * What happens to a chain game when a player is reaped for inactivity mid-round.
@@ -120,5 +121,66 @@ describe('the inactivity sweep', () => {
 
     expect(seen).not.toContain('member:kicked');
     expect(member.removed).toBe(false);
+  });
+});
+
+/**
+ * The inactivity sweep itself, not a hand-simulated reap.
+ *
+ * The tests above stand in for the sweep by calling Lobby.removePlayer + Member.removePlayer, which
+ * is what the registered reaper does - so they never exercise Member.cullInactive() and cannot catch
+ * it doing something different.
+ */
+describe('Member.cullInactive', () => {
+  /** Four hours clears both the idle threshold and the really-idle one. */
+  const LONG_AGO = 4 * 60 * 60 * 1000 + 1000;
+
+  async function idleLobbyWithOneMember() {
+    const member = new Member();
+    const caller = appRouter.createCaller({ member });
+    const { code } = await caller.lobby.create();
+    await caller.member.setName('afk');
+    return { member, lobby: Lobby.lobbies[code], code };
+  }
+
+  it('removes an afk member from their LOBBY, not just the registry', () => {
+    Member.setReaper((m) => {
+      Lobby.removePlayer(m);
+      Member.removePlayer(m);
+    });
+
+    return idleLobbyWithOneMember().then(({ member, lobby }) => {
+      expect(lobby.members).toContain(member);
+      member.activity = Date.now() - LONG_AGO;
+
+      Member.cullInactive();
+
+      // Leaving them on lobby.members keeps the lobby permanently non-empty, so cullEmpty never
+      // collects it and computeServerInfo counts a player who was kicked hours ago forever.
+      expect(lobby.members).not.toContain(member);
+      expect(lobby.empty()).toBe(true);
+      expect(member.lobby).toBeUndefined();
+    });
+  });
+
+  /** The reported symptom: the idle counts stayed put while afk members piled up in lobbies. */
+  it('drops the idle counts that /metrics and server.info report', async () => {
+    Member.setReaper((m) => {
+      Lobby.removePlayer(m);
+      Member.removePlayer(m);
+    });
+    const { member } = await idleLobbyWithOneMember();
+
+    // Deltas, not absolutes: other suites leave lobbies behind, and there is a dev lobby.
+    const before = computeServerInfo();
+    member.activity = Date.now() - LONG_AGO;
+
+    Member.cullInactive();
+
+    const after = computeServerInfo();
+    expect(after.idlePlayers).toBe(before.idlePlayers - 1);
+    // The lobby is now empty, so it stops being counted as idle once cullEmpty collects it - but the
+    // player must be gone from the count immediately.
+    expect(after.idlePlayers).toBeLessThan(before.idlePlayers);
   });
 });

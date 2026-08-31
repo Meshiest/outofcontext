@@ -1,6 +1,7 @@
 import type { Lobby } from '../Lobby.js';
 import type { GameState, PlayerState } from '@shared/types';
 import type { ServerEventName, GameMessageType } from '@shared/events';
+import { metrics, parseGameId, parsePlayerState } from '../Metrics.js';
 
 // Resolved gamemode object (union of every game's gamemode shape after config resolution).
 export interface ResolvedGameMode {
@@ -43,6 +44,12 @@ export class Game {
   lobby: Lobby;
   config: ResolvedGameConfig;
   players: string[];
+  /**
+   * Last state seen per player and when it began, for turn/wait durations. Measured here rather
+   * than on the client because the server decides the transition; a client reading is really "when
+   * the SSE arrived". Discarded with the Game on endGame.
+   */
+  private stateSince = new Map<string, { state: string; at: number }>();
 
   constructor(lobby: Lobby, config: ResolvedGameConfig, players: string[]) {
     this.lobby = lobby;
@@ -62,8 +69,41 @@ export class Game {
   sendGameInfo(): void {
     this.lobby.emitAll('game:info', this.getState());
     for (const player of this.players) {
-      this.emitTo(player, 'game:player:info', this.getPlayerState(player));
+      const state = this.getPlayerState(player);
+      this.emitTo(player, 'game:player:info', state);
+      this.recordStateChange(player, state.state);
     }
+  }
+
+  /**
+   * Turn-pacing metrics, derived from player state transitions. Every transition reports the state
+   * that just ENDED and how long it lasted, so waiting, editing and reading are all measured by the
+   * same rule and an EDITING -> READING transition is not recorded as a turn made of reading time.
+   *
+   * The first state seen for a player only seeds the map: there is no prior instant to measure from.
+   */
+  private recordStateChange(pid: string, state: string): void {
+    const now = Date.now();
+    const previous = this.stateSince.get(pid);
+    if (!previous) {
+      this.stateSince.set(pid, { state, at: now });
+      return;
+    }
+    if (previous.state === state) return;
+    this.stateSince.set(pid, { state, at: now });
+
+    const game = parseGameId(this.lobby.selectedGame);
+    if (!game) return;
+    const durationMs = now - previous.at;
+    const country = this.lobby.countryOfPlayer(pid);
+
+    metrics.playerStateEnded({
+      game,
+      state: parsePlayerState(previous.state),
+      durationMs,
+      country,
+      rocketcrab: this.lobby.rocketcrab ?? false,
+    });
   }
 
   /**

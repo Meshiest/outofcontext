@@ -15,13 +15,13 @@ import { Member } from './core/Member.js';
 import { Lobby } from './core/Lobby.js';
 import * as Persistence from './core/Persistence.js';
 import * as Drawings from './core/Drawings.js';
+import { setMetricsSink } from './core/Metrics.js';
+import { createPrometheusMetrics } from './server/metrics/prometheus.js';
+import { metricsServerConfig, startMetricsServer } from './server/metrics/server.js';
+import { metricsTokenConfig, createMetricsRoute } from './server/metrics/route.js';
 import { VERSION } from './server/version.js';
 import { DRAWING_MAX_BYTES, parseImageSize } from './shared/drawing.js';
-import {
-  computeServerInfo,
-  createRocketcrab,
-  gameExists,
-} from './server/stats.js';
+import { createRocketcrab, gameExists } from './server/stats.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -61,8 +61,15 @@ app.use(bodyParser.json({ strict: true, limit: '256kb' }));
 // Typed contract: tRPC mutations/queries over HTTP + subscriptions over SSE.
 app.use('/trpc', createExpressMiddleware({ router: appRouter, createContext }));
 
-// REST compatibility shims. RocketCrab's external caller uses POST /api/v1/rocketcrab, and
-// /api/v1/info stays for smoke/monitoring; both share the same logic as the tRPC procedures.
+// Liveness probe for the container healthcheck and the e2e webServer wait. Deliberately reports
+// nothing but "the process is answering" - it is unauthenticated and public, so it must never grow
+// into a stats endpoint.
+app.get('/api/v1/ok', (_req: Request, res: Response) => {
+  res.status(200).json({ ok: true });
+});
+
+// REST compatibility shim: RocketCrab's external caller uses POST /api/v1/rocketcrab. Shares its
+// logic with the tRPC procedure.
 app.get('/api/v1/lobby/:code', (req: Request, res: Response) => {
   const code = req.params.code.toLowerCase();
   if (Lobby.lobbyExists(code)) {
@@ -70,10 +77,6 @@ app.get('/api/v1/lobby/:code', (req: Request, res: Response) => {
   } else {
     res.status(404).json({ message: 'Lobby Does Not Exist' });
   }
-});
-
-app.get('/api/v1/info', (_req: Request, res: Response) => {
-  res.status(200).json(computeServerInfo());
 });
 
 // Drawing blobs. Bytes travel here rather than inside game messages: a drawing is uploaded once,
@@ -155,6 +158,17 @@ process.on('SIGTERM', () => exitHandler({ exit: true }));
 process.on('SIGUSR1', () => exitHandler({ exit: true }));
 process.on('SIGUSR2', () => exitHandler({ exit: true }));
 process.on('uncaughtException', () => exitHandler({ exit: true }));
+
+// Metrics are opt-in: with neither env var set there is no endpoint and the sink stays the no-op.
+// See docs/metrics.md. Mounted here, ahead of the SPA fallback, or the fallback swallows the path.
+const metricsListener = metricsServerConfig();
+const metricsToken = metricsTokenConfig();
+if (metricsListener || metricsToken) {
+  const { sink, registry } = createPrometheusMetrics();
+  setMetricsSink(sink);
+  if (metricsListener) startMetricsServer({ registry, ...metricsListener });
+  if (metricsToken) app.get('/metrics', createMetricsRoute(registry, metricsToken));
+}
 
 // Cull expired saves on startup, then weekly.
 Persistence.cullSaves();
