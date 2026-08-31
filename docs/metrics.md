@@ -56,6 +56,8 @@ proxy caching a scrape would serve stale counters and make `rate()` lie.
 | `ooc_game_participants_total` | `game`, `country`, `rocketcrab` |
 | `ooc_emotes_sent_total` | `emote`, `game`, `country`, `rocketcrab` |
 | `ooc_emotes_rate_limited_total` | `game`, `rocketcrab` |
+| `ooc_reactions_total` | `reaction`, `game`, `rocketcrab` |
+| `ooc_game_config_total` | `game`, `setting`, `value` |
 | `ooc_trpc_requests_total` | `procedure`, `outcome` |
 | `ooc_app_errors_total` | `code` |
 
@@ -69,6 +71,7 @@ proxy caching a scrape would serve stale counters and make `rate()` lie.
 | `ooc_game_players` | `game`, `rocketcrab` |
 | `ooc_game_duration_seconds` | `game`, `rocketcrab` |
 | `ooc_player_state_duration_seconds` | `game`, `state`, `rocketcrab` |
+| `ooc_game_config_value` | `game`, `setting` |
 | `ooc_trpc_duration_seconds` | `procedure` |
 
 `state` is the state that **ended** - the one the duration measures. `waiting` is time spent waiting
@@ -140,8 +143,37 @@ countries", which reads as a plausible number and is silently wrong. Per-player 
 is created empty by an external caller and joined seconds later through an iframe, so mixing it with
 direct play muddies both.
 
+`ooc_reactions_total` counts **adds only**. Toggling a reaction off is not a reaction being used,
+and counting both would make the total mean "reaction presses". Reactions are also only accepted
+once every chain is finished, so the count is of reactions to results, never mid-game.
+
 `ooc_emotes_sent_total` is the widest metric in the set. If a scrape ever gets slow, look there
 first.
+
+## Game settings
+
+Two metrics, split by what a setting can safely become.
+
+**Choices** - the bool and list fields - become labels on `ooc_game_config_total`, carrying the raw
+selection: `true`/`false`, or a list field's option NAME (`collab`, `sec15`, `three`). Small closed
+sets. Note it is incremented once per setting per game, so `sum(ooc_game_config_total)` is games
+TIMES settings, not games; filter to a single `setting` to get a game count.
+
+**Numbers** - the int fields - become observations on the `ooc_game_config_value` histogram. They
+are bounded at 256 by gameInfo, so as label values they would be up to 256 series per setting per
+game. A histogram is the right tool for a numeric and cannot blow up.
+
+Numbers are reported RESOLVED, so a field defaulting to `#numPlayers` reports the real count rather
+than the sentinel. Choices are read from the raw `gameConfig` instead, because that is the only
+place a list field's option name survives - `configVals()` has already replaced it with the option's
+value, which for a gamemode is a whole object.
+
+`players` is deliberately absent: `ooc_game_players` already reports exactly that number.
+
+Neither config metric carries `rocketcrab`, unlike the rest of the game-scoped set. A RocketCrab
+lobby is preset by the external caller, so its settings are RocketCrab's defaults rather than a
+player's choice. The split would double these 217 series to 434 - the histogram alone is 170 of
+them, at 17 series per numeric setting - to answer a question about RocketCrab rather than the games.
 
 ## Restarts
 
