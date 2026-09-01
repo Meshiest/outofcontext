@@ -134,6 +134,12 @@ a member id is both unbounded and an identifier.
 Histograms carry no `country`. A histogram already costs bucket+sum+count series per label
 combination, so multiplying that by ~200 buys a lot of series for a question nobody is asking.
 
+Every game-scoped series is materialised at zero, so a scrape's shape never depends on what anyone
+has played: all six games on `ooc_games_active` and `ooc_players_active`, and game x `rocketcrab` x
+`state` on the three game histograms. That grid is 1056 of the 1080 series a fresh process reports.
+`country` is far too wide to fill this way, and `ooc_trpc_duration_seconds` has to stay absent per
+procedure so an untimed subscription never mints one.
+
 Game counters take the **lobby admin's** country, so `sum(ooc_games_started_total)` is the number of
 games. Incrementing once per distinct country present would make that sum mean "games times
 countries", which reads as a plausible number and is silently wrong. Per-player geography lives on

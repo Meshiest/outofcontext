@@ -1,5 +1,5 @@
 import { Registry, Counter, Gauge, Histogram, collectDefaultMetrics } from 'prom-client';
-import type { MetricsSink } from '../../core/Metrics.js';
+import { GAME_IDS, PLAYER_STATES, type MetricsSink } from '../../core/Metrics.js';
 import { computeServerInfo } from '../stats.js';
 import { Member } from '../../core/Member.js';
 import * as Persistence from '../../core/Persistence.js';
@@ -44,6 +44,8 @@ const NO_GAME = 'none';
 
 /** Prometheus labels are strings, so a boolean has to be spelled out. */
 const flag = (value: boolean): string => (value ? 'true' : 'false');
+
+const ROCKETCRAB_FLAGS = [flag(false), flag(true)];
 
 export interface PrometheusMetrics {
   sink: MetricsSink;
@@ -186,8 +188,10 @@ export function createPrometheusMetrics(): PrometheusMetrics {
     registers: [registry],
     collect() {
       const info = computeServerInfo();
-      // A game that drops to zero must report zero, not hold its last value, so rebuild the set.
+      // Rebuild the whole set. A game that drops to zero must report zero rather than its last
+      // value, and one nobody is playing must be a zero rather than a missing series.
       this.reset();
+      for (const game of GAME_IDS) this.set({ game }, 0);
       for (const [game, count] of Object.entries(info.gameDistribution)) {
         this.set({ game }, count);
       }
@@ -227,8 +231,9 @@ export function createPrometheusMetrics(): PrometheusMetrics {
     registers: [registry],
     collect() {
       const info = computeServerInfo();
-      // A game dropping to zero players must report zero, not hold its last value.
+      // Same rebuild as ooc_games_active: no stale values, no missing games.
       this.reset();
+      for (const game of GAME_IDS) this.set({ game }, 0);
       for (const [game, count] of Object.entries(info.playerDistribution)) {
         this.set({ game }, count);
       }
@@ -275,6 +280,16 @@ export function createPrometheusMetrics(): PrometheusMetrics {
   // series returns nothing rather than zero. Initialising it makes "no emotes were dropped" a
   // reportable fact instead of a gap.
   emotesRateLimited.inc({ game: NO_GAME, rocketcrab: flag(false) }, 0);
+
+  // Same for the histograms: an unplayed game has no series at all. Zero the closed grid.
+  // Not country (~200 wide) or trpc latency, which stays absent until a procedure is timed.
+  for (const game of GAME_IDS) {
+    for (const rocketcrab of ROCKETCRAB_FLAGS) {
+      gamePlayers.zero({ game, rocketcrab });
+      gameDuration.zero({ game, rocketcrab });
+      for (const state of PLAYER_STATES) stateDuration.zero({ game, state, rocketcrab });
+    }
+  }
 
   const sink: MetricsSink = {
     sessionStarted({ country }) {

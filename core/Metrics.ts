@@ -31,15 +31,18 @@ export function parseCountry(raw: string | string[] | undefined): Country | unde
   return upper;
 }
 
+/** Every game id. Exported for backends that materialise a label set rather than just test one. */
+export const GAME_IDS = Object.keys(gameInfo) as GameId[];
+
+const GAME_ID_SET = new Set<string>(GAME_IDS);
+
 /**
  * Narrow a `Lobby.selectedGame` to a GameId. The lobby models it as a plain string that is `''`
  * before a game is picked, so events take the checked value and callers skip the metric rather than
  * recording a game that does not exist. Keys come from gameInfo, so adding a game needs no edit here.
  */
-const GAME_IDS = new Set(Object.keys(gameInfo));
-
 export function parseGameId(raw: string): GameId | undefined {
-  return GAME_IDS.has(raw) ? (raw as GameId) : undefined;
+  return GAME_ID_SET.has(raw) ? (raw as GameId) : undefined;
 }
 
 /**

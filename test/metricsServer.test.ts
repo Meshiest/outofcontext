@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach } from 'vitest';
 import type { AddressInfo } from 'node:net';
 import { createPrometheusMetrics } from '../server/metrics/prometheus';
 import { metricsServerConfig, startMetricsServer } from '../server/metrics/server';
+import { GAME_IDS, PLAYER_STATES } from '../core/Metrics';
 
 describe('metricsServerConfig', () => {
   /** Metrics are opt-in. An absent port must mean "no listener", never a guessed default. */
@@ -196,5 +197,48 @@ describe('the metrics endpoint', () => {
   it('reports zero dropped emotes rather than no series at all', async () => {
     const { body } = await scrape();
     expect(body).toContain('ooc_emotes_rate_limited_total{game="none",rocketcrab="false"} 0');
+  });
+
+  /** The scrape's shape must not depend on what anyone has played. */
+  it('exposes every game-scoped series from the first scrape, at zero', async () => {
+    const { body } = await scrape();
+    for (const game of GAME_IDS) {
+      for (const rocketcrab of ['false', 'true']) {
+        const scope = `game="${game}",rocketcrab="${rocketcrab}"`;
+        expect(body, scope).toContain(`ooc_game_players_count{${scope}} 0`);
+        expect(body, scope).toContain(`ooc_game_duration_seconds_count{${scope}} 0`);
+        for (const state of PLAYER_STATES) {
+          const stated = `game="${game}",state="${state}",rocketcrab="${rocketcrab}"`;
+          expect(body, stated).toContain(`ooc_player_state_duration_seconds_count{${stated}} 0`);
+        }
+      }
+      expect(body, game).toContain(`ooc_games_active{game="${game}"} 0`);
+      expect(body, game).toContain(`ooc_players_active{game="${game}"} 0`);
+    }
+  });
+
+  /** Zeroing is initialisation, not a floor. A real observation still lands on top of it. */
+  it('keeps the zeroed series usable once something is observed', async () => {
+    const { sink, registry } = createPrometheusMetrics();
+    sink.playerStateEnded({ game: 'story', state: 'editing', durationMs: 3000, rocketcrab: false });
+
+    const body = await registry.metrics();
+    expect(body).toContain(
+      'ooc_player_state_duration_seconds_count{game="story",state="editing",rocketcrab="false"} 1',
+    );
+    expect(body).toContain(
+      'ooc_player_state_duration_seconds_sum{game="story",state="editing",rocketcrab="false"} 3',
+    );
+    // One observation must not sweep the rest of the grid.
+    expect(body).toContain(
+      'ooc_player_state_duration_seconds_count{game="comic",state="editing",rocketcrab="false"} 0',
+    );
+  });
+
+  /** Zeroing costs bucket+sum+count series per combination, so it stops short of the wide ones. */
+  it('does not zero the wide or per-procedure series', async () => {
+    const { body } = await scrape();
+    expect(body).not.toContain('ooc_game_participants_total{');
+    expect(body).not.toContain('ooc_trpc_duration_seconds_count{');
   });
 });
