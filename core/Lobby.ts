@@ -395,7 +395,9 @@ export class Lobby {
     if (!this.selectedGame) return;
     if (this.lobbyState !== 'PLAYING') return;
 
-    this.reportGameEnded(reason);
+    // An admin ending a game whose results are already on screen completed it. Only a game cut
+    // short mid-play is 'ended'.
+    this.reportGameEnded(reason === 'ended' && this.game?.isFinished() ? 'completed' : reason);
 
     if (this.game) {
       this.game.stop();

@@ -230,6 +230,11 @@ export class Story extends Game {
     this.sendGameInfo();
   }
 
+  /** Same condition as the READING state in getPlayerState: every chain full. */
+  override isFinished(): boolean {
+    return this.getGameProgress() === 1;
+  }
+
   getGameProgress(): number {
     const { numStories, numLinks } = this.config;
     const totalLines = numStories * numLinks;

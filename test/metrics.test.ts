@@ -170,6 +170,31 @@ describe('metrics wiring', () => {
     expect(sink.gameEnded).toHaveBeenCalledTimes(1);
   });
 
+  /**
+   * The admin still has to press End once the results are on screen, so counting that as a game cut
+   * short would report almost every finished game as 'ended'.
+   */
+  it('reports a finished game as completed even when the admin ends it', async () => {
+    const { callers, code } = await startedLobby(3);
+    await callers[0].lobby.setConfig({ name: 'numStories', value: 1 });
+    await callers[0].lobby.setConfig({ name: 'numLinks', value: 3 });
+    await callers[0].game.start();
+
+    // Written straight at the game: chains are keyed by playerId, not member id.
+    const story = Lobby.lobbies[code].game as Story;
+    for (let round = 0; round < 10 && story.getGameProgress() < 1; round++) {
+      for (const editor of story.chains.map((c) => c.editor).filter(Boolean)) {
+        story.handleMessage(editor, 'story:line', 'a line');
+      }
+    }
+    expect(story.getGameProgress()).toBe(1);
+
+    await callers[0].game.end();
+
+    expect(sink.gameEnded).toHaveBeenCalledTimes(1);
+    expect(sink.gameEnded.mock.calls[0][0]).toMatchObject({ reason: 'completed' });
+  });
+
   it('reports a game abandoned when its lobby is culled mid-game', async () => {
     const { callers, code } = await startedLobby(3);
     await callers[0].game.start();

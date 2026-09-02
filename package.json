@@ -1,6 +1,6 @@
 {
   "name": "ooc",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Out of Context Games",
   "type": "module",
   "main": "main.ts",

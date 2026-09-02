@@ -182,6 +182,11 @@ export class Recipe extends Story {
     };
   }
 
+  /** A recipe also needs its comment pass done, so progress alone is not the end of play. */
+  override isFinished(): boolean {
+    return this.getGameProgress() === 1 && !this.chains.some((s) => s.editor);
+  }
+
   override getGameProgress(): number {
     const { numRecipes, numSteps } = this.config;
     const totalLines = numRecipes * numSteps * 2;

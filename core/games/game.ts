@@ -127,6 +127,14 @@ export class Game {
   /** Called when a player connects or drops mid-game. Games that hand out turns should re-deal. */
   onPlayersChanged(): void {}
 
+  /**
+   * Play is over and the results are on screen. An admin ending a game in this phase completed it
+   * rather than cut it short, which is the whole difference between the two metric reasons.
+   */
+  isFinished(): boolean {
+    return false;
+  }
+
   // receive input from a player, potentially a spectator
   handleMessage(_pid: string, _type: GameMessageType, _data: unknown): void {}
 
